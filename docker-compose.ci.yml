@@ -1,0 +1,67 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2018 NU,FSM,GHSL.
+#
+# CD2H Repo Project is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+
+version: '2.3'
+services:
+  cache:
+    image: redis
+    restart: "always"
+    read_only: true
+    ports:
+      - "6380:6379"
+  db:
+    image: postgres:9.6
+    restart: "always"
+    environment:
+      - "POSTGRES_USER=cd2h-repo-project"
+      - "POSTGRES_PASSWORD=cd2h-repo-project"
+      - "POSTGRES_DB=cd2h-repo-project"
+    ports:
+      - "5433:5432"
+  mq:
+    extends:
+      file: docker-services.yml
+      service: mq
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2
+    restart: "always"
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9201:9200"
+      - "9301:9300"
+  app:
+    extends:
+      file: docker-services.yml
+      service: app
+    environment:
+      # Ports map to internal ones
+      - "INVENIO_CACHE_TYPE=redis"
+      - "INVENIO_CACHE_REDIS_URL=redis://cache:6379/0"
+      - "INVENIO_ACCOUNTS_SESSION_REDIS_URL=redis://cache:6379/1"
+      - "INVENIO_BROKER_URL=amqp://guest:guest@mq:5672/"
+      - "INVENIO_CELERY_BROKER_URL=amqp://guest:guest@mq:5672/"
+      - "INVENIO_CELERY_RESULT_BACKEND=redis://cache:6379/2"
+      - "INVENIO_SEARCH_ELASTIC_HOSTS=['es:9200']"
+      - "INVENIO_SECRET_KEY=CHANGE_ME"
+      - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://cd2h-repo-project:cd2h-repo-project@db/cd2h-repo-project"
+      - "INVENIO_WSGI_PROXIES=2"
+      - "INVENIO_RATELIMIT_STORAGE_URL=redis://cache:6379/3"
+    command: ./run-ci-tests.sh
+    image: cd2h-repo-project-ci
+    # TODO: 'links' are deprecated, use 'networks'
+    links:
+      - cache
+      - es
+      - mq
+      - db

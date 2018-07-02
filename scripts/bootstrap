@@ -8,10 +8,18 @@
 
 set -e
 
+# Install dependencies
+## Python
+# TODO: Update to pipenv
+# TODO: COPY Pipfile before copying rest of source code
 pip install -r requirements.txt
 pip install -e .[all]
 
-npm update && npm install --silent -g node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
+## Nodejs
+# Need to switch node user to root to install globally correctly
+npm -g config set user root
+npm update
+npm install --silent -g node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
 
 CWD=`pwd`
 invenio npm

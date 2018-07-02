@@ -8,13 +8,20 @@
 FROM python:3.5
 
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y git curl vim
-RUN pip install --upgrade setuptools wheel pip uwsgi uwsgitop uwsgi-tools
+RUN apt-get install -y git curl vim unzip
+RUN pip install --upgrade setuptools wheel pip uwsgi uwsgitop uwsgi-tools pipenv
 
 # Install Node
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
-RUN npm update
+
+# TODO: Enable End-to-end testing with either chromedriver or geckodriver
+# (headless)
+# Install chromedriver
+# TODO: fetch the *latest* release
+# RUN curl --silent --remote-name --location https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip
+# Note that unzip has no long options
+# RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 
 RUN python -m site
 RUN python -m site --user-site
@@ -27,6 +34,7 @@ ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
 RUN mkdir -p ${WORKING_DIR}/src
 COPY ./ ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
+
 
 # Install/create static files
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
@@ -42,3 +50,5 @@ RUN chgrp -R 0 ${WORKING_DIR} && \
 RUN useradd invenio --uid 1000 --gid 0 && \
     chown -R invenio:root ${WORKING_DIR}
 USER 1000
+
+EXPOSE 5000
