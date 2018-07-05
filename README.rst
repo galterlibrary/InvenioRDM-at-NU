@@ -26,48 +26,106 @@ https://cd2h-repo-project.readthedocs.io/
 Development
 ===================
 
-To run the project on your local development machine:
+To run the project on your local development machine. Follow these
+instructions:
 
-    # Create a virtualenv (the name does not matter)
-    mkvirtualenv my-repository-venv
+1.  On Linux, add the following to `/etc/sysctl.conf` on your local machine
+    (host machine):
 
-    # Start the containers for the services
-    docker-compose up --detach
+    .. code-block::
 
-    # Start the celery worker
-    $ workon my-repository-venv
-    (my-repository-venv)$ celery worker --app invenio_app.celery --loglevel INFO
+        # Memory mapped max size set for ElasticSearch
+        vm.max_map_count=262144
 
-    # ...in a new terminal, start the flask development server
-    $ workon my-repository-venv
-    (my-repository-venv)$ ./scripts/server
+    On macOS, do the following:
+
+    .. code-block::
+
+        screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty
+        # and in the shell
+        sysctl -w vm.max_map_count=262144
+
+2.  Start the containers for the services
+
+    .. code-block::
+
+        $ docker-compose up --detach
+
+3.  Create a virtualenv (the name does not matter)
+
+    .. code-block::
+
+        $ mkvirtualenv my-repository-venv
+
+
+4.  Start the celery worker
+
+    .. code-block:: console
+
+        $ workon my-repository-venv
+        (my-repository-venv)$ celery worker --app invenio_app.celery --loglevel INFO
+
+5.  ...in a new terminal, start the flask development server
+
+    .. code-block:: console
+
+        $ workon my-repository-venv
+        (my-repository-venv)$ ./scripts/server
 
 This will create and run 4 docker containers, will start the Celery queue service
 and will start a development server on your host machine.
 
 Once you are done you can:
 
-    # Stop and remove the containers:
-    docker-compose down
+-   Stop and remove the containers:
 
-    # In the terminal where you started the celery worker
-    ^C
+    .. code-block:: console
 
-    # ... in the new terminal where you started the development server
-    ^C
+        docker-compose down
 
-Continuous Integration
+-   In the terminal where you started the celery worker
+
+    .. code-block:: console
+
+        ^C
+
+-   ... in the new terminal where you started the development server
+
+    .. code-block:: console
+
+        ^C
+
+Continuous Integration (CI)
 ===================
 
-Set enough virtual memory for Elasticsearch
+To setup the CI machine, make sure it has enough virtual memory
+for Elasticsearch. Add the following to `/etc/sysctl.conf` on the machine:
 
-    sysctl -w vm.max_map_count=262144
+    .. code-block::
+
+        # Memory mapped max size set for ElasticSearch
+        vm.max_map_count=262144
+
+To make the change immediate on a live machine:
+
+    .. code-block::
+
+        sysctl -w vm.max_map_count=262144
 
 
 Production
 ===================
 
-Set enough virtual memory for Elasticsearch
+To setup the Production machine, make sure it has enough virtual memory
+for Elasticsearch. Add the following to `/etc/sysctl.conf` on the machine:
 
-    sysctl -w vm.max_map_count=262144
+    .. code-block::
 
+        # Memory mapped max size set for ElasticSearch
+        vm.max_map_count=262144
+
+To make the change immediate on a live machine:
+
+    .. code-block::
+
+        sysctl -w vm.max_map_count=262144
