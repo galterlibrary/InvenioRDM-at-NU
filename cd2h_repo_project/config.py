@@ -108,8 +108,10 @@ CELERY_BEAT_SCHEDULE = {
 # Database
 # ========
 #: Database URI including user and password
-SQLALCHEMY_DATABASE_URI = \
-    'postgresql+psycopg2://cd2h-repo-project:cd2h-repo-project@localhost/cd2h-repo-project'
+SQLALCHEMY_DATABASE_URI = (
+    'postgresql+psycopg2://cd2h-repo-project:'
+    'cd2h-repo-project@localhost/cd2h-repo-project'
+)
 
 # JSONSchemas
 # ===========
