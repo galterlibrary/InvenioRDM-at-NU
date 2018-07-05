@@ -64,5 +64,8 @@ target/
 # Vim swapfiles
 .*.sw?
 
+# Environment files
+*.env
+
 # SublimeText
 *.sublime-*

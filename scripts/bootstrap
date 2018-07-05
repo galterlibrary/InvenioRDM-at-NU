@@ -8,13 +8,6 @@
 
 set -e
 
-# Install dependencies
-## Python
-# TODO: Update to pipenv
-# TODO: COPY Pipfile before copying rest of source code
-pip install -r requirements.txt
-pip install -e .[all]
-
 ## Nodejs
 # Need to switch node user to root to install globally correctly
 npm -g config set user root

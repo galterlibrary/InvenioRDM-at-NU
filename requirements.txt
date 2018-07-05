@@ -13,3 +13,5 @@
 #
 # You can read more about pip-compile command here:
 # https://github.com/jazzband/pip-tools#example-usage-for-pip-compile
+
+git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/cd2h-datamodel.git@1.0.1#egg=cd2h_datamodel

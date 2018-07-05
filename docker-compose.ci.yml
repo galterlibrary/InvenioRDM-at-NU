@@ -44,19 +44,12 @@ services:
     extends:
       file: docker-services.yml
       service: app
-    environment:
-      # Ports map to internal ones
-      - "INVENIO_CACHE_TYPE=redis"
-      - "INVENIO_CACHE_REDIS_URL=redis://cache:6379/0"
-      - "INVENIO_ACCOUNTS_SESSION_REDIS_URL=redis://cache:6379/1"
-      - "INVENIO_BROKER_URL=amqp://guest:guest@mq:5672/"
-      - "INVENIO_CELERY_BROKER_URL=amqp://guest:guest@mq:5672/"
-      - "INVENIO_CELERY_RESULT_BACKEND=redis://cache:6379/2"
-      - "INVENIO_SEARCH_ELASTIC_HOSTS=['es:9200']"
-      - "INVENIO_SECRET_KEY=CHANGE_ME"
-      - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://cd2h-repo-project:cd2h-repo-project@db/cd2h-repo-project"
-      - "INVENIO_WSGI_PROXIES=2"
-      - "INVENIO_RATELIMIT_STORAGE_URL=redis://cache:6379/3"
+    build:
+      context: ./
+      args:
+        - GITHUB_PRIVATE_TOKEN=${GITHUB_PRIVATE_TOKEN}
+    env_file:
+      - ci.env
     command: ./run-ci-tests.sh
     image: cd2h-repo-project-ci
     # TODO: 'links' are deprecated, use 'networks'
