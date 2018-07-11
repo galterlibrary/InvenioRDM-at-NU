@@ -5,11 +5,26 @@
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-FROM python:3.5
+FROM python:3.5 as builder
 
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y git curl vim unzip
 RUN pip install --upgrade setuptools wheel pip uwsgi uwsgitop uwsgi-tools pipenv
+
+ARG GITHUB_PRIVATE_TOKEN
+# Install dependencies
+## Python
+# TODO: Update to pipenv / Pipfile(.lock)
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+
+# Using a multi-stage build to:
+# - produce a Docker image containing no sensitive information
+# - eventually slim down image size
+# - (by-product) leverages layer caching for faster image builds
+FROM python:3.5
+
+COPY --from=builder /usr/local/lib/python3.5/site-packages /usr/local/lib/python3.5/site-packages
 
 # Install Node
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
@@ -38,6 +53,7 @@ WORKDIR ${WORKING_DIR}/src
 
 # Install/create static files
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
+RUN pip install -e .[all]
 RUN ./scripts/bootstrap
 
 # copy uwsgi config files
