@@ -19,15 +19,18 @@
 
 Invenio-based Digital Library for the CD2H
 
-Further documentation is available on
-https://cd2h-repo-project.readthedocs.io/
+Documentation on Invenio is available on
+https://invenio.readthedocs.io/en/latest/
 
 
-Development
+Local Development
 ===================
 
-To run the project on your local development machine. Follow these
-instructions:
+Initial Setup
+-------------
+
+To setup the project on your local development machine, follow these
+instructions. You only need to execute them once to setup your environment:
 
 1.  On Linux, add the following to `/etc/sysctl.conf` on your local machine
     (host machine):
@@ -45,43 +48,97 @@ instructions:
         # and in the shell
         sysctl -w vm.max_map_count=262144
 
-2.  Start the containers for the services
-
-    .. code-block::
-
-        $ docker-compose up --detach
-
-3.  Create a virtualenv (the name does not matter)
+2.  Create a virtualenv (the name does not matter)
 
     .. code-block::
 
         $ mkvirtualenv my-repository-venv
 
+    This is one way to create such a Python virtual environment. There are other
+    ways too.
 
-4.  Start the celery worker
+3.  Install Python dependencies and current package
+
+    Our project uses some of our private repositories. You will either need
+    the `GITHUB_PRIVATE_TOKEN` value to download them or you can change the
+    requirements.txt to clone the repositories directly.
+
+    For the first option, you can ask your colleagues for the GITHUB_PRIVATE_TOKEN
+    or you can find it on our Jenkins CI that uses it. Once you have that
+    value, run:
+
+    .. code-block::
+
+        (my-repository-venv)$ GITHUB_PRIVATE_TOKEN=<retrieved value> pip install --requirement requirements.txt
+
+    For the second option, for every line that contains
+    `GITHUB_PRIVATE_TOKEN` in the `requirements.txt` file, replace it by:
+
+    .. code-block::
+
+        git+ssh://git@github.com/<owner>/<repo>.git@<tag>#egg=<desired egg name>
+
+    where `<owner>`, `<repo>` and so on are taken from the line to be replaced.
+    Then you should be able to install the dependencies in the
+    `requirements.txt` file (given that you have access to our private repositories
+    if you are reading this) by running:
+
+    .. code-block::
+
+        (my-repository-venv)$ pip install --requirement requirements.txt
+
+    The `GITHUB_PRIVATE_TOKEN` value is sensitive, so it is not included in any
+    repository.
+
+    Irrespective of the option you chose above, install the current package
+    after you installed the dependencies:
+
+    .. code-block::
+
+        (my-repository-venv)$ pip install --editable .[all]
+
+4.  Execute the Invenio initial bootstrap code in the virtual environment
+
+    .. code-block::
+
+        (my-repository-venv)$ ./scripts/bootstrap
+
+5.  Start the containers for the services
+
+    .. code-block::
+
+        $ docker-compose up --detach
+
+    Note you don't have to be in a virtual environment to do so.
+    This will create and run 4 docker containers. These containers will then
+    keep themselves running even across reboots.
+
+Day to day development
+----------------------
+
+Once you have setup your environment as above, your day to day work will
+involve running these commands to develop / run the application on your local
+machine.
+
+1.  Start the celery worker inside your virtual environment
 
     .. code-block:: console
 
         $ workon my-repository-venv
         (my-repository-venv)$ celery worker --app invenio_app.celery --loglevel INFO
 
-5.  ...in a new terminal, start the flask development server
+2.  ...in a new terminal, start the flask development server
 
     .. code-block:: console
 
         $ workon my-repository-venv
         (my-repository-venv)$ ./scripts/server
 
-This will create and run 4 docker containers, will start the Celery queue service
-and will start a development server on your host machine.
+This will start the Celery queue service in the background and the development
+server at https://localhost:5000 .
 
 Once you are done you can:
 
--   Stop and remove the containers:
-
-    .. code-block:: console
-
-        docker-compose down
 
 -   In the terminal where you started the celery worker
 
@@ -94,6 +151,13 @@ Once you are done you can:
     .. code-block:: console
 
         ^C
+
+If you want to permanently bring the containers down, you can do:
+
+    .. code-block:: console
+
+        docker-compose down
+
 
 Continuous Integration (CI)
 ===================
