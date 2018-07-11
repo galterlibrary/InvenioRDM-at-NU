@@ -13,4 +13,4 @@ def test_frontpage(live_server, browser):
         .find_element_by_tag_name('h1').text
     )
 
-    assert "Welcome to CD2H Repo Project." == h1_text
+    assert h1_text == "This is a barebones Invenio install."

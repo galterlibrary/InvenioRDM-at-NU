@@ -8,7 +8,7 @@
 FROM python:3.5 as builder
 
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y git curl vim unzip
+RUN apt-get install -y git
 RUN pip install --upgrade setuptools wheel pip uwsgi uwsgitop uwsgi-tools pipenv
 
 ARG GITHUB_PRIVATE_TOKEN
@@ -28,16 +28,16 @@ COPY --from=builder /usr/local/lib/python3.5/site-packages /usr/local/lib/python
 
 # Install Node
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs gdebi-core unzip
 
-# TODO: Enable End-to-end testing with either chromedriver or geckodriver
-# (headless)
-# Install chromedriver
-# TODO: fetch the *latest* release
-# RUN curl --silent --remote-name --location https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip
+# Install Chrome+chromedriver
+RUN curl --silent --remote-name --location https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN gdebi --non-interactive google-chrome-stable_current_amd64.deb
+RUN curl --silent --remote-name --location https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip
 # Note that unzip has no long options
-# RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
+RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 
+# TODO: These are useless, remove
 RUN python -m site
 RUN python -m site --user-site
 
