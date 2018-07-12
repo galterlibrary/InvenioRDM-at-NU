@@ -55,6 +55,7 @@ def browser(request):
     options = ChromeOptions()
     options.headless = True
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--no-sandbox")
     driver = Chrome(options=options)
 
     yield driver
