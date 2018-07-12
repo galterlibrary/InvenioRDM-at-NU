@@ -54,6 +54,7 @@ def browser(request):
     # just Chrome for now
     options = ChromeOptions()
     options.headless = True
+    options.add_argument("--disable-dev-shm-usage")
     driver = Chrome(options=options)
 
     yield driver
