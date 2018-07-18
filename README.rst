@@ -97,11 +97,12 @@ instructions. You only need to execute them once to setup your environment:
 
         (my-repository-venv)$ pip install --editable .[all]
 
-4.  Execute the Invenio initial bootstrap code in the virtual environment
+4.  Execute the Invenio initial bootstrap and setup code in the virtual environment
 
     .. code-block::
 
         (my-repository-venv)$ ./scripts/bootstrap
+        (my-repository-venv)$ ./scripts/setup
 
 5.  Start the containers for the services
 
@@ -193,3 +194,8 @@ To make the change immediate on a live machine:
     .. code-block::
 
         sysctl -w vm.max_map_count=262144
+
+# TODO: Remove the following by having the deployment script do it for us
+On initial deployment, run the setup script:
+
+    (virtualenv)$ ./scripts/setup

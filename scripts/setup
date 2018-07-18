@@ -10,12 +10,13 @@ set -e
 
 # Clean redis
 invenio shell --no-term-title -c "import redis; redis.StrictRedis.from_url(app.config['CACHE_REDIS_URL']).flushall(); print('Cache cleared')"
-invenio db destroy --yes-i-know
+# Commented out the below destructive actions for now
+# invenio db destroy --yes-i-know
 invenio db init create
-invenio index destroy --force --yes-i-know
+# invenio index destroy --force --yes-i-know
 invenio index init --force
-invenio index queue init purge
+# invenio index queue init purge
 
-# Create admin role to rectict access
+# Create admin role to restrict access
 invenio roles create admin
 invenio access allow superuser-access role admin
