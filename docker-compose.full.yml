@@ -29,6 +29,8 @@ services:
     extends:
       file: docker-services.yml
       service: app
+    env_file:
+      - production.env
     command: uwsgi /opt/cd2h-repo-project/var/instance/uwsgi_ui.ini
     image: cd2h-repo-project-web-ui
     ports:
@@ -45,6 +47,8 @@ services:
     extends:
       file: docker-services.yml
       service: app
+    env_file:
+      - production.env
     command: uwsgi /opt/cd2h-repo-project/var/instance/uwsgi_rest.ini
     image: cd2h-repo-project-web-api
     ports:
@@ -61,6 +65,8 @@ services:
     extends:
       file: docker-services.yml
       service: app
+    env_file:
+      - production.env
     restart: "always"
     command: "celery worker -A invenio_app.celery --loglevel=INFO"
     image: cd2h-repo-project-worker
