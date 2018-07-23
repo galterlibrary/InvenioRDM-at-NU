@@ -67,6 +67,7 @@ target/
 
 # Environment files
 *.env
+!default.env
 
 # SublimeText
 *.sublime-*
