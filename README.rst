@@ -195,7 +195,20 @@ To make the change immediate on a live machine:
 
         sysctl -w vm.max_map_count=262144
 
+Before you spin up all the production containers, retrieve the `GITHUB_PRIVATE_TOKEN`
+value (see above) and export it to make it available at image build time. Run
+`docker-compose` to spin everything up:
+
+    .. code-block::
+
+        GITHUB_PRIVATE_TOKEN=<value> docker-compose -f docker-compose.full.yml up --detach
+
+If you rebuild an image (`docker build .`), the above `docker-compose` command
+will pick it up!
+
 # TODO: Remove the following by having the deployment script do it for us
-On initial deployment, run the setup script:
+After initial deployment, run the setup script:
 
     (virtualenv)$ ./scripts/setup
+
+This script will build the database tables and initialize the index.
