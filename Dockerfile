@@ -25,8 +25,11 @@ RUN pip install -r requirements.txt
 FROM python:3.5
 
 COPY --from=builder /usr/local/lib/python3.5/site-packages /usr/local/lib/python3.5/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Install Node
+RUN apt-get update -y && apt-get upgrade -y
+
+# Install needed tools
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs gdebi-core unzip
 
