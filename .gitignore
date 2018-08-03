@@ -12,6 +12,7 @@ __pycache__/
 .Python
 env/
 build/
+!/docker/build/.gitkeep
 develop-eggs/
 dist/
 downloads/

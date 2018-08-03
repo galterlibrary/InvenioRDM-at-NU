@@ -155,9 +155,9 @@ Once you are done you can:
 
 If you want to permanently bring the containers down, you can do:
 
-    .. code-block:: console
+.. code-block:: console
 
-        docker-compose down
+    docker-compose down
 
 
 Continuous Integration (CI)
@@ -166,49 +166,96 @@ Continuous Integration (CI)
 To setup the CI machine, make sure it has enough virtual memory
 for Elasticsearch. Add the following to `/etc/sysctl.conf` on the machine:
 
-    .. code-block::
+.. code-block::
 
-        # Memory mapped max size set for ElasticSearch
-        vm.max_map_count=262144
+    # Memory mapped max size set for ElasticSearch
+    vm.max_map_count=262144
 
 To make the change immediate on a live machine:
 
-    .. code-block::
+.. code-block::
 
-        sysctl -w vm.max_map_count=262144
+    sysctl -w vm.max_map_count=262144
 
 
-Production
+Production (RHEL setup)
 ===================
 
-To setup the Production machine, make sure it has enough virtual memory
-for Elasticsearch. Add the following to `/etc/sysctl.conf` on the machine:
+TODO: Automate these
+
+Initial Setup
+-------------
+
+1. ssh into machine
+2.  Install `docker` and `docker-compose` on machine:
+
+    .. code-block::
+
+        # Do the following as root
+
+        # Install docker
+        yum install docker
+
+        # Install docker-compose
+        curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
+
+        # Add deploy user to dockerroot group
+        usermod --append --groups dockerroot deploy
+
+        # Edit `/etc/docker/daemon.json` to contain
+
+            {
+                "live-restore": true,
+                "group": "dockerroot"
+            }
+
+        # Enable + start docker
+        systemctl enable docker
+        systemctl start docker
+
+3. git clone this project (using your own credentials for now)
+4.  Make sure the production machine has enough virtual memory for Elasticsearch.
+    Add the following to `/etc/sysctl.conf` on the machine:
 
     .. code-block::
 
         # Memory mapped max size set for ElasticSearch
         vm.max_map_count=262144
 
-To make the change immediate on a live machine:
+    To make the change immediate on a live machine:
 
     .. code-block::
 
         sysctl -w vm.max_map_count=262144
 
-Before you spin up all the production containers, retrieve the `GITHUB_PRIVATE_TOKEN`
-value (see above) and export it to make it available at image build time. Run
-`docker-compose` to spin everything up:
+5.  Once you have retrieved the `GITHUB_PRIVATE_TOKEN` value (see above), launch
+    the multi-stage image build and spin up the containers:
 
     .. code-block::
 
-        GITHUB_PRIVATE_TOKEN=<value> docker-compose -f docker-compose.full.yml up --detach
+        ./docker-compose.sh <GITHUB_PRIVATE_TOKEN> docker-compose.prod.yml
 
-If you rebuild an image (`docker build .`), the above `docker-compose` command
-will pick it up!
+6.  Connect to a web container and run the one time setup:
 
-# TODO: Remove the following by having the deployment script do it for us
-After initial deployment, run the setup script:
+    .. code-block::
 
-    (virtualenv)$ ./scripts/setup
+        docker exec -it cd2h-repo-project_web-ui_1 /bin/bash
+        ./scripts/setup
 
-This script will build the database tables and initialize the index.
+Subsequent Deployments (updates)
+--------------------------------
+
+1. ssh into production machine
+2.  Run update script:
+
+    .. code-block::
+
+        docker exec -it cd2h-repo-project_web-ui_1 /bin/bash
+        ./scripts/update
+
+    This script should:
+
+    * run DB migrations
+    * run indexing updates
+    * install missing requirements

@@ -5,32 +5,21 @@
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-FROM python:3.5 as builder
-
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y git
-RUN pip install --upgrade setuptools wheel pip uwsgi uwsgitop uwsgi-tools pipenv
-
-ARG GITHUB_PRIVATE_TOKEN
-# Install dependencies
-## Python
-# TODO: Update to pipenv / Pipfile(.lock)
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
-
-# Using a multi-stage build to:
+# Multi-stage image creation
+# This is the 2nd stage i.e. the Dockerfile for the actual running app.
+# Multi-stage image creation is done to:
 # - produce a Docker image containing no sensitive information
 # - eventually slim down image size
-# - (by-product) leverages layer caching for faster image builds
-FROM python:3.5
+# - (by-product) leverage layer caching for faster image builds
+# - in 2 files because Docker 1.13 does not allow it in a single file
+# It is done in 2 files because Docker 1.13 does not allow it in a single file.
 
-COPY --from=builder /usr/local/lib/python3.5/site-packages /usr/local/lib/python3.5/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+FROM python:3.5
 
 RUN apt-get update -y && apt-get upgrade -y
 
 # Install needed tools
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs gdebi-core unzip
 
 # Install Chrome+chromedriver
@@ -40,27 +29,24 @@ RUN curl --silent --remote-name --location https://chromedriver.storage.googleap
 # Note that unzip has no long options
 RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 
-# TODO: These are useless, remove
-RUN python -m site
-RUN python -m site --user-site
-
-# Install Invenio
+## Copy source code
 ENV WORKING_DIR=/opt/cd2h-repo-project
-ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
-
-# copy everything inside /src
 RUN mkdir -p ${WORKING_DIR}/src
 COPY ./ ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
 
-
-# Install/create static files
+## Copy uwsgi config files
+ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
+COPY ./docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
+
+## Copy built dependencies from previous stage
+COPY docker/build/site-packages /usr/local/lib/python3.5/site-packages
+COPY docker/build/bin /usr/local/bin
+
+## Install instance
 RUN pip install -e .[all]
 RUN ./scripts/bootstrap
-
-# copy uwsgi config files
-COPY ./docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
 
 # Set folder permissions
 RUN chgrp -R 0 ${WORKING_DIR} && \
