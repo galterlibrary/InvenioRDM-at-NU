@@ -1,0 +1,26 @@
+{% extends "cd2hrepo_theme/page.html" %}
+
+{% set title = config.THEME_SITENAME + " - Medical knowledge. Emerging." %}
+
+{%- block page_body %}
+<div id="frontPageBody" class="container body-container">
+  <div class="jumbotron">
+    <div class="row">
+    <div class="col-md-6 search">
+      <form action="{{config.THEME_SEARCH_ENDPOINT}}" role="search"
+            class="input-group input-group-lg">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" name="q" placeholder="Start your Research">
+      </form>
+    </div>
+
+    <div class="col-md-6 share">
+        <a href="{{ url_for('cd2h_metadata_upload.create') }}"
+           class="btn btn-primary btn-lg">
+          Share your Research
+       </a>
+    </div>
+    </div>
+  </div>
+</div>
+{%- endblock page_body %}

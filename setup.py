@@ -78,18 +78,23 @@ setup(
     include_package_data=True,
     platforms='any',
     entry_points={
+        'invenio_config.module': [
+            'cd2h_repo_project = cd2h_repo_project.config',
+        ],
         'console_scripts': [
             'cd2h-repo-project = invenio_app.cli:cli',
         ],
         'invenio_base.blueprints': [
             'cd2h_repo_project = cd2h_repo_project.views:blueprint',
+            'cd2hrepo_theme = cd2h_repo_project.modules.theme.views:blueprint',
+            'cd2hrepo_frontpage = cd2h_repo_project.modules.frontpage.views:blueprint',
         ],
-        'invenio_config.module': [
-            'cd2h_repo_project = cd2h_repo_project.config',
+        'invenio_assets.bundles': [
+            'cd2hrepo_theme_css = cd2h_repo_project.modules.theme.bundles:css',
         ],
         'invenio_i18n.translations': [
             'messages = cd2h_repo_project',
-        ]
+        ],
     },
     extras_require=extras_require,
     install_requires=install_requires,

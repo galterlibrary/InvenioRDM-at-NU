@@ -1,0 +1,75 @@
+<header id="header">
+  <div class="container">
+    <div class="row">
+      {%- block organization_header %}
+      <div id='brandTop' class="col-md-12">
+        <div id='brandTopLogo' class='hidden-xs hidden-sm col-md-6'>
+          <a class='institutionLogo' href='https://www.feinberg.northwestern.edu/'>
+            <img src="{{ url_for('static', filename='img/logos/northwestern-medicine.svg') }}" alt='Northwestern Medicine'>
+          </a>
+        </div>
+
+        <div id='brandTopRightLinks' class='hidden-xs hidden-sm col-md-6 text-right'>
+          <a href='https://www.nm.org'>Northwestern Medicine</a> |
+          <a href='https://www.northwestern.edu'>Northwestern University</a> |
+          <a href="https://www.feinberg.northwestern.edu/faculty-profiles/index.html">Faculty Profiles</a>
+        </div>
+
+        <div id='brandTopMobile' class='col-xs-12 hidden-md hidden-lg'>
+          <span>Northwestern University</span>
+        </div>
+      </div>
+      {% endblock %}
+
+      {%- block product_header %}
+      <div id='brandBottom' class="col-md-12">
+        <div id="productTitle" class='col-xs-12 col-sm-9 col-md-9 col-lg-10'>
+          <a href='/'>{{ config.THEME_SITENAME }}</a>
+        </div>
+
+        {%- if config.ACCOUNTS %}
+        <div id="productLogin" class='hidden-xs col-sm-3 col-md-3 col-lg-2 text-right'>
+          {%- if not current_user.is_authenticated %}
+          <form>
+            <a href="{{ url_for_security('login', next=request.path) }}"
+               class="btn btn-default">
+              <i class="fa fa-sign-in"></i> {{_('Log in')}}
+            </a>
+          </form>
+          {%- else %}
+          <div>
+          {%- if config.USERPROFILES %}
+            <div class="btn-group">
+              <a class="btn btn-default" href="{{ url_for('invenio_userprofiles.profile') }}">
+                <i class="fa fa-user"></i> {{current_user.email}}
+              </a>
+              <button type="button" class="btn btn-default dropdown-toggle"
+                      data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                {%- for item in current_menu.submenu('settings').children if item.visible %}
+                <li><a href="{{ item.url }}">{{ item.text|safe }}</a></li>
+                {%- endfor %}
+                <li class="divider"></li>
+                <li>
+                  <a href="{{url_for_security('logout')}}">
+                    <i class="fa fa-sign-out"></i> {{_('Log out')}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          {%- else %}
+          <a href="{{ url_for_security('logout') }}" class="btn btn-default">
+            <i class="fa fa-sign-out"></i> {{_('Log out')}}
+          </a>
+          {%- endif %}
+          </div>
+          {%- endif %}
+        </div>
+        {%- endif %}
+      </div>
+      {% endblock %}
+    </div>
+  </div>
+</header>

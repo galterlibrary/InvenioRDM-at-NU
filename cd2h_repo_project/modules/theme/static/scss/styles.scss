@@ -1,0 +1,18 @@
+
+// @import "variables";
+
+// Setting the path to fonts files.
+$icon-font-path: "/static/node_modules/bootstrap-sass/assets/fonts/bootstrap/";
+$fa-font-path: "/static/node_modules/font-awesome/fonts";
+
+@import "../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "../node_modules/font-awesome/scss/font-awesome";
+
+// @import "type";
+// @import "navbar";
+@import "body";
+// @import "cover";
+@import "header";
+@import "footer";
+// @import "input-icon";
+@import "frontpage";

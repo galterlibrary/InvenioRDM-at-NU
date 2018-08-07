@@ -159,6 +159,24 @@ If you want to permanently bring the containers down, you can do:
 
     docker-compose down
 
+To add another entrypoint to the setup.py (to integrate a module) and have it
+take effect:
+
+1.  Modify `setup.py`
+2.  Stop the development server and/or celery service
+3.  Re-install this project in your virtualenv:
+
+    .. code-block:: console
+
+        (my-repository-venv)$ pip install --editable .[all]
+
+To run migrations, install new npm packages added via Bundles or collect/build
+*new* assets:
+
+    .. code-block:: console
+
+        (my-repository-venv)$ ./scripts/update
+
 
 Continuous Integration (CI)
 ===================
