@@ -177,6 +177,27 @@ To run migrations, install new npm packages added via Bundles or collect/build
 
         (my-repository-venv)$ ./scripts/update
 
+Running tests
+~~~~~~~~~~~~~
+
+To run regular tests (no end-to-end tests):
+
+.. code-block:: console
+
+    (my-repository-venv)$ ./run-tests.sh
+
+To run end-to-end (E2E) tests (which are run by the CI):
+
+Install the `Chrome browser <https://www.google.com/chrome/>`_ and
+`chromedriver <https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip>`_
+on your machine to directories on your `PATH`. This is a one-time setup.
+
+Then, run the CI tests (they enable end-to-end testing):
+
+.. code-block:: console
+
+    (my-repository-venv)$ ./run-ci-tests.sh
+
 
 Continuous Integration (CI)
 ===================

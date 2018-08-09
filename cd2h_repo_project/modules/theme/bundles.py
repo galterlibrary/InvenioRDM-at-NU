@@ -1,6 +1,7 @@
+"""JS/CSS bundles for theme."""
+
 from flask_assets import Bundle
 from invenio_assets import NpmBundle
-
 
 css = NpmBundle(
     Bundle(

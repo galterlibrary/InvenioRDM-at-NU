@@ -1,5 +1,6 @@
-from flask import current_app, flash, Blueprint, render_template
+"""CD2HRepo frontpage blueprint."""
 
+from flask import Blueprint, current_app, flash, render_template
 
 blueprint = Blueprint(
     'cd2hrepo_frontpage',

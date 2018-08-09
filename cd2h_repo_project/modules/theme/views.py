@@ -1,5 +1,6 @@
-from flask import Blueprint
+"""Theme blueprint in order for template and static files to be loaded."""
 
+from flask import Blueprint
 
 blueprint = Blueprint(
     'cd2hrepo_theme',
