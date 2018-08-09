@@ -5,9 +5,10 @@
 # Arguments
 #   <GITHUB_PRIVATE_TOKEN>
 #   <docker-compose file to use: docker-compose.ci.yml OR docker-compose.prod.yml>
+#   <option>* : 0 or more option flags to pass to docker-compose
 
 if [[ "$#" -lt 2 ]]; then
-    echo "USAGE: docker-compose.sh <GITHUB_PRIVATE_TOKEN> <docker-compose.ci.yml | docker-compose.prod.yml>"
+    echo "USAGE: docker-compose.sh <GITHUB_PRIVATE_TOKEN> <docker-compose.ci.yml | docker-compose.prod.yml> [<option>...]"
     exit 1
 fi
 
@@ -24,4 +25,18 @@ sudo su -c "docker cp cd2h-repo-builder:/usr/local/bin/. $PWD/docker/build/bin"
 # Cleanup
 docker rm cd2h-repo-builder
 
-docker-compose --file $DOCKER_COMPOSE_FILE up --build --detach
+# Load CLI options
+DEFAULT_OPTIONS="--build --detach"
+OPTIONS=""
+if [[ -n "$3" ]]; then
+    while [[ -n "$3" ]]; do
+        OPTIONS+="$3 "
+        shift
+    done
+else
+    OPTIONS="$DEFAULT_OPTIONS"
+fi
+
+echo "docker-compose --file $DOCKER_COMPOSE_FILE up $OPTIONS"
+# Spin up containers
+docker-compose --file $DOCKER_COMPOSE_FILE up $OPTIONS
