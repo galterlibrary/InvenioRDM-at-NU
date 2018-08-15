@@ -42,13 +42,13 @@ I18N_LANGUAGES = [
 # Base templates
 # ==============
 #: Global base template.
-BASE_TEMPLATE = 'invenio_theme/page.html'
+BASE_TEMPLATE = 'cd2hrepo_theme/page.html'
 #: Cover page base template (used for e.g. login/sign-up).
 COVER_TEMPLATE = 'invenio_theme/page_cover.html'
 #: Footer base template.
-FOOTER_TEMPLATE = 'invenio_theme/footer.html'
+FOOTER_TEMPLATE = 'cd2hrepo_theme/footer.html'
 #: Header base template.
-HEADER_TEMPLATE = 'invenio_theme/header.html'
+HEADER_TEMPLATE = 'cd2hrepo_theme/header.html'
 #: Settings base template.
 SETTINGS_TEMPLATE = 'invenio_theme/page_settings.html'
 
@@ -56,12 +56,9 @@ SETTINGS_TEMPLATE = 'invenio_theme/page_settings.html'
 # ===================
 #: Site name
 THEME_SITENAME = _('CD2H Repo Project')
-#: Use default frontpage.
-THEME_FRONTPAGE = True
 #: Frontpage title.
 THEME_FRONTPAGE_TITLE = _('CD2H Repo Project')
-#: Frontpage template.
-THEME_FRONTPAGE_TEMPLATE = 'cd2h_repo_project/frontpage.html'
+# THEME_HEADER_LOGIN_TEMPLATE = 'invenio_theme/header_login.html'
 
 # Email configuration
 # ===================
@@ -73,7 +70,9 @@ MAIL_SUPPRESS_SEND = True
 # Assets
 # ======
 #: Static files collection method (defaults to copying files).
-COLLECT_STORAGE = 'flask_collect.storage.file'
+# COLLECT_STORAGE = 'flask_collect.storage.file'  # Production
+COLLECT_STORAGE = 'flask_collect.storage.link'
+
 
 # Accounts
 # ========
@@ -148,3 +147,26 @@ OAISERVER_ID_PREFIX = 'oai:cd2hrepo.galter.northwestern.edu:'
 
 #: Switches off incept of redirects by Flask-DebugToolbar.
 DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+# TODO: Review security policies so that we can develop locally correctly
+APP_DEFAULT_SECURE_HEADERS = {
+    'force_https': True,
+    'force_https_permanent': False,
+    'force_file_save': False,
+    'frame_options': 'sameorigin',
+    'frame_options_allow_from': None,
+    'strict_transport_security': False,  # changed
+    'strict_transport_security_preload': False,
+    'strict_transport_security_max_age': 31556926,  # One year in seconds
+    'strict_transport_security_include_subdomains': True,
+    # changed
+    'content_security_policy': {},
+    # {
+    #     'default-src': '\'self\'',
+    #     'style-src': '\'self\'',
+    # },
+    'content_security_policy_report_uri': None,
+    'content_security_policy_report_only': False,
+    'session_cookie_secure': True,
+    'session_cookie_http_only': True
+}

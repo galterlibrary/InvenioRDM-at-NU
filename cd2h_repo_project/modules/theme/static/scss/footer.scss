@@ -1,0 +1,110 @@
+@import 'common';
+
+
+#footer {
+  width: 100%;
+  background: $northwestern-color;
+  color: $white;
+  font-size: .8em;
+  font-family: Calibri, "Trebuchet MS", Helvetica, Arial, sans-serif;
+  letter-spacing: 0.4px;
+  line-height: 1.8em;
+  word-wrap: break-word;
+
+  .container .row {
+    padding-top: 2.16667%;
+  }
+
+  p {
+    margin: 1em 0;
+  }
+
+  a {
+    color: $white;
+    text-decoration: underline;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  img#nu-logo {
+    width: 170px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin: 10px 0px;
+    }
+  }
+
+  .social-icons {
+    .icon {
+      transition: all 0.4s ease;
+      background: $white;
+      font-size: 30px;
+      color: #514689;
+      background: #fff;
+      font-size: 30px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      margin-right: .5em;
+      padding: 0;
+      text-decoration: none;
+
+      &:hover {
+        color: #fff;
+        opacity: 1;
+      }
+    }
+
+    li {
+      float: left;
+    }
+
+    .fa-facebook:hover {
+      background-color: #004088;
+    }
+
+    .fa-twitter:hover {
+      background-color: #00abe3;
+    }
+
+    .fa-instagram:hover {
+      background-color: #517FA6;
+    }
+  }
+
+  .fa-mobile {
+    // line-height: inherit;
+    vertical-align: middle;
+  }
+
+  .visuallyhidden {
+    border: 0px none;
+    clip: rect(0px, 0px, 0px, 0px);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0px;
+    position: absolute;
+    width: 1px;
+  }
+
+  .coar-logo {
+    padding: 0;
+
+    img {
+      filter: drop-shadow(#fff 1px 1px 5px);
+    }
+
+    a {
+      padding: 0;
+    }
+  }
+}

@@ -1,0 +1,55 @@
+@import 'common';
+
+
+#header {
+  background: $northwestern-color;
+  color: $white;
+  min-height: 6em;
+
+  a {
+    color: $white;
+    font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
+
+    &:hover {
+      opacity: .7;
+      text-decoration: none;
+    }
+  }
+
+  .col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #brandTop {
+    margin: 15px 0;
+
+    .institutionLogo img {
+      width: 240px;
+      height: 40px;
+    }
+
+  }
+
+  #brandBottom {
+    border-top: 1px solid #7571b0;
+    margin: 15px 0;
+
+    #productTitle {
+      margin-top: 15px;
+      margin-bottom: 10px;
+
+      a {
+        font-family: "Open Sans", sans-serif;
+        font-size: 30px;
+      }
+    }
+
+    #productLogin {
+      margin-top: 15px;
+      a {
+        color: #333;
+      }
+    }
+  }
+}

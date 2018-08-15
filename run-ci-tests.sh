@@ -7,6 +7,8 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 export E2E=yes
+# Print the image to console!
+export E2E_OUTPUT='base64'
 export PATH=${WORKING_DIR}/bin/:$PATH
 pydocstyle cd2h_repo_project tests docs && \
 # TODO: replace with flake8 and flake8-import?

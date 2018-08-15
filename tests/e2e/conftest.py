@@ -16,6 +16,11 @@ import pytest
 from invenio_app.factory import create_app as create_ui_api
 from selenium.webdriver import Chrome, ChromeOptions
 
+SCREENSHOT_SCRIPT = """import base64
+with open('screenshot.png', 'wb') as fp:
+    fp.write(base64.b64decode('''{data}'''))
+"""
+
 
 @pytest.fixture(scope='module')
 def create_app():

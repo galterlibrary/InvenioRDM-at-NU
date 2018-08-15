@@ -1,0 +1,30 @@
+@import 'common';
+
+
+#frontPageBody {
+  .jumbotron {
+    background: url('/static/img/cd2h_hero_image.jpeg') no-repeat;
+    background-size: cover;
+    color: white;
+    min-height: 20em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .row {
+      width: 100%;
+
+      .share {
+        display: flex;
+        justify-content: center;
+      }
+
+      .search {
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+  }
+
+}

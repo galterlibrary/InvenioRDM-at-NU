@@ -1,0 +1,84 @@
+<footer id='footer'>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <h5>
+          <a id="nu-home" href="https://www.northwestern.edu/">
+            <img id="nu-logo" src="{{ url_for('static', filename='img/logos/northwestern-university.svg') }}" alt="Northwestern University Logo"/>
+          </a>
+        </h5>
+        <p>© 2018 Northwestern University</p>
+        <ul class="list-unstyled">
+          <li><a href="https://www.northwestern.edu/contact.html">Contact Northwestern University</a></li>
+          <li><a href="https://www.northwestern.edu/hr/careers/">Careers</a></li>
+          <li><a href="https://www.northwestern.edu/disclaimer.html">Disclaimer</a></li>
+          <li><a href="https://www.northwestern.edu/emergency/index.html">Campus Emergency Information</a></li>
+          <li><a href="https://www.northwestern.edu/policy-statements/index.html">University Policies</a></li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <h5><a href="https://www.feinberg.northwestern.edu">Northwestern University <br> Feinberg School of Medicine</a></h5>
+        <ul class="list-unstyled">
+          <li><a href="https://www.feinberg.northwestern.edu/giving/">Giving</a></li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3" itemscope itemtype='https://schema.org/Organization'>
+        <h5 itemprop='url'><a href="https://galter.northwestern.edu">Galter Health Sciences Library &amp; Learning Center</a></h5>
+        <dl>
+          <dt itemprop='name'>
+            <i class='fa fa-map-marker fa-lg'></i> Galter Health Sciences Library &amp; Learning Center
+          </dt>
+          <dd itemprop='address'>
+            303 E. Chicago Avenue, <span class='region'>Chicago, IL</span><span class='postal-code'> 60611</span>
+          </dd>
+          <dd itemprop='telephone'>
+            <span class='fa fa-mobile fa-2x'></span>
+            <span>312-503-8126</span>
+          </dd>
+          <dd itemprop='email'>
+            <i class='fa fa-paper-plane'></i>
+            <a href="https://galter.northwestern.edu/about-us/contact-us">
+              Contact Galter Reference
+            </a>
+          </dd>
+        </dl>
+        <!-- TODO: Show hours? -->
+        <div class='hours-container col-xs-12'>
+        </div>
+        <ul id='galter-social-icons' class='social-icons cf'>
+          <li itemprop='url'>
+            <a class='icon fa fa-facebook' data-original-title='Facebook'
+               href="https://www.facebook.com/galterlibrary">
+              <span class='visuallyhidden'>Facebook</span>
+            </a>
+          </li>
+          <li itemprop='url'>
+            <a class='icon fa fa-twitter' data-original-title='Twitter'
+               href="https://www.twitter.com/galterlibrary">
+              <span class='visuallyhidden'>Twitter</span>
+            </a>
+          </li>
+          <li itemprop='url'>
+            <a class='icon fa fa-instagram' data-original-title='Instagram'
+               href="https://www.instagram.com/galter_special_collections">
+              <span class='visuallyhidden'>Instagram</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <h5><a href="/">{{ config.THEME_SITENAME }}</a></h5>
+        <ul class="list-unstyled">
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+        <div class="coar-logo col-md-12">
+          <a id='coar-logo' href="https://www.coar-repositories.org"
+             class='col-sm-4 col-md-8'>
+            <img src="{{ url_for('static', filename='img/logos/COAR.png') }}"
+                 class='img-responsive pull-left' alt='Member of COAR'>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
