@@ -9,5 +9,9 @@
 pydocstyle cd2h_repo_project tests docs && \
 isort --recursive --check-only --diff && \
 check-manifest --ignore ".travis-*,docs/_build*" && \
-sphinx-build -qnNW docs docs/_build/html && \
+# sphinx-build doesn't have long options for all short options
+# -q : quiet,
+# -n : nit-picky mode,
+# -W : turn warnings into errors
+sphinx-build -qnW --no-color docs docs/_build/html && \
 python setup.py test

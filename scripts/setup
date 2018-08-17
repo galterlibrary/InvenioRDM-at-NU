@@ -17,6 +17,10 @@ invenio db init create
 invenio index init --force
 # invenio index queue init purge
 
-# Create admin role to restrict access
+# # Create admin role to restrict access
 invenio roles create admin
 invenio access allow superuser-access role admin
+
+# CD2H Repo specific starter setup
+## Create location to store files
+invenio cd2h_datamodel setup_storage
