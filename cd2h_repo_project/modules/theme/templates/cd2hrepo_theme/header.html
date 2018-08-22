@@ -23,12 +23,12 @@
 
       {%- block product_header %}
       <div id='brandBottom' class="col-md-12">
-        <div id="productTitle" class='col-xs-12 col-sm-9 col-md-9 col-lg-10'>
+        <div id="productTitle" class='col-xs-12 col-sm-7'>
           <a href='/'>{{ config.THEME_SITENAME }}</a>
         </div>
 
         {%- if config.ACCOUNTS %}
-        <div id="productLogin" class='hidden-xs col-sm-3 col-md-3 col-lg-2 text-right'>
+        <div id="productLogin" class='hidden-xs col-sm-5 text-right'>
           {%- if not current_user.is_authenticated %}
           <form>
             <a href="{{ url_for_security('login', next=request.path) }}"
