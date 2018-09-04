@@ -155,16 +155,24 @@ APP_DEFAULT_SECURE_HEADERS = {
     'force_file_save': False,
     'frame_options': 'sameorigin',
     'frame_options_allow_from': None,
-    'strict_transport_security': False,  # changed
+    'strict_transport_security': True,
     'strict_transport_security_preload': False,
     'strict_transport_security_max_age': 31556926,  # One year in seconds
     'strict_transport_security_include_subdomains': True,
     # changed
-    'content_security_policy': {},
-    # {
-    #     'default-src': '\'self\'',
-    #     'style-src': '\'self\'',
-    # },
+    'content_security_policy': {
+        'default-src': [
+            "'self'",
+            'https:',
+            "'unsafe-eval'",
+            'https://fonts.gstatic.com',
+        ],
+        'style-src': [
+            "'self'",
+            'https://fonts.googleapis.com',
+        ],
+        'object-src': ["'none'"],
+     },
     'content_security_policy_report_uri': None,
     'content_security_policy_report_only': False,
     'session_cookie_secure': True,
