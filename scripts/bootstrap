@@ -9,11 +9,11 @@
 set -e
 
 ## Nodejs
+# TODO:BUG: If you run this in a container you don't want sudo. If you run this
+# on your computer (at least Ubuntu) you want a sudo. Why?
 # Need to switch node user to root to install globally correctly
 npm -g config set user root
 npm update
-# BUG: If you run this in a container you don't want sudo. If you run this
-# on your computer (at least Ubuntu) you want a sudo?
 npm install --global --unsafe-perm node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
 
 CWD=`pwd`

@@ -15,7 +15,13 @@ You overwrite and set instance-specific configuration by either:
 
 from __future__ import absolute_import, print_function
 
+import os
+import sys
 from datetime import timedelta
+
+from invenio_deposit.utils import check_oauth2_scope_write, \
+    check_oauth2_scope_write_elasticsearch
+from invenio_records_rest.utils import allow_all, check_elasticsearch
 
 
 def _(x):
@@ -79,8 +85,7 @@ COLLECT_STORAGE = 'flask_collect.storage.link'
 #: Email address used as sender of account registration emails.
 SECURITY_EMAIL_SENDER = SUPPORT_EMAIL
 #: Email subject for account registration emails.
-SECURITY_EMAIL_SUBJECT_REGISTER = _(
-    "Welcome to CD2H Repo Project!")
+SECURITY_EMAIL_SUBJECT_REGISTER = _("Welcome to CD2H Repo Project!")
 #: Redis session storage URL.
 ACCOUNTS_SESSION_REDIS_URL = 'redis://localhost:6379/1'
 
@@ -178,6 +183,70 @@ APP_DEFAULT_SECURE_HEADERS = {
     'session_cookie_secure': True,
     'session_cookie_http_only': True
 }
+
+# Invenio-Deposit and CD2H-datamodel
+# ==================================
+# TODO: Setup this configuration in cd2h_datamodel/config.py
+#       and override if need be here
+DEPOSIT_DEFAULT_SCHEMAFORM = 'json/cd2h_datamodel/deposit_form.json'
+"""Default Angular Schema **Form** provided by external package cd2h_datamodel.
+"""
+
+DEPOSIT_DEFAULT_JSONSCHEMA = 'records/record-v0.1.0.json'
+"""Default JSON schema used for new deposits.
+"""
+
+_PID = 'pid(depid,record_class="cd2h_datamodel.api:Deposit")'
+
+DEPOSIT_REST_ENDPOINTS = {
+    'depid': {
+        'pid_type': 'depid',
+        'pid_minter': 'deposit',
+        'pid_fetcher': 'deposit',
+        'record_class': 'cd2h_datamodel.api:Deposit',
+        'record_loaders': {
+            'application/json': 'cd2h_datamodel.loaders:json_v1',
+        },
+        'files_serializers': {
+            'application/json': ('invenio_deposit.serializers'
+                                 ':json_v1_files_response'),
+        },
+        'record_serializers': {
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_response'),
+        },
+        'search_class': 'invenio_deposit.search:DepositSearch',
+        'search_serializers': {
+            'application/json': ('invenio_records_rest.serializers'
+                                 ':json_v1_search'),
+        },
+        'list_route': '/deposits/',
+        'indexer_class': None,
+        'item_route': '/deposits/<{0}:pid_value>'.format(_PID),
+        'file_list_route': '/deposits/<{0}:pid_value>/files'.format(_PID),
+        'file_item_route':
+            '/deposits/<{0}:pid_value>/files/<path:key>'.format(_PID),
+        'default_media_type': 'application/json',
+        'links_factory_imp': 'cd2h_datamodel.links:deposit_links_factory',
+        # TODO: Redefine these permissions to cover our auth needs
+        'create_permission_factory_imp': allow_all,
+        'read_permission_factory_imp': check_elasticsearch,
+        'update_permission_factory_imp': allow_all,
+        'delete_permission_factory_imp': allow_all,
+        'max_result_window': 10000,
+    },
+}
+"""Basic REST deposit configuration."""
+
+#: Files REST permission factory
+FILES_REST_PERMISSION_FACTORY = \
+    'cd2h_datamodel.permissions:files_permission_factory'
+
+FIXTURES_FILES_LOCATION = os.path.join(sys.prefix, 'var/instance/data')
+"""Location where uploaded files are saved"""
+
+FIXTURES_ARCHIVE_LOCATION = os.path.join(sys.prefix, 'var/instance/archive')
+"""Location where uploaded files are archived"""
 
 # Uncomment to NOT bundle js and css in order to debug in the browser.
 # ASSETS_DEBUG = True

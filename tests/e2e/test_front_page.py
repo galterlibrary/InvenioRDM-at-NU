@@ -9,10 +9,10 @@ def test_frontpage(live_server, browser):
 
     search_form = browser.find_element_by_css_selector('form[role="search"]')
     assert search_form.get_attribute("action").endswith(
-        current_app.config.get("THEME_SEARCH_ENDPOINT")
+        current_app.config["THEME_SEARCH_ENDPOINT"]
     )
 
-    create_button = browser.find_element_by_link_text('Share your Research')
+    create_button = browser.find_element_by_link_text('Upload your Research')
     assert create_button.get_attribute("href").endswith(
-        url_for('cd2h_metadata_upload.create')
+        url_for('invenio_deposit_ui.new')
     )
