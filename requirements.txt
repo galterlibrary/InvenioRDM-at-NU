@@ -14,6 +14,10 @@
 # You can read more about pip-compile command here:
 # https://github.com/jazzband/pip-tools#example-usage-for-pip-compile
 
-git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/cd2h-datamodel.git@0.3.0#egg=cd2h_datamodel
+# We are making galterlibrary/cd2h-datamodel.git point to master because:
+# - it save us from having to change the branch constantly
+# - it makes sense to have cd2h-datamodel features in master before we
+#   integrate them
+git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/cd2h-datamodel.git@master#egg=cd2h_datamodel
 git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/invenio-ldapclient.git@temporary-galter-first-depoloyment#egg=invenio_ldapclient
 git+https://github.com/galterlibrary/invenio-deposit.git@4_upload_file#egg=invenio_deposit

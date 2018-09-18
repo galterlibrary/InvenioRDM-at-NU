@@ -8,7 +8,6 @@
 
 pydocstyle cd2h_repo_project tests docs && \
 isort --recursive --check-only --diff && \
-check-manifest --ignore ".travis-*,docs/_build*" && \
 # sphinx-build doesn't have long options for all short options
 # -q : quiet,
 # -n : nit-picky mode,
