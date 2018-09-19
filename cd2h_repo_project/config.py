@@ -250,3 +250,8 @@ FIXTURES_ARCHIVE_LOCATION = os.path.join(sys.prefix, 'var/instance/archive')
 
 # Uncomment to NOT bundle js and css in order to debug in the browser.
 # ASSETS_DEBUG = True
+
+# Search
+# ======
+
+SEARCH_UI_SEARCH_TEMPLATE = 'cd2h_datamodel/search.html'
