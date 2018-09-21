@@ -19,12 +19,23 @@
 # docker build --build-arg GITHUB_PRIVATE_TOKEN=<value> -f Dockerfile.builder -t cd2h-repo-builder .
 FROM python:3.5
 
-RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y git
-RUN pip install --upgrade setuptools wheel pip uwsgi uwsgitop uwsgi-tools pipenv
+# Update package list, upgrade current package and install new packages
+# all in one line to bust the cache when a package is added to the list
+RUN apt-get update && apt-get upgrade --yes && apt-get install --yes \
+    git
 
-ARG GITHUB_PRIVATE_TOKEN
+RUN pip install --upgrade \
+    setuptools \
+    wheel \
+    pip==18.0 \
+    uwsgi \
+    uwsgitop \
+    uwsgi-tools \
+    pipenv==2018.7.1
+
 # Install Python dependencies to hide sensitive information from final image
+# Busts the cache ONLY IF requirements.txt changes
 # TODO: Update to pipenv / Pipfile(.lock)
+ARG GITHUB_PRIVATE_TOKEN
 COPY requirements.txt ./
 RUN pip install -r requirements.txt

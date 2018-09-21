@@ -16,11 +16,12 @@
 
 FROM python:3.5
 
-RUN apt-get update -y && apt-get upgrade -y
-
 # Install needed tools
 RUN curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
-RUN apt-get install -y nodejs gdebi-core unzip
+RUN apt-get update && apt-get upgrade --yes && apt-get install --yes \
+    nodejs \
+    gdebi-core \
+    unzip
 
 # Install Chrome+chromedriver
 RUN curl --silent --remote-name --location https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -29,23 +30,25 @@ RUN curl --silent --remote-name --location https://chromedriver.storage.googleap
 # Note that unzip has no long options
 RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 
-## Copy source code
+# Setup Environment Variables
 ENV WORKING_DIR=/opt/cd2h-repo-project
+ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
+
+## Copy uwsgi config files (will typically not bust the cache)
+RUN mkdir -p ${INVENIO_INSTANCE_PATH}
+COPY docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
+
+## Copy built dependencies from previous stage (will typically not bust the cache)
+COPY docker/build/site-packages /usr/local/lib/python3.5/site-packages
+COPY docker/build/bin /usr/local/bin
+
+## Copy source code (this WILL bust the cache)
 RUN mkdir -p ${WORKING_DIR}/src
 COPY ./ ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
 
-## Copy uwsgi config files
-ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
-RUN mkdir -p ${INVENIO_INSTANCE_PATH}
-COPY ./docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
-
-## Copy built dependencies from previous stage
-COPY docker/build/site-packages /usr/local/lib/python3.5/site-packages
-COPY docker/build/bin /usr/local/bin
-
 ## Install instance
-RUN pip install -e .[all]
+RUN pip install --editable .[all]
 RUN ./scripts/bootstrap
 
 # Set folder permissions
