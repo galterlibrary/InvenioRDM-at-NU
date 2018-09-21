@@ -35,14 +35,14 @@ instructions. You only need to execute them once to setup your environment:
 1.  On Linux, add the following to `/etc/sysctl.conf` on your local machine
     (host machine):
 
-    .. code-block::
+    .. code-block:: console
 
         # Memory mapped max size set for ElasticSearch
         vm.max_map_count=262144
 
     On macOS, do the following:
 
-    .. code-block::
+    .. code-block:: console
 
         screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty
         # and in the shell
@@ -50,7 +50,7 @@ instructions. You only need to execute them once to setup your environment:
 
 2.  Create a virtualenv (the name does not matter)
 
-    .. code-block::
+    .. code-block:: console
 
         $ mkvirtualenv my-repository-venv
 
@@ -67,14 +67,14 @@ instructions. You only need to execute them once to setup your environment:
     or you can find it on our Jenkins CI that uses it. Once you have that
     value, run:
 
-    .. code-block::
+    .. code-block:: console
 
         (my-repository-venv)$ GITHUB_PRIVATE_TOKEN=<retrieved value> pip install --requirement requirements.txt
 
     For the second option, for every line that contains
     `GITHUB_PRIVATE_TOKEN` in the `requirements.txt` file, replace it by:
 
-    .. code-block::
+    .. code-block:: console
 
         git+ssh://git@github.com/<owner>/<repo>.git@<tag>#egg=<desired egg name>
 
@@ -83,7 +83,7 @@ instructions. You only need to execute them once to setup your environment:
     `requirements.txt` file (given that you have access to our private repositories
     if you are reading this) by running:
 
-    .. code-block::
+    .. code-block:: console
 
         (my-repository-venv)$ pip install --requirement requirements.txt
 
@@ -93,20 +93,20 @@ instructions. You only need to execute them once to setup your environment:
     Irrespective of the option you chose above, install the current package
     after you installed the dependencies:
 
-    .. code-block::
+    .. code-block:: console
 
         (my-repository-venv)$ pip install --editable .[all]
 
 4.  Execute the Invenio initial bootstrap and setup code in the virtual environment
 
-    .. code-block::
+    .. code-block:: console
 
         (my-repository-venv)$ ./scripts/bootstrap
         (my-repository-venv)$ ./scripts/setup
 
 5.  Start the containers for the services
 
-    .. code-block::
+    .. code-block:: console
 
         $ docker-compose up --detach
 
@@ -200,25 +200,25 @@ Then, run the CI tests (they enable end-to-end testing):
 
 
 Continuous Integration (CI)
-===================
+===========================
 
 To setup the CI machine, make sure it has enough virtual memory
 for Elasticsearch. Add the following to `/etc/sysctl.conf` on the machine:
 
-.. code-block::
+.. code-block:: console
 
     # Memory mapped max size set for ElasticSearch
     vm.max_map_count=262144
 
 To make the change immediate on a live machine:
 
-.. code-block::
+.. code-block:: console
 
     sysctl -w vm.max_map_count=262144
 
 
 Production (RHEL setup)
-===================
+=======================
 
 TODO: Automate these
 
@@ -228,7 +228,7 @@ Initial Setup
 1. ssh into machine
 2.  Install `docker` and `docker-compose` on machine:
 
-    .. code-block::
+    .. code-block:: console
 
         # Do the following as root
 
@@ -257,27 +257,27 @@ Initial Setup
 4.  Make sure the production machine has enough virtual memory for Elasticsearch.
     Add the following to `/etc/sysctl.conf` on the machine:
 
-    .. code-block::
+    .. code-block:: console
 
         # Memory mapped max size set for ElasticSearch
         vm.max_map_count=262144
 
     To make the change immediate on a live machine:
 
-    .. code-block::
+    .. code-block:: console
 
         sysctl -w vm.max_map_count=262144
 
 5.  Once you have retrieved the `GITHUB_PRIVATE_TOKEN` value (see above), launch
     the multi-stage image build and spin up the containers:
 
-    .. code-block::
+    .. code-block:: console
 
         ./docker-compose.sh <GITHUB_PRIVATE_TOKEN> docker-compose.prod.yml
 
 6.  Connect to a web container and run the one time setup:
 
-    .. code-block::
+    .. code-block:: console
 
         docker exec -it cd2h-repo-project_web-ui_1 /bin/bash
         ./scripts/setup
@@ -288,7 +288,7 @@ Subsequent Deployments (updates)
 1. ssh into production machine
 2.  Run update script:
 
-    .. code-block::
+    .. code-block:: console
 
         docker exec -it cd2h-repo-project_web-ui_1 /bin/bash
         ./scripts/update
