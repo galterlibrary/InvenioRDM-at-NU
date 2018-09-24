@@ -164,20 +164,14 @@ APP_DEFAULT_SECURE_HEADERS = {
     'strict_transport_security_preload': False,
     'strict_transport_security_max_age': 31556926,  # One year in seconds
     'strict_transport_security_include_subdomains': True,
-    # changed
     'content_security_policy': {
         'default-src': [
             "'self'",
-            'https:',
-            "'unsafe-eval'",
-            'https://fonts.gstatic.com',
-        ],
-        'style-src': [
-            "'self'",
             'https://fonts.googleapis.com',
+            'https://fonts.gstatic.com',
+            "'unsafe-eval'",
         ],
-        'object-src': ["'none'"],
-     },
+    },
     'content_security_policy_report_uri': None,
     'content_security_policy_report_only': False,
     'session_cookie_secure': True,
