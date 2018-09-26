@@ -29,32 +29,10 @@ def create_app():
 
 
 @pytest.fixture(scope='session')
-def browser(request):
+def driver():
     """Selenium headless Chrome webdriver fixture.
 
     Code adapted from pytest-invenio/fixtures.py of package pytest-invenio.
-
-    .. code-block:: python
-
-        from flask import url_for
-
-        def test_browser(live_server, browser):
-            browser.get(url_for('index', _external=True))
-
-    The ``live_server`` fixture is provided by Pytest-Flask and uses the
-    :py:data:`app` fixture to determine which application to start.
-
-    .. note::
-
-        End-to-end tests are only executed if the environment variable ``E2E``
-        is set to yes::
-
-            $ export E2E=yes
-
-        This allows you to easily switch on/off end-to-end tests.
-
-    In case the test fail, a screenshot will be taken and saved in folder
-    ``.e2e_screenshots``.
     """
     # just Chrome for now
     options = ChromeOptions()
@@ -65,8 +43,6 @@ def browser(request):
 
     yield driver
 
-    _take_screenshot_if_test_failed(driver, request)
-
     # Quit the webdriver instance
     driver.quit()
 
@@ -76,7 +52,7 @@ def _take_screenshot_if_test_failed(driver, request):
 
     Lifted from pytest-invenio/fixtures.py
     """
-    if request.node.rep_call.failed:
+    if hasattr(request.node, 'rep_call') and request.node.rep_call.failed:
         filename = '{modname}::{funname}::{now}.png'.format(
             modname=request.module.__name__,
             funname=request.function.__name__ if request.function else '',
@@ -100,3 +76,33 @@ def _get_screenshots_dir():
     if not os.path.exists(directory):
         os.makedirs(directory)
     return directory
+
+
+@pytest.fixture(scope='function')
+def browser(driver, request):
+    """Fixture for browser that takes a screenshot on error.
+
+    .. code-block:: python
+
+        from flask import url_for
+
+        def test_browser(live_server, browser):
+            browser.get(url_for('index', _external=True))
+
+    The ``live_server`` fixture is provided by Pytest-Flask and uses the
+    :py:data:`app` fixture to determine which application to start.
+
+    .. note::
+
+        End-to-end tests are only executed if the environment variable ``E2E``
+        is set to yes::
+
+            $ export E2E=yes
+
+        This allows you to easily switch on/off end-to-end tests.
+
+    In case the test fail, a screenshot will be taken and saved in folder
+    ``.e2e_screenshots``.
+    """
+    yield driver
+    _take_screenshot_if_test_failed(driver, request)
