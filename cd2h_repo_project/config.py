@@ -247,5 +247,5 @@ FIXTURES_ARCHIVE_LOCATION = os.path.join(sys.prefix, 'var/instance/archive')
 
 # Search
 # ======
-
 SEARCH_UI_SEARCH_TEMPLATE = 'cd2h_datamodel/search.html'
+SEARCH_UI_JSTEMPLATE_RESULTS = 'templates/cd2h_datamodel/results.html'
