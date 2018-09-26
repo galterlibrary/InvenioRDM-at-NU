@@ -177,6 +177,13 @@ To run migrations, install new npm packages added via Bundles or collect/build
 
         (my-repository-venv)$ ./scripts/update
 
+To create a record from the command-line (via invenio cli):
+
+    .. code-block:: console
+
+        (my-repository-venv)$ echo '{"title": "New record", "description": "Test September 19 2018", "author": "You"}' | invenio records create
+
+
 Running tests
 ~~~~~~~~~~~~~
 
