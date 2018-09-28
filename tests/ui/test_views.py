@@ -26,14 +26,15 @@ def test_ping(client):
     assert resp.get_data(as_text=True) == 'OK'
 
 
-def test_record_page_returns_200(client, record):
-    """Test record view.
-    """
+def test_record_page_returns_200(client, create_record):
+    """Test record view."""
+    create_record()
+
     response = client.get('/records/1')
 
     assert response.status_code == 200
     html_text = response.get_data(as_text=True)
-    assert "A record" in html_text
+    assert "A title" in html_text
     assert "An author" in html_text
     assert "A description" in html_text
 

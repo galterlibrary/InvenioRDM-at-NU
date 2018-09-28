@@ -18,6 +18,6 @@
 # Docker will cache these requirements once and never update them again
 # since the file stays the same.
 # TODO: Bring cd2h-datamodel repository into cd2h-repo-project
-git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/cd2h-datamodel.git@tag-14#egg=cd2h_datamodel
+git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/cd2h-datamodel.git@134_search_published_record#egg=cd2h_datamodel
 git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/invenio-ldapclient.git@temporary-galter-first-depoloyment#egg=invenio_ldapclient
 git+https://github.com/galterlibrary/invenio-deposit.git@4_upload_file#egg=invenio_deposit
