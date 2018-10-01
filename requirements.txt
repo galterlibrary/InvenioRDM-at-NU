@@ -5,7 +5,7 @@
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 # This file will include pinned versions of packages
-# TODO: Generate this file by running the following commands:
+# TODO: Replace/adapt this file for pipenv usage
 #
 # pip install -e .
 # pip install pip-tools
@@ -14,10 +14,5 @@
 # You can read more about pip-compile command here:
 # https://github.com/jazzband/pip-tools#example-usage-for-pip-compile
 
-# We can't make galterlibrary/cd2h-datamodel.git point to master because
-# Docker will cache these requirements once and never update them again
-# since the file stays the same.
-# TODO: Bring cd2h-datamodel repository into cd2h-repo-project
-git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/cd2h-datamodel.git@134_search_published_record#egg=cd2h_datamodel
 git+https://${GITHUB_PRIVATE_TOKEN}@github.com/galterlibrary/invenio-ldapclient.git@temporary-galter-first-depoloyment#egg=invenio_ldapclient
 git+https://github.com/galterlibrary/invenio-deposit.git@4_upload_file#egg=invenio_deposit

@@ -21,8 +21,9 @@ tests_require = [
     'check-manifest>=0.35',
     'coverage>=4.4.1',
     'isort>=4.3',
-    'mock>=2.0.0',
+    'mock>=2.0.0',  # TODO: Remove bc we only support Python 3
     'pydocstyle>=2.0.0',
+    # TODO: Add pytest-cache?
     'pytest-cov>=2.5.1',
     'pytest-invenio>=1.0.2,<1.1.0',
     'pytest-mock>=1.6.0',
@@ -52,6 +53,13 @@ install_requires = [
     'Flask-Debugtoolbar>=0.10.1',
     'invenio[{db},{es},base,auth,metadata]~={version}'.format(
         db=DATABASE, es=ELASTICSEARCH, version=INVENIO_VERSION),
+    'invenio-records-rest>=1.1.0,<1.2.0',
+    'arrow>=0.12.1',
+    'IPython<7.0.0',
+    # TODO: Move to pipenv completely and set a non-prerelease version
+    #       to invenio-deposit
+    'SQLAlchemy-Continuum==1.3.4',
+    'marshmallow==2.15.5'
 ]
 
 packages = find_packages()
@@ -84,10 +92,14 @@ setup(
         'console_scripts': [
             'cd2h-repo-project = invenio_app.cli:cli',
         ],
+        'flask.commands': [
+            'locations = cd2h_repo_project.modules.records.cli:locations',
+        ],
         'invenio_base.blueprints': [
             'cd2h_repo_project = cd2h_repo_project.views:blueprint',
             'cd2hrepo_theme = cd2h_repo_project.modules.theme.views:blueprint',
             'cd2hrepo_frontpage = cd2h_repo_project.modules.frontpage.views:blueprint',
+            'cd2hrepo_records = cd2h_repo_project.modules.records.views:blueprint',
         ],
         'invenio_assets.bundles': [
             'cd2hrepo_theme_css = cd2h_repo_project.modules.theme.bundles:css',
@@ -95,6 +107,15 @@ setup(
         ],
         'invenio_i18n.translations': [
             'messages = cd2h_repo_project',
+        ],
+        'invenio_jsonschemas.schemas': [
+            'cd2hrepo_records = cd2h_repo_project.modules.records.jsonschemas'
+        ],
+        'invenio_search.mappings': [
+            'records = cd2h_repo_project.modules.records.mappings'
+        ],
+        'invenio_base.apps': [
+            'cd2hrepo_records = cd2h_repo_project.modules.records.ext:Records',
         ],
     },
     extras_require=extras_require,
