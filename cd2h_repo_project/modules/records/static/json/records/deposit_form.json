@@ -3,22 +3,22 @@
     "key": "title",
     "title": "Title",
     "description": "Required.",
-    "fa_cls": "fa-book",
+    "fa_cls": "fa-file-text",
+    "required": true
+  },
+  {
+    "key": "author",
+    "title": "Author(s)",
+    "description": "Required.",
+    "fa_cls": "fa-user",
     "required": true
   },
   {
     "key": "description",
     "title": "Description",
     "type": "textarea",
-    "placeholder": "Abstract, summary or description of the upload",
-    "fa_cls": "fa-book",
-    "required": true
-  },
-  {
-    "key": "author",
-    "title": "Author (One for now)",
+    "placeholder": "Abstract, summary or description that will appear in search results.",
     "description": "Required.",
-    "fa_cls": "fa-user",
     "required": true
   }
 ]

@@ -1,0 +1,4 @@
+<div ng-show="recordsVM.invenioRecordsAlert" class="alert alert-{{recordsVM.invenioRecordsAlert.type}}">
+  <strong>{{ recordsVM.invenioRecordsAlert.data.status }}</strong>
+  {{ recordsVM.invenioRecordsAlert.data.message || recordsVM.invenioRecordsArgs.templateParams[recordsVM.invenioRecordsAlert.action[0][0]].message }}
+</div>

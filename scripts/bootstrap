@@ -22,6 +22,6 @@ static_folder=$(invenio shell --no-term-title -c "print(app.static_folder)")
 cd $static_folder
 npm install
 cd ${CWD}
-invenio collect -v
+invenio collect --verbose
 invenio assets build
 echo "FINISHED BOOTSTRAPPING"
