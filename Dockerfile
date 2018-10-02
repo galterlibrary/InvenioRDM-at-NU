@@ -12,7 +12,6 @@
 # - eventually slim down image size
 # - (by-product) leverage layer caching for faster image builds
 # - in 2 files because Docker 1.13 does not allow it in a single file
-# It is done in 2 files because Docker 1.13 does not allow it in a single file.
 
 FROM python:3.5
 
