@@ -8,7 +8,6 @@
 """Common pytest fixtures and plugins."""
 import shutil
 import tempfile
-import uuid
 
 import pytest
 from flask import current_app
@@ -42,20 +41,31 @@ def locations(db):
 
 
 @pytest.fixture
-def create_record(db, locations):
-    """Factory pattern to create a Record."""
-    def _create_record(data={}, published=True):
-        record_uuid = uuid.uuid4()
+def create_serialized_record():
+    """Factory pattern for a serialized Record."""
+    def _create_serialized_record(data={}):
         data_to_use = {
-            '$schema': (
-                current_app.extensions['invenio-jsonschemas']
-                .path_to_url('records/record-v0.1.0.json')
-            ),
             'title': 'A title',
             'author': 'An author',
             'description': 'A description',
+            'license': 'mit-license',
         }
         data_to_use.update(data)
+        return data_to_use
+
+    return _create_serialized_record
+
+
+@pytest.fixture
+def create_record(db, locations, create_serialized_record):
+    """Factory pattern to create a Record."""
+    def _create_record(data={}, published=True):
+        data['$schema'] = (
+            current_app.extensions['invenio-jsonschemas']
+            .path_to_url('records/record-v0.1.0.json')
+        )
+        data_to_use = create_serialized_record(data)
+
         # A Deposit is an unpublished Record
         record = Deposit.create(data_to_use)
 

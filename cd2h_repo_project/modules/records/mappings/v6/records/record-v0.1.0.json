@@ -20,6 +20,9 @@
         "author": {
           "type": "keyword"
         },
+        "license": {
+          "type": "keyword"
+        },
         "_created": {
           "type": "date"
         },

@@ -2,7 +2,6 @@
 
 from flask_assets import Bundle
 
-
 js_deposit = Bundle(
     Bundle(
         'js/deposit/controllers.js',
@@ -10,7 +9,7 @@ js_deposit = Bundle(
         output="gen/cd2hrepo.deposit.filters.%(version)s.js",
         filters='jsmin',
     ),
-    filters='jsmin',  # TODO: uglifyjs?
+    filters='jsmin',
     output='gen/cd2hrepo.deposit.%(version)s.js',
 )
 """Deposit JavaScript bundle.

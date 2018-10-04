@@ -59,7 +59,7 @@
         "name": "Other (Not Open)"
       }
     ],
-    "description": "Required. The selected license applies to all of your files. If you want to upload some of your files under different licenses, please do so in separate uploads. If you cannot find the license you're looking for, include a relevant LICENSE file in your record and choose one of the 'Other' licenses available ('Other (Open)', 'Other (Not Open)', etc.).",
+    "description": "Required. The selected license applies to all of your files. If you want to upload some of your files under different licenses, please do so in separate uploads. If you cannot find the license you're looking for, include a relevant LICENSE file in your record and choose one of the 'Other' licenses available - 'Other (Open)' or 'Other (Not Open)'.",
     "fa_cls": "fa-certificate",
     "required": true
   }
