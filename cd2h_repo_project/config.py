@@ -318,7 +318,6 @@ DEPOSIT_UI_JSTEMPLATE_ALERT = 'templates/records/alert.html'
 DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/records/files_list.html'
 """Template for <invenio-files-list>."""
 
-
 DEPOSIT_UI_RESPONSE_MESSAGES = {
     'self': {
         'message': 'Your research was saved successfully.'
@@ -333,6 +332,31 @@ DEPOSIT_UI_RESPONSE_MESSAGES = {
         'message': "Your research was published successfully."
     }
 }
+
+# NOTE: Unfortunately, we can't simply pick and choose deposit form elements
+# templates from invenio-records-js, because we must specify one
+# common parent directory. In other words, we can't pick templates in a
+# directory in our repository and templates in a directory from
+# invenio-records-js's repository. *All* templates must be under the same
+# directory. So we copied the content of DEPOSIT_FORM_TEMPLATES_BASE and added
+# our own templates.
+DEPOSIT_FORM_TEMPLATES_BASE = 'templates/deposit-form'
+"""Directory where the types used in deposit_form.json have their templates."""
+
+DEPOSIT_FORM_TEMPLATES = {
+    # Copied
+    'array': 'array.html',
+    'button': 'button.html',
+    'default': 'default.html',
+    'fieldset': 'fieldset.html',
+    'radios': 'radios.html',
+    'radios_inline': 'radios_inline.html',
+    'select': 'select.html',
+    'textarea': 'textarea.html',
+    # Added
+    'uiselect': 'uiselect.html'
+}
+"""Specific templates for the various deposit form elements."""
 
 FILES_REST_PERMISSION_FACTORY = \
     'cd2h_repo_project.modules.records.permissions:files_permission_factory'
