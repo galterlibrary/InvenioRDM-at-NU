@@ -19,8 +19,14 @@ DOCKER_COMPOSE_FILE="$2"
 docker build --build-arg GITHUB_PRIVATE_TOKEN=$GITHUB_PRIVATE_TOKEN --tag cd2h-repo-builder-image --file Dockerfile.builder .
 docker create --name cd2h-repo-builder cd2h-repo-builder-image
 PWD=`pwd`
-sudo su -c "docker cp cd2h-repo-builder:/usr/local/lib/python3.5/site-packages/. $PWD/docker/build/site-packages"
-sudo su -c "docker cp cd2h-repo-builder:/usr/local/bin/. $PWD/docker/build/bin"
+
+# Cleanup intermediate directories where some docker content is exported
+sudo rm -rf $PWD/docker/build/site-packages/*
+sudo rm -rf $PWD/docker/build/bin/*
+
+# Export docker content in cleaned directories
+sudo su --command "docker cp cd2h-repo-builder:/usr/local/lib/python3.5/site-packages/. $PWD/docker/build/site-packages"
+sudo su --command "docker cp cd2h-repo-builder:/usr/local/bin/. $PWD/docker/build/bin"
 
 # Cleanup
 docker rm cd2h-repo-builder

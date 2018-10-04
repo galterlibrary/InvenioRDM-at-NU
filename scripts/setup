@@ -23,4 +23,4 @@ invenio access allow superuser-access role admin
 
 # CD2H Repo specific starter setup
 ## Create location to store files
-invenio cd2h_datamodel setup_storage
+invenio locations setup_storage

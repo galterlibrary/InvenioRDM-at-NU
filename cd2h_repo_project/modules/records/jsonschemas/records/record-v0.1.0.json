@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Describe information needed for deposit module.",
+  "id": "https://cd2hrepo.galter.northwestern.edu/schemas/records/record-v0.1.0.json",
+  "title": "CD2H Data Model v0.1.0",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "title": {
+      "description": "Record title.",
+      "type": "string"
+    },
+    "description": {
+      "description": "Record description, summary or abstract.",
+      "type": "string"
+    },
+    "author": {
+      "description": "Record author. (TODO: Multiple authors)",
+      "type": "string"
+    },
+    "_deposit": {
+      "description": "Internal deposit metadata.",
+      "type": "object",
+      "properties": {
+        "created_by": {
+          "description": "ID of user that created the deposit.",
+          "name": "created_by",
+          "title": "Creator",
+          "type": "integer"
+        },
+        "id": {
+          "description": "Identifier of the deposit - usually the value of corresponding 'depid'-type PID.",
+          "name": "id",
+          "title": "Persistent Identifier of the deposit",
+          "type": "string"
+        },
+        "owners": {
+          "description": "Owners of the deposit (a list of user's IDs).",
+          "items": [
+            {
+              "type": "integer"
+            }
+          ],
+          "name": "owners",
+          "title": "Owners",
+          "type": "array"
+        },
+        "pid": {
+          "description": "Identifier of the published record - usually the type and value of a 'recid'-type PID of the corresponding published record.",
+          "name": "pid",
+          "properties": {
+            "revision_id": {
+              "description": "ID of the RecordMetadata revision. Used for record merging.",
+              "title": "Record Revision ID",
+              "type": "integer"
+            },
+            "type": {
+              "description": "Type of the PID, corresponding to PID's 'pid_type' property.",
+              "title": "PID Type",
+              "type": "string"
+            },
+            "value": {
+              "description": "Value of the PID, corresponding to PID's 'pid_value' property.",
+              "title": "PID Value",
+              "type": "string"
+            }
+          },
+          "title": "Persistent identifier of the published record",
+          "type": "object"
+        },
+        "status": {
+          "description": "Status of the deposit, either 'draft' or 'published'.",
+          "enum": [
+            "draft",
+            "published"
+          ],
+          "name": "status",
+          "title": "Status",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "_deposit"
+  ]
+}

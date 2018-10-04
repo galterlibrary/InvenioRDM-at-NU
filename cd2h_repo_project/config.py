@@ -19,9 +19,13 @@ import os
 import sys
 from datetime import timedelta
 
-from invenio_deposit.utils import check_oauth2_scope_write, \
-    check_oauth2_scope_write_elasticsearch
+from invenio_deposit.utils import (
+    check_oauth2_scope_write, check_oauth2_scope_write_elasticsearch
+)
+from invenio_indexer.api import RecordIndexer
 from invenio_records_rest.utils import allow_all, check_elasticsearch
+
+from cd2h_repo_project.modules.records.search import RecordsSearch
 
 
 def _(x):
@@ -153,7 +157,6 @@ OAISERVER_ID_PREFIX = 'oai:cd2hrepo.galter.northwestern.edu:'
 #: Switches off incept of redirects by Flask-DebugToolbar.
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-# TODO: Review security policies so that we can develop locally correctly
 APP_DEFAULT_SECURE_HEADERS = {
     'force_https': True,
     'force_https_permanent': False,
@@ -178,28 +181,86 @@ APP_DEFAULT_SECURE_HEADERS = {
     'session_cookie_http_only': True
 }
 
-# Invenio-Deposit and CD2H-datamodel
-# ==================================
-# TODO: Setup this configuration in cd2h_datamodel/config.py
-#       and override if need be here
-DEPOSIT_DEFAULT_SCHEMAFORM = 'json/cd2h_datamodel/deposit_form.json'
-"""Default Angular Schema **Form** provided by external package cd2h_datamodel.
+# Uncomment to NOT bundle js and css in order to debug in the browser.
+# ASSETS_DEBUG = True
+
+# Invenio-Records
+# ===============
+RECORDS_REST_ENDPOINTS = {
+    'recid': {
+        'pid_type': 'recid',
+        'pid_minter': 'recid',
+        'pid_fetcher': 'recid',
+        'default_endpoint_prefix': True,
+        'search_class': RecordsSearch,
+        'indexer_class': RecordIndexer,
+        'search_index': 'records',
+        'search_type': None,
+        'record_serializers': {
+            'application/json': (
+                'cd2h_repo_project.modules.records.serializers:'
+                'json_v1_response'
+            )
+        },
+        'search_serializers': {
+            'application/json': (
+                'cd2h_repo_project.modules.records.serializers:json_v1_search'
+            )
+        },
+        'record_loaders': {
+            'application/json': (
+                'cd2h_repo_project.modules.records.loaders:json_v1'
+            )
+        },
+        'list_route': '/records/',
+        'item_route': '/records/<pid(recid):pid_value>',
+        'default_media_type': 'application/json',
+        'max_result_window': 10000,
+        'error_handlers': {},
+        # TODO: Redefine these permissions to cover our auth needs
+        'create_permission_factory_imp': allow_all,
+        'read_permission_factory_imp': check_elasticsearch,
+        'update_permission_factory_imp': allow_all,
+        'delete_permission_factory_imp': allow_all,
+    },
+}
+"""REST API for Records."""
+
+RECORDS_UI_ENDPOINTS = {
+    'recid': {
+        'pid_type': 'recid',
+        'route': '/records/<pid_value>',
+        'template': 'records/record.html',
+    },
+}
+"""Records UI for Records."""
+
+PIDSTORE_RECID_FIELD = 'id'
+
+# Invenio-Deposit
+# ===============
+DEPOSIT_DEFAULT_SCHEMAFORM = 'json/records/deposit_form.json'
+"""Default Angular Schema **Form**.
 """
 
 DEPOSIT_DEFAULT_JSONSCHEMA = 'records/record-v0.1.0.json'
 """Default JSON schema used for new deposits.
 """
 
-_PID = 'pid(depid,record_class="cd2h_datamodel.api:Deposit")'
+_PID = (
+    'pid(depid,record_class="cd2h_repo_project.modules.records.api:Deposit")'
+)
 
 DEPOSIT_REST_ENDPOINTS = {
     'depid': {
         'pid_type': 'depid',
         'pid_minter': 'deposit',
         'pid_fetcher': 'deposit',
-        'record_class': 'cd2h_datamodel.api:Deposit',
+        'record_class': 'cd2h_repo_project.modules.records.api:Deposit',
         'record_loaders': {
-            'application/json': 'cd2h_datamodel.loaders:json_v1',
+            'application/json': (
+                'cd2h_repo_project.modules.records.loaders:json_v1'
+            )
         },
         'files_serializers': {
             'application/json': ('invenio_deposit.serializers'
@@ -221,7 +282,9 @@ DEPOSIT_REST_ENDPOINTS = {
         'file_item_route':
             '/deposits/<{0}:pid_value>/files/<path:key>'.format(_PID),
         'default_media_type': 'application/json',
-        'links_factory_imp': 'cd2h_datamodel.links:deposit_links_factory',
+        'links_factory_imp': (
+            'cd2h_repo_project.modules.records.links:deposit_links_factory'
+        ),
         # TODO: Redefine these permissions to cover our auth needs
         'create_permission_factory_imp': allow_all,
         'read_permission_factory_imp': check_elasticsearch,
@@ -232,9 +295,9 @@ DEPOSIT_REST_ENDPOINTS = {
 }
 """Basic REST deposit configuration."""
 
-#: Files REST permission factory
 FILES_REST_PERMISSION_FACTORY = \
-    'cd2h_datamodel.permissions:files_permission_factory'
+    'cd2h_repo_project.modules.records.permissions:files_permission_factory'
+"""Files REST permission factory"""
 
 FIXTURES_FILES_LOCATION = os.path.join(sys.prefix, 'var/instance/data')
 """Location where uploaded files are saved"""
@@ -242,10 +305,8 @@ FIXTURES_FILES_LOCATION = os.path.join(sys.prefix, 'var/instance/data')
 FIXTURES_ARCHIVE_LOCATION = os.path.join(sys.prefix, 'var/instance/archive')
 """Location where uploaded files are archived"""
 
-# Uncomment to NOT bundle js and css in order to debug in the browser.
-# ASSETS_DEBUG = True
-
 # Search
 # ======
-SEARCH_UI_SEARCH_TEMPLATE = 'cd2h_datamodel/search.html'
-SEARCH_UI_JSTEMPLATE_RESULTS = 'templates/cd2h_datamodel/results.html'
+SEARCH_UI_SEARCH_TEMPLATE = 'records/search.html'
+SEARCH_UI_JSTEMPLATE_RESULTS = 'templates/records/results.html'
+SEARCH_UI_JSTEMPLATE_SEARCHBAR = 'templates/records/searchbar.html'

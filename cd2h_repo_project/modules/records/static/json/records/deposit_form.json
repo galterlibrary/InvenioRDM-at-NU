@@ -1,0 +1,24 @@
+[
+  {
+    "key": "title",
+    "title": "Title",
+    "description": "Required.",
+    "fa_cls": "fa-book",
+    "required": true
+  },
+  {
+    "key": "description",
+    "title": "Description",
+    "type": "textarea",
+    "placeholder": "Abstract, summary or description of the upload",
+    "fa_cls": "fa-book",
+    "required": true
+  },
+  {
+    "key": "author",
+    "title": "Author (One for now)",
+    "description": "Required.",
+    "fa_cls": "fa-user",
+    "required": true
+  }
+]

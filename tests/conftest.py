@@ -11,11 +11,12 @@ import tempfile
 import uuid
 
 import pytest
-from cd2h_datamodel.api import Deposit
 from flask import current_app
-from invenio_files_rest.models import Location
+from invenio_files_rest.models import Bucket, Location
 from invenio_pidstore import current_pidstore
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
+
+from cd2h_repo_project.modules.records.api import Deposit
 
 
 @pytest.fixture
