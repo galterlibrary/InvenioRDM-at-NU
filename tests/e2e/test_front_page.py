@@ -12,7 +12,7 @@ def test_frontpage(live_server, browser):
         current_app.config["THEME_SEARCH_ENDPOINT"]
     )
 
-    create_button = browser.find_element_by_link_text('Upload your Research')
+    create_button = browser.find_element_by_link_text('Deposit your Research')
     assert create_button.get_attribute("href").endswith(
         url_for('invenio_deposit_ui.new')
     )

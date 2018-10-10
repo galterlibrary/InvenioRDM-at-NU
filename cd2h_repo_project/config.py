@@ -295,6 +295,45 @@ DEPOSIT_REST_ENDPOINTS = {
 }
 """Basic REST deposit configuration."""
 
+DEPOSIT_RECORDS_UI_ENDPOINTS = {
+    'depid': {
+        'pid_type': 'depid',
+        'route': '/deposit/<pid_value>',
+        'template': 'records/edit.html',
+        'record_class': 'cd2h_repo_project.modules.records.api:Deposit',
+        'view_imp': 'invenio_deposit.views.ui.default_view_method',
+    },
+}
+"""Basic deposit UI endpoints configuration."""
+
+DEPOSIT_UI_NEW_TEMPLATE = 'records/edit.html'
+"""Template for a new deposit page."""
+
+DEPOSIT_UI_JSTEMPLATE_ACTIONS = 'templates/records/actions.html'
+"""Template for <invenio-records-actions>."""
+
+DEPOSIT_UI_JSTEMPLATE_ALERT = 'templates/records/alert.html'
+"""Template for <invenio-records-alert>."""
+
+DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/records/files_list.html'
+"""Template for <invenio-files-list>."""
+
+
+DEPOSIT_UI_RESPONSE_MESSAGES = {
+    'self': {
+        'message': 'Your research was saved successfully.'
+    },
+    'delete': {
+        'message': "Your research was deleted successfully."
+    },
+    'discard': {
+        'message': "Your changes were discarded."
+    },
+    'publish': {
+        'message': "Your research was published successfully."
+    }
+}
+
 FILES_REST_PERMISSION_FACTORY = \
     'cd2h_repo_project.modules.records.permissions:files_permission_factory'
 """Files REST permission factory"""
