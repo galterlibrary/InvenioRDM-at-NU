@@ -1,5 +1,7 @@
 {#
-# This file is part of Invenio.
+# This file is modified from Invenio.
+#
+# Copyright (C) 2018 NU,FSM,GHSL.
 # Copyright (C) 2016 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
@@ -33,6 +35,7 @@
 {%- block javascript %}
   {% assets "invenio_deposit_dependencies_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {% assets "invenio_deposit_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+  {% assets "cd2hrepo_deposit_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {%- endblock javascript %}
 
 {% set title = "Deposit your Research" %}

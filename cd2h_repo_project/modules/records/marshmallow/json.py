@@ -4,10 +4,27 @@
 
 from __future__ import absolute_import, print_function
 
+from collections import namedtuple
+
 from invenio_records_rest.schemas import StrictKeysMixin
 from invenio_records_rest.schemas.fields import DateString, SanitizedUnicode
 from invenio_rest.errors import RESTValidationError
 from marshmallow import Schema, fields, missing, post_dump, post_load, validate
+
+License = namedtuple('License', ['name', 'value'])
+# WARNING: Any change to this list should be reflected in deposit_form.json
+LICENSES = [
+    License(name="MIT License", value="mit-license"),
+    License(name="Creative Commons Attribution", value="cc-by"),
+    License(name="Creative Commons Attribution Share-Alike",
+            value="cc-by-sa"),
+    License(name="Creative Commons CCZero", value="cc-zero"),
+    License(name="Creative Commons Non-Commercial (Any)", value="cc-nc"),
+    License(name="GNU General Public License version 3.0 (GPLv3)",
+            value="gpl-3.0"),
+    License(name="Other (Open)", value="other-open"),
+    License(name="Other (Not Open)", value="other-closed"),
+]
 
 
 def get_id(obj, context):
@@ -47,6 +64,13 @@ class MetadataSchemaV1(Schema):
         required=True, validate=validate.Length(min=3)
     )
     author = SanitizedUnicode(required=True, validate=validate.Length(min=3))
+    license = fields.Str(
+        required=True,
+        validate=validate.OneOf(
+            [l.value for l in LICENSES],
+            labels=[l.name for l in LICENSES]
+        )
+    )
 
 
 class RecordSchemaV1(StrictKeysMixin):

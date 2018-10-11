@@ -29,6 +29,6 @@ def test_json_v1_serializes_metadata(create_record):
 
     serialized_record = json_v1.transform_record(record.pid, record)
 
-    assert serialized_record['metadata']['title']
-    assert serialized_record['metadata']['description']
-    assert serialized_record['metadata']['author']
+    required_keys = ['title', 'description', 'author', 'license']
+    for key in required_keys:
+        assert serialized_record['metadata'][key]

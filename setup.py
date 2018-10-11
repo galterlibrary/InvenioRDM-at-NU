@@ -104,6 +104,7 @@ setup(
         'invenio_assets.bundles': [
             'cd2hrepo_theme_css = cd2h_repo_project.modules.theme.bundles:css',
             'cd2hrepo_theme_js = cd2h_repo_project.modules.theme.bundles:js',
+            'cd2hrepo_deposit_js = cd2h_repo_project.modules.records.bundles:js_deposit',
         ],
         'invenio_i18n.translations': [
             'messages = cd2h_repo_project',

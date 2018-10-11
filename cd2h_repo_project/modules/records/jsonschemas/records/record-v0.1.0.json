@@ -20,6 +20,10 @@
       "description": "Record author. (TODO: Multiple authors)",
       "type": "string"
     },
+    "license": {
+      "description": "License for embargoed/open access content.",
+      "type": "string"
+    },
     "_deposit": {
       "description": "Internal deposit metadata.",
       "type": "object",

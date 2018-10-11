@@ -20,5 +20,47 @@
     "placeholder": "Abstract, summary or description that will appear in search results.",
     "description": "Required.",
     "required": true
+  },
+  {
+    "key": "license",
+    "title": "License",
+    "type": "select",
+    "titleMap": [
+      {
+        "value": "mit-license",
+        "name": "MIT License"
+      },
+      {
+        "value": "cc-by",
+        "name": "Creative Commons Attribution"
+      },
+      {
+        "value": "cc-by-sa",
+        "name": "Creative Commons Attribution Share-Alike"
+      },
+      {
+        "value": "cc-zero",
+        "name": "Creative Commons CCZero"
+      },
+      {
+        "value": "cc-nc",
+        "name": "Creative Commons Non-Commercial (Any)"
+      },
+      {
+        "value": "gpl-3.0",
+        "name": "GNU General Public License version 3.0 (GPLv3)"
+      },
+      {
+        "value": "other-open",
+        "name": "Other (Open)"
+      },
+      {
+        "value": "other-closed",
+        "name": "Other (Not Open)"
+      }
+    ],
+    "description": "Required. The selected license applies to all of your files. If you want to upload some of your files under different licenses, please do so in separate uploads. If you cannot find the license you're looking for, include a relevant LICENSE file in your record and choose one of the 'Other' licenses available - 'Other (Open)' or 'Other (Not Open)'.",
+    "fa_cls": "fa-certificate",
+    "required": true
   }
 ]
