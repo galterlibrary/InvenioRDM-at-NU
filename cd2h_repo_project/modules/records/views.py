@@ -11,6 +11,8 @@ from __future__ import absolute_import, print_function
 
 from flask import Blueprint, current_app
 
+from .marshmallow.json import LICENSES
+
 blueprint = Blueprint(
     'cd2hrepo_records',
     __name__,
@@ -52,3 +54,11 @@ def extract_files(deposit):
         })
 
     return files_dicts
+
+
+@blueprint.app_template_filter('license_value_to_name')
+def license_value_to_name(value):
+    """Return license name of given license value."""
+    for license in LICENSES:
+        if license.value == value:
+            return license.name

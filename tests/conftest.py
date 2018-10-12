@@ -57,7 +57,7 @@ def create_serialized_record():
 
 
 @pytest.fixture
-def create_record(db, locations, create_serialized_record):
+def create_record(db, es_clear, locations, create_serialized_record):
     """Factory pattern to create a Record."""
     def _create_record(data={}, published=True):
         data['$schema'] = (

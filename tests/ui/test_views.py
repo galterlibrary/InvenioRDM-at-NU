@@ -22,29 +22,45 @@ from flask import url_for
 def test_ping(client):
     """Test the ping view."""
     resp = client.get(url_for('cd2h_repo_project.ping'))
+
     assert resp.status_code == 200
     assert resp.get_data(as_text=True) == 'OK'
 
 
 def test_record_page_returns_200(client, create_record):
     """Test record view."""
-    create_record()
+    record = create_record()
 
-    response = client.get('/records/1')
+    # WARNING: In invenio record.id != record['id']
+    response = client.get(
+        url_for('invenio_records_ui.recid', pid_value=record['id']))
+    html_text = response.get_data(as_text=True)
 
     assert response.status_code == 200
-    html_text = response.get_data(as_text=True)
     assert "A title" in html_text
     assert "An author" in html_text
     assert "A description" in html_text
+    assert "MIT License" in html_text
+
+
+def test_record_page_shows_files(client, create_record):
+    record = create_record({'_files': [{'key': 'fileA.png', 'size': 8889}]})
+
+    response = client.get(
+        url_for('invenio_records_ui.recid', pid_value=record['id']))
+    html_text = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert "fileA.png" in html_text
+    assert "8.9 kB" in html_text
 
 
 def test_search_page_returns_200(client):
     """Test search page.
     """
     response = client.get('/search')
+    html_text = response.get_data(as_text=True)
 
     assert response.status_code == 200
-    html_text = response.get_data(as_text=True)
     assert "<h1>Search</h1>" in html_text
     assert '</invenio-search-bar>' in html_text

@@ -28,7 +28,7 @@ tests_require = [
     'pytest-invenio>=1.0.2,<1.1.0',
     'pytest-mock>=1.6.0',
     'pytest-pep8>=1.0.6',
-    'pytest>=3.3.1,<3.8.1',
+    'pytest>=3.3.1',
     'selenium>=3.4.3',
 ]
 
@@ -59,7 +59,7 @@ install_requires = [
     # TODO: Move to pipenv completely and set a non-prerelease version
     #       to invenio-deposit
     'SQLAlchemy-Continuum==1.3.4',
-    'marshmallow==2.15.5'
+    'marshmallow==2.15.5',
 ]
 
 packages = find_packages()
