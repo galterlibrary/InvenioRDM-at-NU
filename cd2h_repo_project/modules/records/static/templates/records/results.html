@@ -1,13 +1,13 @@
 <div class="search-result" ng-repeat="record in vm.invenioSearchResults.hits.hits track by $index">
   <h4 class="title">
     <a target="_self" ng-href="/records/{{ record.id }}">
-      {{ record.metadata.title }}
+      <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;{{ record.metadata.title }}
     </a>
   </h4>
 
   <ul class="list-inline authors">
     <li>
-      {{ record.metadata.author }}
+      <i class="fa fa-user" title="published" aria-hidden="true"></i>&nbsp;{{ record.metadata.author }}
     </li>
   </ul>
 

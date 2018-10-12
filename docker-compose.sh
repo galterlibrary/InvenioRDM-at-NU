@@ -20,7 +20,7 @@ docker build --build-arg GITHUB_PRIVATE_TOKEN=$GITHUB_PRIVATE_TOKEN --tag cd2h-r
 docker create --name cd2h-repo-builder cd2h-repo-builder-image
 PWD=`pwd`
 
-# Cleanup intermediate directories where some docker content is exported
+# Cleanup intermediate directories where some docker content will be exported
 sudo rm -rf $PWD/docker/build/site-packages/*
 sudo rm -rf $PWD/docker/build/bin/*
 

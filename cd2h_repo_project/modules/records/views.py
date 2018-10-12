@@ -9,7 +9,8 @@
 
 from __future__ import absolute_import, print_function
 
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, redirect, url_for
+from flask_menu import register_menu
 
 from .marshmallow.json import LICENSES
 
@@ -62,3 +63,18 @@ def license_value_to_name(value):
     for license in LICENSES:
         if license.value == value:
             return license.name
+
+
+@blueprint.route('/deposits')
+@register_menu(
+    blueprint,
+    'settings.deposits',
+    '<i class="fa fa-th-list fa-fw"></i> Deposits')
+def personal_records():
+    """Redirect to list of deposits.
+
+    Needed to register the link in the menu.
+    TODO: Create a separate menu for our specific need.
+    TODO: Change the deposit URL so that this redirect is not needed.
+    """
+    return redirect(url_for('invenio_deposit_ui.index'))

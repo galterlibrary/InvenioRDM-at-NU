@@ -5,7 +5,9 @@
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-# Multi-stage image creation
+# **Multi-stage image creation**
+# See cd2h-repo-project/docker-compose.sh for the orchestration script.
+#
 # This is the 1st stage i.e. the Dockerfile for the container that will build
 # the requirements to a directory and from which directory the second
 # Dockerfile will start to configure and run the app.

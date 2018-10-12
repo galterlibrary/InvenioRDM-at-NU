@@ -28,7 +28,7 @@ def records_filter():
 
 
 class RecordsSearch(_RecordsSearch):
-    """Default search class."""
+    """Default Record search class."""
 
     class Meta:
         """Configuration for Deposit search."""
@@ -47,8 +47,7 @@ def deposits_filter():
 
     Permit the user to see all if:
 
-    * The user is an admin (see
-        func:`invenio_deposit.permissions:admin_permission_factory`).
+    * The user is an admin.
 
     * It's called outside of a request.
 
@@ -64,7 +63,7 @@ def deposits_filter():
 
 
 class DepositsSearch(_RecordsSearch):
-    """Default search class."""
+    """Default Deposit search class."""
 
     class Meta:
         """Configuration for Deposit search."""
