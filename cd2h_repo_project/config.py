@@ -59,8 +59,12 @@ COVER_TEMPLATE = 'invenio_theme/page_cover.html'
 FOOTER_TEMPLATE = 'cd2hrepo_theme/footer.html'
 #: Header base template.
 HEADER_TEMPLATE = 'cd2hrepo_theme/header.html'
-#: Settings base template.
-SETTINGS_TEMPLATE = 'invenio_theme/page_settings.html'
+#: Settings base template from invenio modules inherit from this.
+SETTINGS_TEMPLATE = 'cd2hrepo_theme/page_settings.html'
+#: Except for invenio-accounts that inherit from this
+ACCOUNTS_SETTINGS_TEMPLATE = SETTINGS_TEMPLATE
+# PR has been submitted:
+# https://github.com/inveniosoftware/invenio-accounts/pull/272
 
 # Theme configuration
 # ===================
@@ -82,7 +86,6 @@ MAIL_SUPPRESS_SEND = True
 #: Static files collection method (defaults to copying files).
 # COLLECT_STORAGE = 'flask_collect.storage.file'  # Production
 COLLECT_STORAGE = 'flask_collect.storage.link'
-
 
 # Accounts
 # ========

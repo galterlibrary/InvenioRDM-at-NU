@@ -103,6 +103,7 @@ setup(
             'cd2hrepo_theme = cd2h_repo_project.modules.theme.views:blueprint',
             'cd2hrepo_frontpage = cd2h_repo_project.modules.frontpage.views:blueprint',
             'cd2hrepo_records = cd2h_repo_project.modules.records.views:blueprint',
+            'cd2hrepo_user_dashboard = cd2h_repo_project.modules.user_dashboard.views:blueprint',
         ],
         'invenio_assets.bundles': [
             'cd2hrepo_theme_css = cd2h_repo_project.modules.theme.bundles:css',

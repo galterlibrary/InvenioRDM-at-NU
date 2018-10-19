@@ -52,13 +52,18 @@
               {% block user_dropdown_menu %}
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a href="{{ url_for('invenio_userprofiles.profile') }}">
-                    <i class="fa fa-user fa-fw"></i> Profile
+                  <a href="{{ url_for('user_dashboard.activity_feed') }}">
+                    <i class="fa fa-flash fa-fw"></i> Activity Feed
                   </a>
                 </li>
                 <li>
                   <a href="{{ url_for('cd2hrepo_records.personal_records') }}">
                     <i class="fa fa-th-list fa-fw"></i> Entries
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ url_for('invenio_userprofiles.profile') }}">
+                    <i class="fa fa-sliders fa-fw"></i> Settings
                   </a>
                 </li>
                 <li class="divider"></li>
