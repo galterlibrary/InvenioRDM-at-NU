@@ -4,13 +4,13 @@
       <li>
         <button ng-disabled="depositionForm.$invalid || depositionForm.$prestine || recordsVM.invenioRecordsLoading"
                 class="btn btn-default" ng-click="recordsVM.actionHandler(['self', 'PUT'])">
-          Save your Deposit
+          Save your Changes
         </button>
       </li>
       <li>
         <button ng-disabled="depositionForm.$invalid || depositionForm.$dirty || recordsVM.invenioRecordsLoading"
                 class="btn btn-success" ng-click="recordsVM.actionHandler(['publish', 'POST'])">
-          Publish your Deposit
+          Catalog your Research
         </button>
       </li>
     </ul>
@@ -21,7 +21,7 @@
       <li>
         <button ng-disabled="depositionForm.$invalid || recordsVM.invenioRecordsLoading"
                 class="btn btn-default" ng-click="recordsVM.actionHandler(['self', 'PUT'])">
-          Deposit your Research
+          Save your Changes
         </button>
       </li>
     </ul>
