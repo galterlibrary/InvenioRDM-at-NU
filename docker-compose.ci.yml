@@ -16,7 +16,7 @@ services:
       service: app
     build:
       context: ./
-    command: ./run-ci-tests.sh
+    command: pipenv run ./run-ci-tests.sh
     image: cd2h-repo-project-ci
     # TODO: 'links' are deprecated, use 'networks'
     links:

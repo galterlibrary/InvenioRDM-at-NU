@@ -4,61 +4,72 @@
 #
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
-
-# **Multi-stage image creation**
-# See cd2h-repo-project/docker-compose.sh for the orchestration script.
 #
-# This is the 2nd stage i.e. the Dockerfile for the actual running app.
-# Multi-stage image creation is done to:
-# - produce a Docker image containing no sensitive information
-# - eventually slim down image size
-# - (by-product) leverage layer caching for faster image builds
-# - in 2 files because Docker 1.13 does not allow it in a single file
+# Dockerfile for main CD2H-Repo-Project image
 
+# TODO: Use python 3.6
 FROM python:3.5
 
 # Install needed tools
-RUN curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
+######################
+
+# Update package list, upgrade current package and install new packages.
+# These are all part of a single command to bust the cache when a package
+# is added to the list.
 RUN apt-get update && apt-get upgrade --yes && apt-get install --yes \
-    nodejs \
+    git \
     gdebi-core \
     unzip \
     emacs-nox
+
+RUN curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get update && apt-get install --yes nodejs tree
+
+# Setup Dockerfile and container run-time environment variables
+ENV WORKING_DIR=/opt/cd2h-repo-project
+ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
+# This will create the virtualenv locally (see below: ${WORKING_DIR}/src)
+ENV PIPENV_VENV_IN_PROJECT=1
 
 # Install Chrome+chromedriver
 RUN curl --silent --remote-name --location https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN gdebi --non-interactive google-chrome-stable_current_amd64.deb
 RUN curl --silent --remote-name --location https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip
+RUN mkdir -p ${WORKING_DIR}/bin
 # Note that unzip has no long options
 RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
+
+# Global python tools
+RUN pip install --upgrade \
+    setuptools \
+    wheel \
+    pip==18.1 \
+    uwsgi \
+    uwsgitop \
+    uwsgi-tools \
+    pipenv==2018.11.14
+
+# Copy uwsgi config files (will typically not bust the cache)
+RUN mkdir -p ${INVENIO_INSTANCE_PATH}
+COPY docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
 
 # Setup image build-time variable
 ## Since we are using a .env file for ALL our environment variables,
 ## we need to disable Flask's .env "tip"
 ARG FLASK_SKIP_DOTENV
 ARG INVENIO_COLLECT_STORAGE
+ARG PIPENV_SYNC_OPTIONS
 
-# Setup Dockerfile and container run-time environment variables
-ENV WORKING_DIR=/opt/cd2h-repo-project
-ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
-
-## Copy uwsgi config files (will typically not bust the cache)
-RUN mkdir -p ${INVENIO_INSTANCE_PATH}
-COPY docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
-
-## Copy built dependencies from previous stage (will typically not bust the cache)
-COPY docker/build/site-packages /usr/local/lib/python3.5/site-packages
-COPY docker/build/bin /usr/local/bin
-
-## Copy source code (this WILL bust the cache)
+# Copy source code (this WILL bust the cache)
 RUN mkdir -p ${WORKING_DIR}/src
 COPY ./ ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
 
-## Install instance
-RUN pip install --editable .[all]
-# NOTE: ./scripts/bootstrap needs user to be root to install npm packages
-RUN ./scripts/bootstrap
+# Install locked production dependencies
+RUN pipenv sync ${PIPENV_SYNC_OPTIONS}
+
+# Ensure database, task queue and elasticsearch are initialized
+RUN pipenv run ./scripts/bootstrap
 
 # Set folder permissions
 RUN chgrp -R 0 ${WORKING_DIR} && \
