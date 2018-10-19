@@ -34,11 +34,17 @@ tests_require = [
     'cssselect>=1.0.3'
 ]
 
+operations_require = [
+    'ansible==2.7.1',
+    'fabric==2.4.0'
+]
+
 extras_require = {
     'docs': [
         'Sphinx>=1.5.1',
     ],
     'tests': tests_require,
+    'ops': operations_require
 }
 
 extras_require['all'] = []
@@ -62,7 +68,8 @@ install_requires = [
     #       to invenio-deposit
     'SQLAlchemy-Continuum==1.3.4',
     'marshmallow==2.15.5',
-    'invenio-accounts>=1.0.2'
+    'invenio-accounts>=1.0.2',
+    'urllib3==1.22'
 ]
 
 packages = find_packages()

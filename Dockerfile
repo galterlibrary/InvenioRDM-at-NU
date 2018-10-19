@@ -22,7 +22,8 @@ RUN curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update && apt-get upgrade --yes && apt-get install --yes \
     nodejs \
     gdebi-core \
-    unzip
+    unzip \
+    emacs-nox
 
 # Install Chrome+chromedriver
 RUN curl --silent --remote-name --location https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -31,7 +32,13 @@ RUN curl --silent --remote-name --location https://chromedriver.storage.googleap
 # Note that unzip has no long options
 RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 
-# Setup Environment Variables
+# Setup image build-time variable
+## Since we are using a .env file for ALL our environment variables,
+## we need to disable Flask's .env "tip"
+ARG FLASK_SKIP_DOTENV
+ARG INVENIO_COLLECT_STORAGE
+
+# Setup Dockerfile and container run-time environment variables
 ENV WORKING_DIR=/opt/cd2h-repo-project
 ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
 
@@ -50,6 +57,7 @@ WORKDIR ${WORKING_DIR}/src
 
 ## Install instance
 RUN pip install --editable .[all]
+# NOTE: ./scripts/bootstrap needs user to be root to install npm packages
 RUN ./scripts/bootstrap
 
 # Set folder permissions

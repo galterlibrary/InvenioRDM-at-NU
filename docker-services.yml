@@ -7,14 +7,6 @@
 
 version: '2.2'
 services:
-  app:
-    build:
-      context: ./
-      args:
-        - ENVIRONMENT=DEV
-    image: cd2h-repo-project
-    env_file:
-      - default.env
   lb:
     build: ./docker/haproxy/
     image: cd2h-repo-project-lb
@@ -30,12 +22,22 @@ services:
     ports:
       - "80"
       - "443"
+  app:
+    build:
+      context: ./
+      args:
+        - INVENIO_COLLECT_STORAGE=${INVENIO_COLLECT_STORAGE}
+        - FLASK_SKIP_DOTENV=${FLASK_SKIP_DOTENV}
+    image: cd2h-repo-project
+    env_file:
+      - default.env
+      - .env
+  # NOTE: ports are not provided for the following services
+  #       because they are not overridden but only appended to by extenders
   cache:
     image: redis
     restart: "always"
     read_only: true
-    ports:
-      - "6379:6379"
   db:
     image: postgres:9.6
     restart: "always"
@@ -43,14 +45,9 @@ services:
       - "POSTGRES_USER=cd2h-repo-project"
       - "POSTGRES_PASSWORD=cd2h-repo-project"
       - "POSTGRES_DB=cd2h-repo-project"
-    ports:
-      - "5432:5432"
   mq:
     image: rabbitmq:3-management
     restart: "always"
-    ports:
-      - "15672:15672"
-      - "5672:5672"
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2
     restart: "always"
@@ -62,9 +59,6 @@ services:
         soft: -1
         hard: -1
     mem_limit: 1g
-    ports:
-      - "9200:9200"
-      - "9300:9300"
   kibana:
     image: docker.elastic.co/elasticsearch/kibana-oss:6.2.2
     environment:

@@ -1,0 +1,75 @@
+---
+- hosts: "{{ deploy_hosts | default('stage')}}"
+
+  tasks:
+    # TODO: Waiting on IT for this to work in production (works on staging)
+    # - name: Enable RedHat repositories
+    #   rhsm_repository:
+    #     name:
+    #       - rhel-7-server-rpms
+    #       - rhel-7-server-extras-rpms
+    #       - rhel-7-server-optional-rpms
+    #   become: yes
+
+    - name: docker is installed
+      yum:
+        name: docker
+        state: latest
+      become: yes
+
+    - name: docker-compose is installed and executable
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.22.0/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: u=rwx,g=rx,o=rx
+      become: yes
+
+    - name: deploy user is part of dockerroot group
+      user:
+        name: deploy
+        append: yes
+        groups: dockerroot
+      become: yes
+
+    - name: /etc/docker/daemon.json is configured
+      copy:
+        src: docker/daemon.json
+        dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      become: yes
+
+    - name: docker daemon is enabled and started
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+      become: yes
+
+    - name: branch "{{ deploy_branch | default('master')}}" is used
+      git:
+        repo: git@github.com:galterlibrary/cd2h-repo-project.git
+        version: "{{ deploy_branch | default('master')}}"
+        dest: cd2h-repo-project
+        accept_hostkey: yes
+      become: no
+
+    - name: server has enough virtual memory for Elasticsearch
+      lineinfile:
+        path: /etc/sysctl.conf
+        line: vm.max_map_count=262144
+
+    # Note that this task is long and will always be run right now
+    - name: containers are up and running
+      command: ./docker-compose.sh {{ token|quote }} docker-compose.prod.yml
+      args:
+        chdir: cd2h-repo-project
+
+    - name: one-time scripts/setup was run
+      # TODO: have `./scripts/setup` be idempotent
+      shell: docker exec cd2h-repo-project_web-ui_1 ./scripts/setup && touch setup_was_run.flag
+      args:
+        creates: setup_was_run.flag
+      tags:
+        - setup

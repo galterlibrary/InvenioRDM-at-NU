@@ -17,7 +17,7 @@ DOCKER_COMPOSE_FILE="$2"
 
 # Builder image
 docker build --build-arg GITHUB_PRIVATE_TOKEN=$GITHUB_PRIVATE_TOKEN --tag cd2h-repo-builder-image --file Dockerfile.builder .
-docker create --name cd2h-repo-builder cd2h-repo-builder-image
+
 PWD=`pwd`
 
 # Cleanup intermediate directories where some docker content will be exported
@@ -25,9 +25,9 @@ sudo rm -rf $PWD/docker/build/site-packages/*
 sudo rm -rf $PWD/docker/build/bin/*
 
 # Export docker content in cleaned directories
+docker create --name cd2h-repo-builder cd2h-repo-builder-image
 sudo su --command "docker cp cd2h-repo-builder:/usr/local/lib/python3.5/site-packages/. $PWD/docker/build/site-packages"
 sudo su --command "docker cp cd2h-repo-builder:/usr/local/bin/. $PWD/docker/build/bin"
-
 # Cleanup
 docker rm cd2h-repo-builder
 
@@ -43,6 +43,5 @@ else
     OPTIONS="$DEFAULT_OPTIONS"
 fi
 
-echo "docker-compose --file $DOCKER_COMPOSE_FILE up $OPTIONS"
-# Spin up containers
+echo "Running: docker-compose --file $DOCKER_COMPOSE_FILE up $OPTIONS"
 docker-compose --file $DOCKER_COMPOSE_FILE up $OPTIONS

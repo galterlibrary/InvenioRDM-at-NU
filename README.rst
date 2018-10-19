@@ -227,70 +227,35 @@ To make the change immediate on a live machine:
 Production (RHEL setup)
 =======================
 
-TODO: Automate these
+Enable SSH agent forwarding for <staging IP> and <production IP> on
+your own machine:
 
-Initial Setup
--------------
+    Host <staging IP>
+        ForwardAgent yes
 
-1. ssh into machine
-2.  Install `docker` and `docker-compose` on machine:
+    Host <production IP>
+        ForwardAgent yes
 
-    .. code-block:: console
+Add the missing `hosts` file in `deployment/ansible/` and populate it with
+the appropriate IPs:
 
-        # Do the following as root
+    stage ansible_host=<staging IP> ansible_user=deploy
+    production ansible_host=<production IP> ansible_user=deploy
 
-        # Install docker
-        yum install docker
+Go to `deployment/ansible/` and run the playbook:
 
-        # Install docker-compose
-        curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
+    cd deployment/ansible
+    ansible-playbook playbook.yml --extra-vars "token=<GITHUB_PRIVATE_TOKEN> deploy_hosts=<stage (default) | production> deploy_branch=<master (default) | something else>"
 
-        # Add deploy user to dockerroot group
-        usermod --append --groups dockerroot deploy
+<GITHUB_PRIVATE_TOKEN> is the token value retrieved above.
 
-        # Edit `/etc/docker/daemon.json` to contain
+TODO: Fabric layer on top of Ansible to make the CLI more user-friendly
 
-            {
-                "live-restore": true,
-                "group": "dockerroot"
-            }
-
-        # Enable + start docker
-        systemctl enable docker
-        systemctl start docker
-
-3. git clone this project (using your own credentials for now)
-4.  Make sure the production machine has enough virtual memory for Elasticsearch.
-    Add the following to `/etc/sysctl.conf` on the machine:
-
-    .. code-block:: console
-
-        # Memory mapped max size set for ElasticSearch
-        vm.max_map_count=262144
-
-    To make the change immediate on a live machine:
-
-    .. code-block:: console
-
-        sysctl -w vm.max_map_count=262144
-
-5.  Once you have retrieved the `GITHUB_PRIVATE_TOKEN` value (see above), launch
-    the multi-stage image build and spin up the containers:
-
-    .. code-block:: console
-
-        ./docker-compose.sh <GITHUB_PRIVATE_TOKEN> docker-compose.prod.yml
-
-6.  Connect to a web container and run the one time setup:
-
-    .. code-block:: console
-
-        docker exec -it cd2h-repo-project_web-ui_1 /bin/bash
-        ./scripts/setup
 
 Subsequent Deployments (updates)
 --------------------------------
+
+TODO: Automate updates
 
 1. ssh into production machine
 2.  Run update script:
