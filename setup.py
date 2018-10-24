@@ -61,6 +61,7 @@ install_requires = [
     #       to invenio-deposit
     'SQLAlchemy-Continuum==1.3.4',
     'marshmallow==2.15.5',
+    'invenio-accounts>=1.0.2'
 ]
 
 packages = find_packages()
