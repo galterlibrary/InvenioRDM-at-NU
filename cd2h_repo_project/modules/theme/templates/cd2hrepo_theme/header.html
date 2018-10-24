@@ -1,8 +1,9 @@
 <header id="header">
   <div class="container">
     <div class="row">
+
       {%- block organization_header %}
-      <div id='brandTop' class="col-md-12">
+      <div id='organizationHeader' class="col-md-12">
         <div id='brandTopLogo' class='hidden-xs hidden-sm col-md-6'>
           <a class='institutionLogo' href='https://www.feinberg.northwestern.edu/'>
             <img src="{{ url_for('static', filename='img/logos/northwestern-medicine.svg') }}" alt='Northwestern Medicine'>
@@ -22,7 +23,7 @@
       {% endblock %}
 
       {%- block product_header %}
-      <div id='brandBottom' class="col-md-12">
+      <div id='productHeader' class="col-md-12">
         <div id="productTitle" class='col-xs-12 col-sm-7'>
           <a href='/'>{{ config.THEME_SITENAME }}</a>
         </div>
@@ -70,6 +71,42 @@
         {%- endif %}
       </div>
       {% endblock %}
+
+      {%- block product_nav %}
+      <div id="productNav" class="col-md-12">
+        <nav class="navbar">
+          <div class="container-fluid">
+            <div class="collapse navbar-collapse">
+
+              {% block catalog %}
+              <ul class="nav navbar-nav">
+                <li>
+                  <a href="{{ url_for('invenio_deposit_ui.new') }}" class="navbar-link">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    <span class="catalog-text">Catalog your Research</span>
+                  </a>
+                </li>
+              </ul>
+              {% endblock %}
+
+              {% block search %}
+              <div class="nav navbar-nav navbar-right">
+                <form class="navbar-form"
+                      action="{{config.THEME_SEARCH_ENDPOINT}}" role="search">
+                  <div class="input-group">
+                    <span class="input-group-addon navbar-btn"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control search" name="q" placeholder="Start your Research">
+                  </div>
+                </form>
+              </div>
+              {% endblock %}
+
+            </div>
+          </div>
+        </nav>
+      </div>
+      {%- endblock %}
+
     </div>
   </div>
 </header>
