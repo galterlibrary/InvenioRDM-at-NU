@@ -1,3 +1,29 @@
+{#
+# This file is modified from Invenio.
+#
+# Copyright (C) 2018 NU,FSM,GHSL.
+# Copyright (C) 2016 CERN.
+#
+# Invenio is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# Invenio is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Invenio; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+#
+# In applying this license, CERN does not
+# waive the privileges and immunities granted to it by virtue of its status
+# as an Intergovernmental Organization or submit itself to any jurisdiction.
+#}
+
+
 {%- extends config.RECORDS_UI_BASE_TEMPLATE %}
 
 {# Kept around for debugging #}
@@ -29,10 +55,47 @@
   {% endfor %}
 {%- endmacro %}
 
+{% set title = record.title + " | " + config.THEME_SITENAME %}
+
 {%- block page_body %}
-<div class="container">
-  <h2>{{record.title}}</h2>
-  <p><small>{{record.author}}</small></p>
-  <p><em>{{record.description}}</em></p>
-</div>
+  <div class="container body-container">
+    {%- block title %}
+      <div class="page-header">
+        <h1><span><i class="fa fa-fw fa-file-text"></i></span>{{ record.title }}</h1>
+      </div>
+    {%- endblock title %}
+
+    <div class="row">
+      <div id="invenio-records">
+        <div class="col-md-4">
+          {% if record._files %}
+          <ul>
+            {% for file in record._files %}
+              <li>{{ file.key }} ({{file.size | filesizeformat}})</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+
+        <div class="col-md-8">
+          <div>
+            <p>
+              <span><i class="fa fa-user"></i></span>
+              <span class="text-muted">{{ record.author }}</span>
+            </p>
+          </div>
+          <div><p><em>{{record.description}}</em></p></div>
+          <div>
+            <label class="col-sm-3" for="license">
+              <span><i class="fa fa-certificate"></i></span>
+              License
+            </label>
+            <div class="col-sm-9">
+              {{ record.license | license_value_to_name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {%- endblock %}
