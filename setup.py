@@ -25,11 +25,12 @@ tests_require = [
     'pydocstyle>=2.0.0',
     # TODO: Add pytest-cache?
     'pytest-cov>=2.5.1',
-    'pytest-invenio>=1.0.2,<1.1.0',
+    'pytest-invenio>=1.0.2,<1.0.5',
     'pytest-mock>=1.6.0',
     'pytest-pep8>=1.0.6',
     'pytest>=3.3.1',
     'selenium>=3.4.3',
+    'pytest-flask==0.12.0'  # Artificially added
 ]
 
 extras_require = {

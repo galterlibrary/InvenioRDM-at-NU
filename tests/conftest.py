@@ -14,6 +14,7 @@ from flask import current_app
 from invenio_files_rest.models import Bucket, Location
 from invenio_pidstore import current_pidstore
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
+from invenio_search import current_search
 
 from cd2h_repo_project.modules.records.api import Deposit
 
@@ -72,7 +73,24 @@ def create_record(db, es_clear, locations, create_serialized_record):
         if published:
             record.publish()
 
+        current_search.flush_and_refresh(index='*')
         db.session.commit()
         return record
 
     return _create_record
+
+
+@pytest.fixture()
+def create_user(db):
+    """Create a user."""
+    def _create_user(info={}):
+        default_data = {'email': 'info@inveniosoftware.org',
+                        'password': 'tester', 'active': True}
+        user_info = default_data.copy()
+        user_info.update(info)
+        datastore = current_app.extensions['security'].datastore
+        user = datastore.create_user(**user_info)
+        db.session.commit()
+        return user
+
+    return _create_user

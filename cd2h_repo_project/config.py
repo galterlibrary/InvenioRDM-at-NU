@@ -231,6 +231,7 @@ RECORDS_UI_ENDPOINTS = {
         'pid_type': 'recid',
         'route': '/records/<pid_value>',
         'template': 'records/record.html',
+        # 'record_class': ....
     },
 }
 """Records UI for Records."""
@@ -270,7 +271,9 @@ DEPOSIT_REST_ENDPOINTS = {
             'application/json': ('invenio_records_rest.serializers'
                                  ':json_v1_response'),
         },
-        'search_class': 'invenio_deposit.search:DepositSearch',
+        'search_class': (
+            'cd2h_repo_project.modules.records.search:DepositsSearch'
+        ),
         'search_serializers': {
             'application/json': ('invenio_records_rest.serializers'
                                  ':json_v1_search'),
@@ -306,6 +309,9 @@ DEPOSIT_RECORDS_UI_ENDPOINTS = {
 }
 """Basic deposit UI endpoints configuration."""
 
+DEPOSIT_UI_INDEX_TEMPLATE = 'records/index.html'
+"""Template for list of deposits page."""
+
 DEPOSIT_UI_NEW_TEMPLATE = 'records/edit.html'
 """Template for a new deposit page."""
 
@@ -317,6 +323,9 @@ DEPOSIT_UI_JSTEMPLATE_ALERT = 'templates/records/alert.html'
 
 DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/records/files_list.html'
 """Template for <invenio-files-list>."""
+
+DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/records/own_results.html'
+"""Template for <invenio-search-results> of personal records."""
 
 DEPOSIT_UI_RESPONSE_MESSAGES = {
     'self': {

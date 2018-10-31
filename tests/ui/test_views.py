@@ -8,17 +8,21 @@
 """Views tests.
 
 We have simple, very high-level, view tests here even if the functionality is
-originally provided by cd2h-datamodel (or another module) because:
-- cd2h-repo-project has the whole setup
-- cd2h-repo-project is the interface to the functionality in the end
-
+originally provided by another module because:
+- this project has the whole setup
+- this project is the interface to the functionality in the end
 """
 
 from __future__ import absolute_import, print_function
 
 from flask import url_for
+from flask_menu import current_menu
+from flask_security import login_user, url_for_security
+
+from utils import login_request_and_session
 
 
+# WARNING: the client fixture adds a ~5sec (large) startup overhead to tests
 def test_ping(client):
     """Test the ping view."""
     resp = client.get(url_for('cd2h_repo_project.ping'))
@@ -37,6 +41,7 @@ def test_record_page_returns_200(client, create_record):
     html_text = response.get_data(as_text=True)
 
     assert response.status_code == 200
+    html_text = response.get_data(as_text=True)
     assert "A title" in html_text
     assert "An author" in html_text
     assert "A description" in html_text
@@ -64,3 +69,23 @@ def test_search_page_returns_200(client):
     assert response.status_code == 200
     assert "<h1>Search</h1>" in html_text
     assert '</invenio-search-bar>' in html_text
+
+
+def test_deposits_page_requires_login(client, create_user):
+    user = create_user()
+    deposits_page_url = url_for('invenio_deposit_ui.index')
+
+    response = client.get(deposits_page_url)
+
+    assert response.status_code == 302
+    assert response.location.endswith('login/?next=%2Fdeposit')
+
+    login_request_and_session(user, client)
+
+    response = client.get(deposits_page_url)
+
+    assert response.status_code == 200
+
+
+def test_user_dropdown_contains_deposits_link(appctx):
+    assert 'deposits' in current_menu.submenu('settings')._child_entries

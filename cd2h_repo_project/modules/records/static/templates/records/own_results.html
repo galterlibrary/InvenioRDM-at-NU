@@ -1,0 +1,56 @@
+<div ng-if="vm.invenioSearchResults.hits.total != 0">
+  <div class="search-result" ng-repeat="record in vm.invenioSearchResults.hits.hits track by $index">
+    <h4 class="title">
+      <a ng-if="record.metadata._deposit.status == 'published'"
+         target="_self" ng-href="/records/{{ record.metadata.id }}">
+        <i class="fa fa-file-text-o title-icon" title="published" aria-hidden="true"></i>{{ record.metadata.title }}
+      </a>
+      <a ng-if="record.metadata._deposit.status == 'draft'"
+         target="_self" ng-href="/deposit/{{ record.metadata._deposit.id }}">
+        <i class="fa fa-pencil-square-o title-icon" title="draft" aria-hidden="true"></i>{{ record.metadata.title }}
+      </a>
+    </h4>
+
+    <p>
+      <small ng-if="record.metadata._deposit.status == 'published'"
+             class="label label-success">
+        Published
+      </small>
+      <small ng-if="record.metadata._deposit.status !== 'published'"
+             class="label label-danger">
+        Draft - Unpublished
+      </small>
+    </p>
+
+    <p>
+      <ul class="list-inline authors">
+        <li>
+          <i class="fa fa-user" title="published" aria-hidden="true"></i>&nbsp;{{ record.metadata.author }}
+        </li>
+      </ul>
+    </p>
+
+    <p class="description">
+      {{ record.metadata.description }}
+    </p>
+
+    <div class="clearfix"></div>
+
+    <hr />
+  </div>
+</div>
+
+<div ng-if="vm.invenioSearchResults.hits.total == 0">
+  <div class="list-group">
+    <div class="list-group-item">
+      <div align="center">
+        <h1>No uploads</h1>
+        <p>Get started by making your first upload</p>
+        <a class="btn btn-success" href="/deposit/new">
+            <i class="glyphicon glyphicon-upload" aria-hidden="true"></i>
+            New Upload
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
