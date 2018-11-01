@@ -8,6 +8,11 @@ $fa-font-path: "/static/node_modules/font-awesome/fonts";
 @import "../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "../node_modules/font-awesome/scss/font-awesome";
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 // @import "type";
 // @import "navbar";
 @import "body";
