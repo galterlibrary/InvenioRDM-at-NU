@@ -5,6 +5,7 @@
   background: $northwestern-color;
   color: $white;
   min-height: 6em;
+  margin-bottom: 5px;
 
   a {
     color: $white;
@@ -21,7 +22,7 @@
     padding-right: 0;
   }
 
-  #brandTop {
+  #organizationHeader {
     margin: 15px 0;
 
     .institutionLogo img {
@@ -31,9 +32,9 @@
 
   }
 
-  #brandBottom {
+  #productHeader {
     border-top: 1px solid #7571b0;
-    margin: 15px 0;
+    margin-top: 15px;
 
     #productTitle {
       margin-top: 15px;
@@ -52,4 +53,67 @@
       }
     }
   }
+
+  #productNav {
+
+    .nav > li > a:focus, .nav > li > a:hover {
+      background-color: transparent;
+    }
+
+    .navbar-nav > li {
+      margin: 8px 0;
+    }
+
+    .navbar-nav > li a {
+      padding: 0;
+      font-size: 18px;
+    }
+
+    .catalog-text {
+      display: inline-block;
+    }
+
+    .navbar-link span {
+      padding: 10px 0;
+      line-height: 18px;
+      font-size: 18px;
+    }
+
+    .glyphicon-upload {
+      font-size: 17px;
+    }
+
+    .navbar-collapse {
+      padding-right: 0px;
+    }
+
+    .navbar {
+      margin-bottom: 0;
+    }
+
+    // Search bar
+    .input-group .form-control:last-child {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
+
+    .input-group-addon {
+      padding: 10px 16px;
+      font-size: 18px;
+      border-radius: 6px;
+    }
+
+    .input-group-addon:first-child {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    .search {
+      width: 400px;
+      font-size: 18px;
+      height: 46px;
+    }
+
+  }
+
 }

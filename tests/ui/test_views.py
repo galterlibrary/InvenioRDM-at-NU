@@ -15,14 +15,17 @@ originally provided by another module because:
 
 from __future__ import absolute_import, print_function
 
+import re
+
 from flask import url_for
 from flask_menu import current_menu
 from flask_security import login_user, url_for_security
 
 from utils import login_request_and_session
 
-
 # WARNING: the client fixture adds a ~5sec (large) startup overhead to tests
+
+
 def test_ping(client):
     """Test the ping view."""
     resp = client.get(url_for('cd2h_repo_project.ping'))
@@ -31,6 +34,20 @@ def test_ping(client):
     assert resp.get_data(as_text=True) == 'OK'
 
 
+# Front Page
+def test_front_page_has_only_one_search_bar_and_one_catalog_link(client):
+    response = client.get('/')
+    html_text = response.get_data(as_text=True)
+    invenio_search_bar = re.findall('<invenio-search-bar', html_text)
+    role_search = re.findall('role="search"', html_text)
+    catalog_links = re.findall('/deposit/new', html_text)
+
+    assert not invenio_search_bar
+    assert len(role_search) == 1
+    assert len(catalog_links) == 1
+
+
+# Record Page
 def test_record_page_returns_200(client, create_record):
     """Test record view."""
     record = create_record()
@@ -60,6 +77,7 @@ def test_record_page_shows_files(client, create_record):
     assert "8.9 kB" in html_text
 
 
+# Search Page
 def test_search_page_returns_200(client):
     """Test search page.
     """
@@ -71,6 +89,17 @@ def test_search_page_returns_200(client):
     assert '</invenio-search-bar>' in html_text
 
 
+def test_search_page_has_only_one_search_bar(client):
+    response = client.get('/search')
+    html_text = response.get_data(as_text=True)
+    invenio_search_bar = re.findall('<invenio-search-bar', html_text)
+    role_search = re.findall('role="search"', html_text)
+
+    assert len(invenio_search_bar) == 1
+    assert not role_search
+
+
+# Deposit Page
 def test_deposits_page_requires_login(client, create_user):
     user = create_user()
     deposits_page_url = url_for('invenio_deposit_ui.index')
@@ -87,5 +116,19 @@ def test_deposits_page_requires_login(client, create_user):
     assert response.status_code == 200
 
 
+def test_deposits_page_has_search_bar(client, create_user):
+    user = create_user()
+    login_request_and_session(user, client)
+
+    response = client.get('/deposit/new')
+    html_text = response.get_data(as_text=True)
+    invenio_search_bar = re.findall('<invenio-search-bar', html_text)
+    role_search = re.findall('role="search"', html_text)
+
+    assert len(invenio_search_bar) == 0
+    assert len(role_search) == 1
+
+
+# Other
 def test_user_dropdown_contains_deposits_link(appctx):
     assert 'deposits' in current_menu.submenu('settings')._child_entries

@@ -2,25 +2,42 @@
 
 {% set title = config.THEME_SITENAME + " - Medical knowledge. Emerging." %}
 
+{%- block page_header %}
+{% include "cd2hrepo_frontpage/header.html" %}
+{% endblock %}
+
 {%- block page_body %}
 <div id="frontPageBody" class="container body-container">
   <div class="jumbotron">
     <div class="row">
-    <div class="col-md-6 search">
-      <form action="{{config.THEME_SEARCH_ENDPOINT}}" role="search"
-            class="input-group input-group-lg">
-        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-        <input type="text" class="form-control" name="q" placeholder="Start your Research">
-      </form>
-    </div>
 
-    <div class="col-md-6 share">
+      <div class="col-md-6 share">
         <a href="{{ url_for('invenio_deposit_ui.new') }}"
            class="btn btn-primary btn-lg">
-          Deposit your Research
+          Catalog your Research
        </a>
+      </div>
+
+      <div class="col-md-6 search">
+        <form action="{{config.THEME_SEARCH_ENDPOINT}}" role="search"
+              class="input-group input-group-lg">
+          <span class="input-group-addon"><i class="fa fa-search"></i></span>
+          <input type="text" class="form-control" name="q" placeholder="Start your Research">
+        </form>
+      </div>
+
     </div>
-    </div>
+  </div>
+
+  <div>
+    <h1>About</h1>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus urna purus. Sed venenatis pulvinar dui, quis consequat elit sollicitudin sed. Proin sodales mauris lorem, ut finibus elit dignissim sed. Nulla quis sem neque. Nullam porta augue a urna pretium, in viverra ipsum euismod. Integer lacus eros, faucibus at porta eu, placerat id lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam sollicitudin commodo enim volutpat pretium. Duis commodo hendrerit eros sit amet lobortis.
+    </p>
+    <h1>Center for Data to Health</h1>
+    <p>
+      Cras id metus sem. Integer rutrum ligula arcu, quis sollicitudin arcu efficitur ac. Quisque rhoncus euismod nisl eget sagittis. Aenean molestie rhoncus feugiat. Suspendisse tempus massa ut finibus tempor. Phasellus tristique ultrices lectus eu tincidunt. Mauris non magna rhoncus, maximus augue vitae, ultricies lectus. In in interdum neque. Vivamus in augue lorem. Pellentesque laoreet ullamcorper massa quis interdum. Fusce varius dolor ultricies lorem vehicula, vel viverra enim gravida. Etiam luctus justo ipsum, sagittis efficitur lorem efficitur non. Integer quis est tellus. In maximus tortor quis quam bibendum consequat. Aenean pulvinar feugiat sem, a tincidunt arcu congue eu. Phasellus a quam orci.
+    </p>
   </div>
 </div>
 {%- endblock page_body %}

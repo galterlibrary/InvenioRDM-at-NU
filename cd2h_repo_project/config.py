@@ -65,9 +65,9 @@ SETTINGS_TEMPLATE = 'invenio_theme/page_settings.html'
 # Theme configuration
 # ===================
 #: Site name
-THEME_SITENAME = _('Next Generation Repository')
+THEME_SITENAME = _('Next Generation Research Discovery')
 #: Frontpage title.
-THEME_FRONTPAGE_TITLE = _('Next Generation Repository')
+THEME_FRONTPAGE_TITLE = _('Next Generation Research Discovery')
 # THEME_HEADER_LOGIN_TEMPLATE = 'invenio_theme/header_login.html'
 
 # Email configuration
