@@ -116,6 +116,19 @@ def test_deposits_page_requires_login(client, create_user):
     assert response.status_code == 200
 
 
+def test_deposits_page_has_search_bar(client, create_user):
+    user = create_user()
+    login_request_and_session(user, client)
+
+    response = client.get('/deposit/new')
+    html_text = response.get_data(as_text=True)
+    invenio_search_bar = re.findall('<invenio-search-bar', html_text)
+    role_search = re.findall('role="search"', html_text)
+
+    assert len(invenio_search_bar) == 0
+    assert len(role_search) == 1
+
+
 # Other
 def test_user_dropdown_contains_deposits_link(appctx):
     assert 'deposits' in current_menu.submenu('settings')._child_entries
