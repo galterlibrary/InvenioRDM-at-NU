@@ -30,7 +30,8 @@ tests_require = [
     'pytest-pep8>=1.0.6',
     'pytest>=3.3.1',
     'selenium>=3.4.3',
-    'pytest-flask==0.12.0'  # Artificially added
+    'pytest-flask==0.12.0',  # Artificially added
+    'cssselect>=1.0.3'
 ]
 
 extras_require = {

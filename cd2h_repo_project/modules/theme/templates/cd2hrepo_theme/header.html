@@ -48,17 +48,28 @@
                       data-toggle="dropdown">
                 <span class="caret"></span>
               </button>
+
+              {% block user_dropdown_menu %}
               <ul class="dropdown-menu" role="menu">
-                {%- for item in current_menu.submenu('settings').children if item.visible %}
-                <li><a href="{{ item.url }}">{{ item.text|safe }}</a></li>
-                {%- endfor %}
+                <li>
+                  <a href="{{ url_for('invenio_userprofiles.profile') }}">
+                    <i class="fa fa-user fa-fw"></i> Profile
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ url_for('cd2hrepo_records.personal_records') }}">
+                    <i class="fa fa-th-list fa-fw"></i> Deposits
+                  </a>
+                </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="{{url_for_security('logout')}}">
-                    <i class="fa fa-sign-out"></i> {{_('Log out')}}
+                  <a href="{{ url_for_security('logout') }}">
+                    <i class="fa fa-sign-out fa-fw"></i> {{_('Log out')}}
                   </a>
                 </li>
               </ul>
+              {% endblock %}
+
             </div>
           {%- else %}
           <a href="{{ url_for_security('logout') }}" class="btn btn-default">

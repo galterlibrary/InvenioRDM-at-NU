@@ -20,6 +20,7 @@ import re
 from flask import url_for
 from flask_menu import current_menu
 from flask_security import login_user, url_for_security
+from lxml import html
 
 from utils import login_request_and_session
 
@@ -130,5 +131,18 @@ def test_deposits_page_has_search_bar(client, create_user):
 
 
 # Other
-def test_user_dropdown_contains_deposits_link(appctx):
-    assert 'deposits' in current_menu.submenu('settings')._child_entries
+def test_user_dropdown_contains_desired_links(client, create_user):
+    user = create_user()
+    login_request_and_session(user, client)
+
+    response = client.get('/')
+    html_tree = html.fromstring(response.get_data(as_text=True))
+    links = {
+        a.get('href') for a in html_tree.cssselect('ul.dropdown-menu li a')
+    }
+
+    assert links == {
+        url_for('invenio_userprofiles.profile'),
+        url_for('cd2hrepo_records.personal_records'),
+        url_for_security('logout')
+    }
