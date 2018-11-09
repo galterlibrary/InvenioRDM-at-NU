@@ -329,16 +329,16 @@ DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/records/own_results.html'
 
 DEPOSIT_UI_RESPONSE_MESSAGES = {
     'self': {
-        'message': 'Your research was saved successfully.'
+        'message': 'Your changes were saved successfully.'
     },
     'delete': {
-        'message': "Your research was deleted successfully."
+        'message': "Your entry was deleted successfully."
     },
     'discard': {
         'message': "Your changes were discarded."
     },
     'publish': {
-        'message': "Your research was published successfully."
+        'message': "Your research was cataloged successfully."
     }
 }
 
