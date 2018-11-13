@@ -66,15 +66,9 @@ def license_value_to_name(value):
 
 
 @blueprint.route('/deposits')
-@register_menu(
-    blueprint,
-    'settings.deposits',
-    '<i class="fa fa-th-list fa-fw"></i> Deposits')
 def personal_records():
     """Redirect to list of deposits.
 
-    Needed to register the link in the menu.
-    TODO: Create a separate menu for our specific need.
     TODO: Change the deposit URL so that this redirect is not needed.
     """
     return redirect(url_for('invenio_deposit_ui.index'))

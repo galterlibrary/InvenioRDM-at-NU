@@ -18,8 +18,9 @@ from __future__ import absolute_import, print_function
 import re
 
 from flask import url_for
+from flask_login import current_user
 from flask_menu import current_menu
-from flask_security import login_user, url_for_security
+from flask_security import url_for_security
 from lxml import html
 
 from utils import login_request_and_session
@@ -130,6 +131,47 @@ def test_deposits_page_has_search_bar(client, create_user):
     assert len(role_search) == 1
 
 
+# Activity Feed Page
+def test_activity_feed_page_requires_login(client, create_user):
+    user = create_user()
+    activity_feed_url = '/account'
+
+    response = client.get(activity_feed_url)
+
+    assert response.status_code == 302
+    assert response.location.endswith('login/?next=%2Faccount')
+
+    login_request_and_session(user, client)
+
+    response = client.get(activity_feed_url)
+
+    assert response.status_code == 200
+
+
+def test_account_page_menu_contains_desired_links(
+        client, create_user, admin_user):
+    # NOTE: admin_user is needed because of a quirk in invenio-admin.
+    #       A PR: https://github.com/inveniosoftware/invenio-admin/pull/67
+    #       has been submitted.
+    user = create_user()
+    login_request_and_session(user, client)
+
+    response = client.get('/account')
+    html_tree = html.fromstring(response.get_data(as_text=True))
+    links = {
+        a.get('href') for a in html_tree.cssselect('ul.list-group a')
+    }
+
+    assert links == {
+        '/account',
+        '/deposits',
+        '/account/settings/profile/',
+        '/account/settings/password/',
+        '/account/settings/security/',
+        '/account/settings/applications/',
+    }
+
+
 # Other
 def test_user_dropdown_contains_desired_links(client, create_user):
     user = create_user()
@@ -142,7 +184,8 @@ def test_user_dropdown_contains_desired_links(client, create_user):
     }
 
     assert links == {
-        url_for('invenio_userprofiles.profile'),
-        url_for('cd2hrepo_records.personal_records'),
-        url_for_security('logout')
+        '/account',
+        '/deposits',
+        '/account/settings/profile/',
+        '/logout/'
     }
