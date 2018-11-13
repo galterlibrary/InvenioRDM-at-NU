@@ -118,6 +118,19 @@ def test_deposits_page_requires_login(client, create_user):
     assert response.status_code == 200
 
 
+def test_deposits_page_has_search_bar(client, create_user):
+    user = create_user()
+    login_request_and_session(user, client)
+
+    response = client.get('/deposit/new')
+    html_text = response.get_data(as_text=True)
+    invenio_search_bar = re.findall('<invenio-search-bar', html_text)
+    role_search = re.findall('role="search"', html_text)
+
+    assert len(invenio_search_bar) == 0
+    assert len(role_search) == 1
+
+
 # Activity Feed Page
 def test_activity_feed_page_requires_login(client, create_user):
     user = create_user()
