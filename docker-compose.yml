@@ -5,21 +5,34 @@
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
+# This is the local development docker-compose file. It is the default
+# docker-compose file. Adapt it to your local machine needs (e.g. change ports)
+
 version: '2.2'
 services:
   cache:
     extends:
       file: docker-services.yml
       service: cache
+    ports:
+      - "6379:6379"
   db:
     extends:
       file: docker-services.yml
       service: db
+    ports:
+      - "5432:5432"
   mq:
     extends:
       file: docker-services.yml
       service: mq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
   es:
     extends:
       file: docker-services.yml
       service: es
+    ports:
+      - "9200:9200"
+      - "9300:9300"

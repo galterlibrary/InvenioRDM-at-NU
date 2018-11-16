@@ -1,7 +1,6 @@
 """Data related commands to use on the command-line."""
 
-from os import makedirs, stat
-from os.path import exists
+import os
 
 import click
 from flask import current_app
@@ -16,23 +15,33 @@ def load_locations(force=False):
 
     Lifted from https://github.com/zenodo/zenodo
     """
+    # NOTE: os.path.join returns its 2nd argument if that argument is an
+    #       absolute path which is what we want
+    files_location = os.path.join(
+        current_app.instance_path,
+        current_app.config['FIXTURES_FILES_LOCATION']
+    )
+    archive_location = os.path.join(
+        current_app.instance_path,
+        current_app.config['FIXTURES_ARCHIVE_LOCATION']
+    )
+
     try:
-        locs = []
+        locations = []
         uris = [
-            ('default', True, current_app.config['FIXTURES_FILES_LOCATION'], ),
-            ('archive', False,
-             current_app.config['FIXTURES_ARCHIVE_LOCATION'], )
+            ('default', True, files_location),
+            ('archive', False, archive_location)
         ]
         for name, default, uri in uris:
-            if uri.startswith('/') and not exists(uri):
-                makedirs(uri)
+            if uri.startswith('/') and not os.path.exists(uri):
+                os.makedirs(uri)
             if not Location.query.filter_by(name=name).first():
                 loc = Location(name=name, uri=uri, default=default)
                 db.session.add(loc)
-                locs.append(loc)
+                locations.append(loc)
 
         db.session.commit()
-        return locs
+        return locations
     except Exception:
         db.session.rollback()
         raise

@@ -43,7 +43,7 @@ RATELIMIT_STORAGE_URL = 'redis://localhost:6379/3'
 #: Default language
 BABEL_DEFAULT_LANGUAGE = 'en'
 #: Default time zone
-BABEL_DEFAULT_TIMEZONE = 'Europe/Zurich'
+BABEL_DEFAULT_TIMEZONE = 'America/Chicago'
 #: Other supported languages (do not include the default language in list).
 I18N_LANGUAGES = [
     # ('fr', _('French'))
@@ -84,8 +84,8 @@ MAIL_SUPPRESS_SEND = True
 # Assets
 # ======
 #: Static files collection method (defaults to copying files).
-# COLLECT_STORAGE = 'flask_collect.storage.file'  # Production
 COLLECT_STORAGE = 'flask_collect.storage.link'
+# NOTE: COLLECT_STORAGE = 'flask_collect.storage.file' is used in Production
 
 # Accounts
 # ========
@@ -374,11 +374,15 @@ FILES_REST_PERMISSION_FACTORY = \
     'cd2h_repo_project.modules.records.permissions:files_permission_factory'
 """Files REST permission factory"""
 
-FIXTURES_FILES_LOCATION = os.path.join(sys.prefix, 'var/instance/data')
-"""Location where uploaded files are saved"""
+FIXTURES_FILES_LOCATION = 'data/'
+"""Location where uploaded files are saved. If not an absolute path it is
+   relative to instance path.
+"""
 
-FIXTURES_ARCHIVE_LOCATION = os.path.join(sys.prefix, 'var/instance/archive')
-"""Location where uploaded files are archived"""
+FIXTURES_ARCHIVE_LOCATION = 'archive/'
+"""Location where uploaded files are archived. If not an absolute path it is
+   relative to instance path.
+"""
 
 # Search
 # ======

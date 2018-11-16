@@ -68,9 +68,11 @@ target/
 # Vim swapfiles
 .*.sw?
 
-# Environment files
+# Configuration files
 *.env
 !default.env
+deployment/ansible/hosts
+deployment/ansible/playbook.retry
 
 # SublimeText
 *.sublime-*

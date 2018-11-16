@@ -22,5 +22,5 @@ invenio roles create admin
 invenio access allow superuser-access role admin
 
 # CD2H Repo specific starter setup
-## Create location to store files
+## Create location to store files (idempotent)
 invenio locations setup_storage
