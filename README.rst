@@ -230,6 +230,8 @@ Production (RHEL setup)
 Enable SSH agent forwarding for <staging IP> and <production IP> on
 your own machine:
 
+.. code-block:: console
+
     Host <staging IP>
         ForwardAgent yes
 
@@ -239,15 +241,19 @@ your own machine:
 Add the missing `hosts` file in `deployment/ansible/` and populate it with
 the appropriate IPs:
 
+.. code-block:: console
+
     stage ansible_host=<staging IP> ansible_user=deploy
     production ansible_host=<production IP> ansible_user=deploy
 
 Go to `deployment/ansible/` and run the playbook:
 
+.. code-block:: console
+
     cd deployment/ansible
     ansible-playbook playbook.yml --extra-vars "token=<GITHUB_PRIVATE_TOKEN> deploy_hosts=<stage (default) | production> deploy_branch=<master (default) | something else>"
 
-<GITHUB_PRIVATE_TOKEN> is the token value retrieved above.
+`<GITHUB_PRIVATE_TOKEN>` is the token value retrieved above.
 
 TODO: Fabric layer on top of Ansible to make the CLI more user-friendly
 
