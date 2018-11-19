@@ -85,6 +85,26 @@ class TestRecordsSearch(object):
 
         assert_single_hit(response, published_record)
 
+    def test_search_for_query_part_of_author_returns_record(
+            self, client, create_record, es_clear):
+        # NOTE: This test is enough to validate that the author field uses
+        #       text indexing
+        record1 = create_record({'author': 'John Smith'})
+        record2 = create_record()
+
+        response = client.get("/records/?q=john")
+
+        assert_single_hit(response, record1)
+
+    def test_search_for_query_part_of_description_returns_record(
+            self, client, create_record, es_clear):
+        record1 = create_record({'description': 'In a galaxy far far away...'})
+        record2 = create_record()
+
+        response = client.get("/records/?q=far+galaxy")
+
+        assert_single_hit(response, record1)
+
 
 class TestDepositsSearch(object):
 
