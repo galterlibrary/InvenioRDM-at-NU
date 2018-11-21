@@ -64,7 +64,7 @@ services:
       file: docker-services.yml
       service: app
     restart: "always"
-    command: "celery worker -A invenio_app.celery --loglevel=INFO"
+    command: "pipenv run celery worker -A invenio_app.celery --loglevel=INFO"
     image: cd2h-repo-project-worker
     links:
       - cache
