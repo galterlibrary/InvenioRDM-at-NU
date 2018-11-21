@@ -61,10 +61,6 @@ FOOTER_TEMPLATE = 'cd2hrepo_theme/footer.html'
 HEADER_TEMPLATE = 'cd2hrepo_theme/header.html'
 #: Settings base template from invenio modules inherit from this.
 SETTINGS_TEMPLATE = 'cd2hrepo_theme/page_settings.html'
-#: Except for invenio-accounts that inherit from this
-ACCOUNTS_SETTINGS_TEMPLATE = SETTINGS_TEMPLATE
-# PR has been submitted:
-# https://github.com/inveniosoftware/invenio-accounts/pull/272
 
 # Theme configuration
 # ===================
