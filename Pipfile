@@ -1,0 +1,42 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+ansible = ">=2.7.0"
+check-manifest = ">=0.35"
+coverage = ">=4.4.1"
+cssselect = ">=1.0.3"
+Flask-Debugtoolbar = ">=0.10.1"
+isort = ">=4.3"
+pydocstyle = ">=2.0.0"
+pytest = ">=3.3.1"
+pytest-cov = ">=2.5.1"
+pytest-invenio = ">=1.0.2,<1.0.5"
+pytest-mock = ">=1.6.0"
+pytest-pep8 = ">=1.0.6"
+pytest-flask = "==0.12.0"
+pytest-runner = ">=3.0.0,<5"
+selenium = ">=3.4.3"
+Sphinx = ">=1.5.1"
+
+[packages]
+arrow = ">=0.12.1"
+Babel = ">=2.4.0"
+Flask-BabelEx = ">=0.9.3"
+cd2h-repo-project = {editable = true,path = "."}
+invenio = {version = "~=3.0.0",extras = ["base", "metadata", "postgresql", "auth", "elasticsearch6"]}
+invenio-accounts = ">=1.0.2"
+invenio-deposit = {editable = true,git = "https://github.com/galterlibrary/invenio-deposit.git",ref = "113_fix_dependencies"}
+invenio-records-files = {editable = true,git = "https://github.com/galterlibrary/invenio-records-files.git",ref = "make_non_pre"}
+invenio-files-rest = {editable = true,git = "https://github.com/galterlibrary/invenio-files-rest.git",ref = "make_non_pre"}
+invenio-records-rest = ">=1.1.0,<1.2.0"
+IPython = "<7.0.0"
+marshmallow = ">=2.15.5,<2.30.0"
+SQLAlchemy-Continuum = "==1.3.4"
+urllib3 = "==1.22"
+invenio-ldapclient = {editable = true,git = "https://github.com/galterlibrary/invenio-ldapclient.git",ref = "temporary-galter-first-depoloyment"}
+
+[requires]
+python_version = "3.5"

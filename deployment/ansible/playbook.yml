@@ -2,20 +2,13 @@
 - hosts: "{{ deploy_hosts | default('stage')}}"
 
   tasks:
-    # TODO: Waiting on IT for this to work in production (works on staging)
-    # - name: Enable RedHat repositories
-    #   rhsm_repository:
-    #     name:
-    #       - rhel-7-server-rpms
-    #       - rhel-7-server-extras-rpms
-    #       - rhel-7-server-optional-rpms
-    #   become: yes
-
     - name: docker is installed
       yum:
         name: docker
         state: latest
       become: yes
+      tags:
+        - docker
 
     - name: docker-compose is installed and executable
       get_url:
@@ -62,7 +55,7 @@
 
     # Note that this task is long and will always be run right now
     - name: containers are up and running
-      command: ./docker-compose.sh {{ token|quote }} docker-compose.prod.yml
+      command: docker-compose --file docker-compose.prod.yml
       args:
         chdir: cd2h-repo-project
 

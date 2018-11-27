@@ -9,16 +9,14 @@
 set -e
 
 ## Nodejs
-# TODO:BUG: If you run this in a container you don't want sudo. If you run this
-# on your computer (at least Ubuntu) you want a sudo. Why?
-# Need to switch node user to root to install globally correctly
-# npm -g config set user root
-npm update
-npm install --global --unsafe-perm node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
+VENV=`pipenv --venv`
+npm update --prefix "$VENV"
+npm install --prefix "$VENV" --global --unsafe-perm node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
 
 # Create and install package.json in static folder
 invenio npm
 STATIC_FOLDER=$(invenio shell --no-term-title -c "print(app.static_folder)")
+
 cd "$STATIC_FOLDER"
 npm install
 cd -

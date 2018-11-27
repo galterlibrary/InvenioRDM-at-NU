@@ -28,6 +28,7 @@ services:
       args:
         - INVENIO_COLLECT_STORAGE=${INVENIO_COLLECT_STORAGE}
         - FLASK_SKIP_DOTENV=${FLASK_SKIP_DOTENV}
+        - PIPENV_SYNC_OPTIONS=${PIPENV_SYNC_OPTIONS}
     image: cd2h-repo-project
     env_file:
       - default.env

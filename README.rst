@@ -48,63 +48,13 @@ instructions. You only need to execute them once to setup your environment:
         # and in the shell
         sysctl -w vm.max_map_count=262144
 
-2.  Create a virtualenv (the name does not matter)
+2.  Install the project locally:
 
     .. code-block:: console
 
-        $ mkvirtualenv my-repository-venv
+        $ PIPENV_VENV_IN_PROJECT=1 pipenv install --dev
 
-    This is one way to create such a Python virtual environment. There are other
-    ways too.
-
-3.  Install Python dependencies and current package
-
-    Our project uses some of our private repositories. You will either need
-    the `GITHUB_PRIVATE_TOKEN` value to download them or you can change the
-    requirements.txt to clone the repositories directly.
-
-    For the first option, you can ask your colleagues for the GITHUB_PRIVATE_TOKEN
-    or you can find it on our Jenkins CI that uses it. Once you have that
-    value, run:
-
-    .. code-block:: console
-
-        (my-repository-venv)$ GITHUB_PRIVATE_TOKEN=<retrieved value> pip install --requirement requirements.txt
-
-    For the second option, for every line that contains
-    `GITHUB_PRIVATE_TOKEN` in the `requirements.txt` file, replace it by:
-
-    .. code-block:: console
-
-        git+ssh://git@github.com/<owner>/<repo>.git@<tag>#egg=<desired egg name>
-
-    where `<owner>`, `<repo>` and so on are taken from the line to be replaced.
-    Then you should be able to install the dependencies in the
-    `requirements.txt` file (given that you have access to our private repositories
-    if you are reading this) by running:
-
-    .. code-block:: console
-
-        (my-repository-venv)$ pip install --requirement requirements.txt
-
-    The `GITHUB_PRIVATE_TOKEN` value is sensitive, so it is not included in any
-    repository.
-
-    Irrespective of the option you chose above, install the current package
-    after you installed the dependencies:
-
-    .. code-block:: console
-
-        (my-repository-venv)$ pip install --editable .[all]
-
-4.  Execute the Invenio initial bootstrap and setup code in the virtual environment
-
-    .. code-block:: console
-
-        (my-repository-venv)$ ./scripts/bootstrap
-        (my-repository-venv)$ ./scripts/setup
-
-5.  Start the containers for the services
+3.  Start the containers for the services
 
     .. code-block:: console
 
@@ -114,6 +64,14 @@ instructions. You only need to execute them once to setup your environment:
     This will create and run 4 docker containers. These containers will then
     keep themselves running even across reboots.
 
+4.  Execute the Invenio initial bootstrap and setup code
+
+    .. code-block:: console
+
+        $ pipenv run ./scripts/bootstrap
+        $ pipenv run ./scripts/setup
+
+
 Day to day development
 ----------------------
 
@@ -121,19 +79,17 @@ Once you have setup your environment as above, your day to day work will
 involve running these commands to develop / run the application on your local
 machine.
 
-1.  Start the celery worker inside your virtual environment
+1.  Start the celery worker via pipenv
 
     .. code-block:: console
 
-        $ workon my-repository-venv
-        (my-repository-venv)$ celery worker --app invenio_app.celery --loglevel INFO
+        $ pipenv run celery worker --app invenio_app.celery --loglevel INFO
 
 2.  ...in a new terminal, start the flask development server
 
     .. code-block:: console
 
-        $ workon my-repository-venv
-        (my-repository-venv)$ ./scripts/server
+        $ pipenv run ./scripts/server
 
 This will start the Celery queue service in the background and the development
 server at https://localhost:5000 .
@@ -168,20 +124,14 @@ take effect:
 
     .. code-block:: console
 
-        (my-repository-venv)$ pip install --editable .[all]
+        $ pipenv install --editable .
 
 To run migrations, install new npm packages added via Bundles or collect/build
 *new* assets:
 
     .. code-block:: console
 
-        (my-repository-venv)$ ./scripts/update
-
-To create a record from the command-line (via invenio cli):
-
-    .. code-block:: console
-
-        (my-repository-venv)$ echo '{"title": "New record", "description": "Test September 19 2018", "author": "You"}' | invenio records create
+        $ pipenv run ./scripts/update
 
 
 Running tests
@@ -191,7 +141,7 @@ To run regular tests (no end-to-end tests):
 
 .. code-block:: console
 
-    (my-repository-venv)$ ./run-tests.sh
+    $ pipenv run ./run-tests.sh
 
 To run end-to-end (E2E) tests (which are run by the CI):
 
@@ -203,7 +153,7 @@ Then, run the CI tests (they enable end-to-end testing):
 
 .. code-block:: console
 
-    (my-repository-venv)$ ./run-ci-tests.sh
+    $ pipenv run ./run-ci-tests.sh
 
 
 Continuous Integration (CI)
@@ -251,9 +201,7 @@ Go to `deployment/ansible/` and run the playbook:
 .. code-block:: console
 
     cd deployment/ansible
-    ansible-playbook playbook.yml --extra-vars "token=<GITHUB_PRIVATE_TOKEN> deploy_hosts=<stage (default) | production> deploy_branch=<master (default) | something else>"
-
-`<GITHUB_PRIVATE_TOKEN>` is the token value retrieved above.
+    pipenv run ansible-playbook playbook.yml --extra-vars "deploy_hosts=<stage (default) | production> deploy_branch=<master (default) | something else>"
 
 TODO: Fabric layer on top of Ansible to make the CLI more user-friendly
 
@@ -263,7 +211,7 @@ Subsequent Deployments (updates)
 
 TODO: Automate updates
 
-1. ssh into production machine
+1.  ssh into production machine
 2.  Run update script:
 
     .. code-block:: console
