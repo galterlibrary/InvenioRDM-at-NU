@@ -52,16 +52,28 @@
       lineinfile:
         path: /etc/sysctl.conf
         line: vm.max_map_count=262144
+      become: yes
+
+    # TODO: Automate file generation?
+    - name: custom .env file exists
+      stat:
+        path: /home/deploy/cd2h-repo-project/.env
+      register: status
+    - name: custom .env file exists failed
+      fail:
+        msg: "You need to manually provide the cd2h-repo-project/.env file!"
+      when: status.stat.exists == False
 
     # Note that this task is long and will always be run right now
+    # TODO: Use prebuilt image from registry
     - name: containers are up and running
-      command: docker-compose --file docker-compose.prod.yml
+      command: docker-compose --file docker-compose.prod.yml up --build --detach
       args:
         chdir: cd2h-repo-project
 
     - name: one-time scripts/setup was run
       # TODO: have `./scripts/setup` be idempotent
-      shell: docker exec cd2h-repo-project_web-ui_1 ./scripts/setup && touch setup_was_run.flag
+      shell: docker exec cd2h-repo-project_web-ui_1 pipenv run ./scripts/setup && touch setup_was_run.flag
       args:
         creates: setup_was_run.flag
       tags:

@@ -50,6 +50,7 @@ RUN pip install --upgrade \
     pipenv==2018.11.14
 
 # Copy uwsgi config files (will typically not bust the cache)
+# This only copies the files and NOT the directory itself
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 COPY docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
 
