@@ -1,0 +1,182 @@
+{% extends "cd2hrepo_theme/page.html" %}
+
+{% set title = "Contact Us" %}
+
+{%- block page_body %}
+{# {%- set user = current_user.is_authenticated and current_user %} #}
+<div id="contact-us-page" class="container body-container">
+
+  {%- block title %}
+  {%- if title %}
+  <div class="page-header">
+    <h1>{{ title }}</h1>
+  </div>
+  {%- endif %}
+  {%- endblock title %}
+
+  {# <div class="row">
+        <form id="contact-form" method="POST" enctype="multipart/form-data" role="form">
+          {{ form.csrf_token }}
+          <div class="contact">
+            <div class="row">
+              {{ render_form_field(form.name, input_extras={'disabled': True} if form.name.data else {}) }}
+            </div>
+            <div class="row">
+              {{ render_form_field(form.email, input_extras={'disabled': True} if form.email.data else {}) }}
+            </div>
+            <div class="row">
+              {{ render_form_field(form.issue_category) }}
+            </div>
+            <div class="row">
+              <div class="col-md-2"></div>
+              <div class="col-md-10">
+                <ul id="categories-tab" class="nav nav-tabs">
+                  {%- for category in categories.values() %}
+                    <li class="{%- if loop.index == 1 %} active in{%- endif %}">
+                      <a name="{{ category.key }}" href="#{{ category.key }}"></a>
+                    </li>
+                  {%- endfor %}
+                </ul>
+                <div class="tab-content content-tab">
+                  {%- for category in categories.values() %}
+                  <div id="{{ category.key }}" class="tab-pane fade {%- if loop.index == 1 %} active in {%- endif %}">
+                    {{ category.description|safe }}
+                  </div>
+                  {%- endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              {{ render_form_field(form.subject, input_size=10) }}
+            </div>
+            <div class="row">
+              {{ render_form_field(form.description, input_size=10) }}
+            </div>
+            <div class="row">
+              <div class="col-md-2"></div>
+              <div class="col-md-10">
+                <div class="panel panel-default upload-panel" align="center">
+                  <h3 class="upload-header">Drag files anywhere or click <a class="upload-button">here</a> to upload</h3>
+                  <p class="upload-info"></p>
+                </div>
+                {{ render_form_input(form.attachments, size=None, extras={'style': 'display:none'}) }}
+              </div>
+            </div>
+            <div class="row">
+              {{ render_form_label(form.include_os_browser) }}
+              <div class="col-md-10">
+                <p>{%- if uap.os %}<strong>Operating System:</strong> {{ uap.os }} - {% endif %}{%- if uap.browser %}<strong>Browser:</strong> {{ uap.browser }} {% endif %}{%- if uap.device and uap.device != 'Other' %}- <strong>Device:</strong> {{ uap.device }} {%- endif %}</p>
+                <label class="checkbox-inline" for="{{form.include_os_browser.label.field_id}}">
+                  {{ render_form_input(form.include_os_browser, size=None, extras={'class_':''}) }}
+                  <p>Include this information to assist us with narrowing down the cause of your problem.</p>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                {% if not user and form.recaptcha %}{{ render_form_input(form.recaptcha, size=None) }}{% endif %}
+                <br>
+                <button class="btn btn-block btn-success" type="submit">Send request</button>
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="confirmationModalLabel">Warning!</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <p>
+                    You haven't attached any files. If you want to add/update files, make sure to attach them or
+                    provide us with the link to them.
+                  </p>
+                  <p>Do you want to proceed anyway?</p>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="confirm">Send request</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> #}
+
+
+{# TODO: If useful enough place in new utilities modules #}
+{% macro errors(field) %}
+  {% if field.errors %}
+  <span class="help-block">
+    <ul class="errors">
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  </span>
+  {% endif %}
+{% endmacro %}
+
+  {# content-body #}
+  <form class="form-horizontal" method="POST">
+    {{ form.csrf_token }}
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="{{ form.name.id }}">{{ form.name.label }}</label>
+      <div class="col-md-4">
+        <input id="{{ form.name.id }}" name="{{ form.name.name }}" class="form-control"
+               required="required" type="text" value="{{ form.name.data | default('', true) }}">
+        {{ errors(form.name) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="{{ form.email.id }}">{{ form.email.label }}</label>
+      <div class="col-md-4">
+        <input id="{{ form.email.id }}" name="{{ form.email.name }}" class="form-control"
+               required="required" type="email" value="{{ form.email.data | default('', true) }}">
+        {{ errors(form.email) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="{{ form.subject.id }}">Subject</label>
+      <div class="col-sm-9">
+        <input id="{{ form.subject.id }}" name="{{ form.subject.name }}" class="form-control"
+               required="required" type="text" placeholder="e.g. Question about cataloging"
+               value="{{ form.subject.data | default('', true) }}">
+        {{ errors(form.subject) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="{{ form.message.id }}">Message</label>
+      <div class="col-sm-9">
+        <textarea id="{{ form.message.id }}" name="{{ form.message.name }}"
+          class="form-control" required="required"
+          rows="5" placeholder="Dear Galter Staff,
+
+I was wondering about ...
+
+Thanks for your help!" value="{{ form.message.data | default('', true) }}"></textarea>
+        {{ errors(form.message) }}
+      </div>
+    </div>
+
+    <input type="submit" name="commit" value="Submit" class="btn btn-primary pull-right">
+  </form>
+
+</div>
+{%- endblock page_body %}

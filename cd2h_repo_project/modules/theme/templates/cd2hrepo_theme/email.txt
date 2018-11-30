@@ -1,0 +1,12 @@
+==={{ config.THEME_SITENAME }} <{{ url_for('cd2hrepo_frontpage.index', _external=True) }}>===
+
+{%- block email_body %}
+{%- endblock email_body %}
+
+--------
+{{ config.THEME_SITENAME }} <{{ url_for('cd2hrepo_frontpage.index', _external=True) }}>
+Feinberg School of Medicine<https://www.feinberg.northwestern.edu/>
+Northwestern University<https://www.northwestern.edu/>
+303 E. Chicago Avenue, Chicago, IL 60611-3008
+Phone: 312-503-8126
+Copyright ©{% now 'local', '%Y' %} Northwestern University

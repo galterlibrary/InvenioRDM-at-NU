@@ -11,6 +11,10 @@
     color: $white;
     font-family: Calibri,"Helvetica Neue",Helvetica,Arial,sans-serif;
 
+    &.close {
+      color: black;
+    }
+
     &:hover {
       opacity: .7;
       text-decoration: none;

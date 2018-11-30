@@ -1,0 +1,14 @@
+{% extends 'cd2hrepo_theme/email.txt' %}
+
+{%- block email_body %}
+
+Contact Us Confirmation
+=======================
+
+Thank you for contacting us at {{config.THEME_SITENAME}}.
+
+We have received your message, and we will do our best to get back to you as soon as possible.
+
+This is an automated confirmation of your request, please do not reply to this email.
+
+{%- endblock %}
