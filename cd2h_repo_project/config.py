@@ -403,3 +403,13 @@ CONTACT_US_RECIPIENT_NAME = THEME_SITENAME
 CONTACT_US_RECIPIENT_EMAIL = 'digitalhub@northwestern.edu'
 CONTACT_US_SENDER_NAME = THEME_SITENAME
 CONTACT_US_SENDER_EMAIL = 'digitalhub@northwestern.edu'
+
+# Invenio-ldapclient
+# ==================
+LDAPCLIENT_LOGIN_USER_TEMPLATE = 'cd2hrepo_theme/login.html'
+# Fields to override
+LDAPCLIENT_SERVER_HOSTNAME = 'registry.northwestern.edu'
+LDAPCLIENT_USE_SSL = True
+LDAPCLIENT_BIND_BASE = 'ou=people,dc=northwestern,dc=edu'
+LDAPCLIENT_SEARCH_BASE = 'dc=northwestern,dc=edu'
+LDAPCLIENT_SERVER_PORT = 636
