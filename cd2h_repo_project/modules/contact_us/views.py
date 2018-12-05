@@ -46,7 +46,7 @@ def render_template_to_string(template, **kwargs):
     return template.render(**kwargs)
 
 
-@blueprint.route('/contact_us', methods=['GET', 'POST'])
+@blueprint.route('/contact-us', methods=['GET', 'POST'])
 def contact_us():
     """Provide form for questions/comments."""
     form = ContactForm()

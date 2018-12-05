@@ -175,7 +175,7 @@ def test_account_page_menu_contains_desired_links(
 # Contact Us Page
 def test_missing_data_returns_errors(client):
     response = client.post(
-        '/contact_us',
+        '/contact-us',
         data={
             'name': 'Jane Smith',
             'email': 'jane@example.com',
@@ -188,12 +188,12 @@ def test_missing_data_returns_errors(client):
     error_li = html_tree.cssselect('ul.errors li')[0]
 
     assert error_li.text_content() == "This field is required."
-    assert request.path == '/contact_us'
+    assert request.path == '/contact-us'
 
 
 def test_successful_form_completion_redirects_to_front_page_w_flash(client):
     response = client.post(
-        '/contact_us',
+        '/contact-us',
         data={
             'name': 'Jane Smith',
             'email': 'jane@example.com',
@@ -205,17 +205,17 @@ def test_successful_form_completion_redirects_to_front_page_w_flash(client):
     html_tree = html.fromstring(response.get_data(as_text=True))
     alert = html_tree.cssselect('div.alert-success')[0]
 
+    assert request.path == '/'
     assert (
         "Thank you for contacting us. We will be in touch soon!" in
         alert.text_content()
     )
-    assert request.path == '/'
 
 
 def test_successful_form_completion_sends_support_email(client):
     with current_app.extensions['mail'].record_messages() as outbox:
         response = client.post(
-            '/contact_us',
+            '/contact-us',
             data={
                 'name': 'Jane Smith',
                 'email': 'jane@example.com',
@@ -239,7 +239,7 @@ def test_successful_form_completion_sends_support_email(client):
 def test_successful_form_completion_sends_confirmation_email(client):
     with current_app.extensions['mail'].record_messages() as outbox:
         response = client.post(
-            '/contact_us',
+            '/contact-us',
             data={
                 'name': 'Jane Smith',
                 'email': 'jane@example.com',
