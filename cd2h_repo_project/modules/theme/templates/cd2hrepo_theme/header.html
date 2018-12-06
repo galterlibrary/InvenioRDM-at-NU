@@ -122,7 +122,12 @@
         </nav>
       </div>
       {%- endblock %}
-
     </div>
   </div>
+
+  {%- block flashmessages %}
+  {%- from "invenio_theme/macros/messages.html" import flashed_messages with context -%}
+  {{ flashed_messages() }}
+  {%- endblock %}
+
 </header>

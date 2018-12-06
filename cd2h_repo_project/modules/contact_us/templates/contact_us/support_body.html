@@ -1,0 +1,16 @@
+{% extends 'cd2hrepo_theme/email.html' %}
+
+{%- block email_body %}
+
+<h1>Request for Support</h1>
+
+From: {{poster.name}} &lt;{{poster.email}}&gt;
+
+<br/>
+<br/>
+
+{% for part in poster.message.splitlines() %}
+<p>{{part}}</p>
+{% endfor %}
+
+{%- endblock %}

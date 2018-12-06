@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style type="text/css">
+      body {
+        font-family: Calibri,Candara,Segoe,Optima,Arial,sans-serif !important;
+      }
+
+      table {
+        width: 625px;
+      }
+
+      th.header {
+        background-color: #514689;
+      }
+
+      th.header a {
+        color: white;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <table width='625' border='0' align='center'>
+      <tr>
+        <th class="header">
+          <h2>
+            <a href="{{ url_for('cd2hrepo_frontpage.index', _external=True) }}">
+              {{ config.THEME_SITENAME }}
+            </a>
+          </h2>
+        </th>
+      </tr>
+
+      <tr>
+        <td>
+          {%- block email_body %}
+          {%- endblock email_body %}
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <p>
+            <hr />
+            <a href="{{ url_for('cd2hrepo_frontpage.index', _external=True) }}">{{ config.THEME_SITENAME }}</a>
+            <br />
+            <a href="https://www.feinberg.northwestern.edu/">Feinberg School of Medicine</a>
+            <br />
+            <a href="https://www.northwestern.edu/">Northwestern University</a>
+            <br />
+            303 E. Chicago Avenue, Chicago, IL 60611-3008
+            <br />
+            Phone: 312-503-8126
+            <br />
+            Copyright ©{% now 'local', '%Y' %} Northwestern University
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

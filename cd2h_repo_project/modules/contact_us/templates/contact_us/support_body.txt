@@ -1,0 +1,12 @@
+{% extends 'cd2hrepo_theme/email.txt' %}
+
+{%- block email_body %}
+
+Request for Support
+===================
+
+From: {{poster.name}} <{{poster.email}}>
+
+{{ poster.message }}
+
+{%- endblock %}

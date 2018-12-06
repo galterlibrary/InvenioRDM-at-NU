@@ -69,7 +69,8 @@ WORKDIR ${WORKING_DIR}/src
 # Install locked production dependencies
 RUN pipenv sync ${PIPENV_SYNC_OPTIONS}
 
-# Ensure database, task queue and elasticsearch are initialized
+# Ensure database, task queue, elasticsearch are initialized
+# and css + js is bundled
 RUN pipenv run ./scripts/bootstrap
 
 # Set folder permissions

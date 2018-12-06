@@ -76,8 +76,9 @@ THEME_FRONTPAGE_TITLE = _('Next Generation Research Discovery')
 
 # Email configuration
 # ===================
-#: Email address for support.
-SUPPORT_EMAIL = "piotr.hebal@northwestern.edu"
+#: Email address used to send emails.
+# TODO: Create a project email once name is settled on
+SUPPORT_EMAIL = "digitalhub@northwestern.edu"
 #: Disable email sending by default.
 MAIL_SUPPRESS_SEND = True
 
@@ -389,3 +390,20 @@ FIXTURES_ARCHIVE_LOCATION = 'archive/'
 SEARCH_UI_SEARCH_TEMPLATE = 'records/search.html'
 SEARCH_UI_JSTEMPLATE_RESULTS = 'templates/records/results.html'
 SEARCH_UI_JSTEMPLATE_SEARCHBAR = 'templates/records/searchbar.html'
+
+
+# Contact Us
+# ==========
+CONTACT_US_SUPPORT_EMAIL_SUBJECT_TEMPLATE = 'contact_us/support_subject.txt'
+CONTACT_US_SUPPORT_EMAIL_BODY_TEMPLATE_TXT = 'contact_us/support_body.txt'
+CONTACT_US_SUPPORT_EMAIL_BODY_TEMPLATE_HTML = 'contact_us/support_body.html'
+
+CONTACT_US_CONFIRMATION_EMAIL_SUBJECT_TEMPLATE = 'contact_us/confirmation_subject.txt'  # noqa
+CONTACT_US_CONFIRMATION_EMAIL_BODY_TEMPLATE_TXT = 'contact_us/confirmation_body.txt'  # noqa
+CONTACT_US_CONFIRMATION_EMAIL_BODY_TEMPLATE_HTML = 'contact_us/confirmation_body.html'  # noqa
+
+CONTACT_US_RECIPIENT_NAME = THEME_SITENAME
+# Overridden via environment variable
+CONTACT_US_RECIPIENT_EMAIL = 'digitalhub@northwestern.edu'
+CONTACT_US_SENDER_NAME = THEME_SITENAME
+CONTACT_US_SENDER_EMAIL = 'digitalhub@northwestern.edu'

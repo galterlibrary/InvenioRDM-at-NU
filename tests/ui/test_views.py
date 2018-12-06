@@ -17,7 +17,7 @@ from __future__ import absolute_import, print_function
 
 import re
 
-from flask import url_for
+from flask import current_app, request, url_for
 from flask_login import current_user
 from flask_menu import current_menu
 from flask_security import url_for_security
@@ -170,6 +170,97 @@ def test_account_page_menu_contains_desired_links(
         '/account/settings/security/',
         '/account/settings/applications/',
     }
+
+
+# Contact Us Page
+def test_missing_data_returns_errors(client):
+    response = client.post(
+        '/contact-us',
+        data={
+            'name': 'Jane Smith',
+            'email': 'jane@example.com',
+            'subject': 'A subject'
+            # missing 'message'
+        },
+        follow_redirects=True
+    )
+    html_tree = html.fromstring(response.get_data(as_text=True))
+    error_li = html_tree.cssselect('ul.errors li')[0]
+
+    assert error_li.text_content() == "This field is required."
+    assert request.path == '/contact-us'
+
+
+def test_successful_form_completion_redirects_to_front_page_w_flash(client):
+    response = client.post(
+        '/contact-us',
+        data={
+            'name': 'Jane Smith',
+            'email': 'jane@example.com',
+            'subject': 'A subject',
+            'message': 'A message'
+        },
+        follow_redirects=True
+    )
+    html_tree = html.fromstring(response.get_data(as_text=True))
+    alert = html_tree.cssselect('div.alert-success')[0]
+
+    assert request.path == '/'
+    assert (
+        "Thank you for contacting us. We will be in touch soon!" in
+        alert.text_content()
+    )
+
+
+def test_successful_form_completion_sends_support_email(client):
+    with current_app.extensions['mail'].record_messages() as outbox:
+        response = client.post(
+            '/contact-us',
+            data={
+                'name': 'Jane Smith',
+                'email': 'jane@example.com',
+                'subject': 'A subject',
+                'message': 'A message\n<script>alert("annoying")</script>'
+            },
+            follow_redirects=True
+        )
+
+        assert len(outbox) == 2  # Includes the confirmation email. See below.
+        support_email = outbox[0]
+        assert support_email.sender == 'Jane Smith <jane@example.com>'
+        sitename = current_app.config['THEME_SITENAME']
+        assert support_email.recipients == [(sitename, 'digitalhub@northwestern.edu')]  # noqa
+        assert support_email.subject == '[{} - Contact Us]: A subject'.format(sitename)  # noqa
+        assert support_email.reply_to == ('Jane Smith', 'jane@example.com')
+        assert 'Jane Smith <jane@example.com>' in support_email.body
+        assert 'A message' in support_email.body
+
+
+def test_successful_form_completion_sends_confirmation_email(client):
+    with current_app.extensions['mail'].record_messages() as outbox:
+        response = client.post(
+            '/contact-us',
+            data={
+                'name': 'Jane Smith',
+                'email': 'jane@example.com',
+                'subject': 'A subject',
+                'message': 'A message <script>alert("annoying")</script>'
+            },
+            follow_redirects=True
+        )
+
+        assert len(outbox) == 2  # Includes the support email. See above.
+        confirmation_email = outbox[1]
+        sitename = current_app.config['THEME_SITENAME']
+        assert confirmation_email.sender == '{} <digitalhub@northwestern.edu>'.format(sitename)  # noqa
+        assert confirmation_email.recipients == [
+            ('Jane Smith', 'jane@example.com')
+        ]
+        assert confirmation_email.subject == '[{} - Contact Us] Confirmation'.format(sitename)  # noqa
+        assert (
+            'Thank you for contacting us at {}.'.format(sitename)
+            in confirmation_email.body
+        )
 
 
 # Other
