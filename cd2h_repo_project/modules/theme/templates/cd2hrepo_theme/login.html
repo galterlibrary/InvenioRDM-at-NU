@@ -25,7 +25,7 @@
 
           {%- block form_outer %}
           {%- with form = login_user_form %}
-          <form action="/ldap-login" method="POST" name="login_user_form">
+          <form method="POST" name="login_user_form">
             {{ form.hidden_tag() }}
             {{ form_errors(form) }}
             {{ render_field(form.username, icon="fa fa-user", autofocus=True, errormsg=False) }}
