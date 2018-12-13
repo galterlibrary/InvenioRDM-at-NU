@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fe1de80be9e2f2bad8ee50cb6aead8d18a9a04296962f36e1b2cd26f66a830d1"
+            "sha256": "dffd296bed517983e5fc81f66f5a14c76d9b6c2767e7d5ac6229ff94778ee994"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -95,10 +95,6 @@
                 "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"
             ],
             "version": "==1.4"
-        },
-        "cd2h-repo-project": {
-            "editable": true,
-            "path": "."
         },
         "celery": {
             "hashes": [
@@ -556,7 +552,7 @@
         "invenio-ldapclient": {
             "editable": true,
             "git": "https://github.com/galterlibrary/invenio-ldapclient.git",
-            "ref": "c804eb45e1012ca3b4a16a54bb9c67aa6845f433"
+            "ref": "9b6f32fd8f7192ac1ccf1ec36e7c0291334a1d00"
         },
         "invenio-logging": {
             "hashes": [
