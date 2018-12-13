@@ -37,6 +37,9 @@ recursive-include cd2h_repo_project *.html
 recursive-include cd2h_repo_project *.json
 recursive-include cd2h_repo_project *.scss
 recursive-include cd2h_repo_project *.js
+recursive-include cd2h_repo_project *.svg
+recursive-include cd2h_repo_project *.jpeg
+recursive-include cd2h_repo_project *.png
 recursive-include docs *.bat
 recursive-include docs *.py
 recursive-include docs *.rst

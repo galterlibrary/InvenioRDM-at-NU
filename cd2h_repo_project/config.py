@@ -285,7 +285,7 @@ DEPOSIT_REST_ENDPOINTS = {
             '/deposits/<{0}:pid_value>/files/<path:key>'.format(_PID),
         'default_media_type': 'application/json',
         'links_factory_imp': (
-            'cd2h_repo_project.modules.records.links:deposit_links_factory'
+            'cd2h_repo_project.modules.records.links:deposit_links_api_factory'
         ),
         # TODO: Redefine these permissions to cover our auth needs
         'create_permission_factory_imp': allow_all,
