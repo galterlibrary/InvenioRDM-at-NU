@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b20ebf91a42050c23add3c87c21952b626958d2f3d86e5ea27f67b71678fc8f2"
+            "sha256": "dffd296bed517983e5fc81f66f5a14c76d9b6c2767e7d5ac6229ff94778ee994"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -95,10 +95,6 @@
                 "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"
             ],
             "version": "==1.4"
-        },
-        "cd2h-repo-project": {
-            "editable": true,
-            "path": "."
         },
         "celery": {
             "hashes": [

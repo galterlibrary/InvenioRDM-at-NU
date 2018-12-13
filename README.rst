@@ -53,6 +53,7 @@ instructions. You only need to execute them once to setup your environment:
     .. code-block:: console
 
         $ PIPENV_VENV_IN_PROJECT=1 pipenv install --dev
+        $ pipenv run pip install .
 
 3.  Start the containers for the services
 
