@@ -21,6 +21,7 @@ cd "$STATIC_FOLDER"
 npm install
 cd -
 
+# Making a change to bust the cache and test CI problems
 # Collect and build assets
 invenio collect --verbose
 invenio assets build
