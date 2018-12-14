@@ -166,7 +166,6 @@ def test_account_page_menu_contains_desired_links(
         '/account',
         '/deposits',
         '/account/settings/profile/',
-        '/account/settings/password/',
         '/account/settings/security/',
         '/account/settings/applications/',
     }

@@ -31,15 +31,17 @@
         {%- if config.ACCOUNTS %}
         <div id="productLogin" class='hidden-xs col-sm-5 text-right'>
           {%- if not current_user.is_authenticated %}
+          {% block login_header_button %}
           <form>
             <a href="{{ url_for_security('login', next=request.path) }}"
                class="btn btn-default">
               <i class="fa fa-sign-in"></i> {{_('Log in')}}
             </a>
           </form>
+          {% endblock %}
           {%- else %}
           <div>
-          {%- if config.USERPROFILES %}
+            {%- if config.USERPROFILES %}
             <div class="btn-group">
               <a class="btn btn-default" href="{{ url_for('invenio_userprofiles.profile') }}">
                 <i class="fa fa-user"></i> {{current_user.email}}
@@ -76,11 +78,11 @@
               {% endblock %}
 
             </div>
-          {%- else %}
-          <a href="{{ url_for_security('logout') }}" class="btn btn-default">
-            <i class="fa fa-sign-out"></i> {{_('Log out')}}
-          </a>
-          {%- endif %}
+            {%- else %}
+            <a href="{{ url_for_security('logout') }}" class="btn btn-default">
+              <i class="fa fa-sign-out"></i> {{_('Log out')}}
+            </a>
+            {%- endif %}
           </div>
           {%- endif %}
         </div>
