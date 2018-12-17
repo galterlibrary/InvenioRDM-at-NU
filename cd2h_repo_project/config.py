@@ -83,6 +83,8 @@ MAIL_SUPPRESS_SEND = True
 #: Static files collection method (defaults to copying files).
 COLLECT_STORAGE = 'flask_collect.storage.link'
 # NOTE: COLLECT_STORAGE = 'flask_collect.storage.file' is used in Production
+# Uncomment to NOT bundle js and css in order to debug in the browser.
+# ASSETS_DEBUG = True
 
 # Accounts
 # ========
@@ -180,9 +182,6 @@ APP_DEFAULT_SECURE_HEADERS = {
     'session_cookie_secure': True,
     'session_cookie_http_only': True
 }
-
-# Uncomment to NOT bundle js and css in order to debug in the browser.
-# ASSETS_DEBUG = True
 
 # Invenio-Records
 # ===============

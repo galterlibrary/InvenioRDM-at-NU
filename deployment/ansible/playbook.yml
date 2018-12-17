@@ -47,6 +47,8 @@
         dest: cd2h-repo-project
         accept_hostkey: yes
       become: no
+      tags:
+        - deploy_branch
 
     - name: server has enough virtual memory for Elasticsearch
       lineinfile:

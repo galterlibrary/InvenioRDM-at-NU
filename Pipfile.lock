@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fe1de80be9e2f2bad8ee50cb6aead8d18a9a04296962f36e1b2cd26f66a830d1"
+            "sha256": "02d674729e00dab719ddb2e98d70a33d392209b68d916627ef73d1f1149deafc"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -40,6 +40,7 @@
                 "sha256:5b26757dc6f79a3b7dc9fab95359328d5747fcb2409d331ea66d0272b90ab2a0",
                 "sha256:8b995ffe925347a2138d7ac0fe77155e4311a0ea6d6da4f5128fe4b3cbe5ed71"
             ],
+            "index": "pypi",
             "markers": "sys_platform == 'darwin'",
             "version": "==0.1.0"
         },
@@ -95,10 +96,6 @@
                 "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"
             ],
             "version": "==1.4"
-        },
-        "cd2h-repo-project": {
-            "editable": true,
-            "path": "."
         },
         "celery": {
             "hashes": [
@@ -556,7 +553,7 @@
         "invenio-ldapclient": {
             "editable": true,
             "git": "https://github.com/galterlibrary/invenio-ldapclient.git",
-            "ref": "c804eb45e1012ca3b4a16a54bb9c67aa6845f433"
+            "ref": "954786d52ad1548192724d232ede0ff5d64b30ac"
         },
         "invenio-logging": {
             "hashes": [
@@ -1239,10 +1236,10 @@
         },
         "ansible": {
             "hashes": [
-                "sha256:498bb0581bb8ff00d77f1643f20f63b69227c13d4464419d10450cc3bc37365c"
+                "sha256:aaf9e1974bd12840ca055ac156f37601c08d73d726a3a6b98a2fe759a57051bb"
             ],
             "index": "pypi",
-            "version": "==2.7.4"
+            "version": "==2.7.5"
         },
         "apipkg": {
             "hashes": [
@@ -1657,11 +1654,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:1d131cc532be0023ef8ae265e2a779938d0619bb6c2510f52987ffcba7fa1ee4",
-                "sha256:ca4761407f1acc85ffd1609f464ca20bb71a767803505bd4127d0e45c5a50e23"
+                "sha256:f689bf2fc18c4585403348dd56f47d87780bf217c53ed9ae7a3e2d7faa45f8e9",
+                "sha256:f812ea39a0153566be53d88f8de94839db1e8a05352ed8a49525d7d7f37861e9"
             ],
             "index": "pypi",
-            "version": "==4.0.1"
+            "version": "==4.0.2"
         },
         "pytest-cache": {
             "hashes": [

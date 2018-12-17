@@ -61,13 +61,19 @@ ARG FLASK_SKIP_DOTENV
 ARG INVENIO_COLLECT_STORAGE
 ARG PIPENV_SYNC_OPTIONS
 
-# Copy source code (this WILL bust the cache)
 RUN mkdir -p ${WORKING_DIR}/src
-COPY ./ ${WORKING_DIR}/src
-WORKDIR ${WORKING_DIR}/src
 
-# Install locked production dependencies
+## Install locked production dependencies now to speed up build
+## (by having this step cached)
+COPY Pipfile Pipfile.lock ${WORKING_DIR}/src/
+WORKDIR ${WORKING_DIR}/src
 RUN pipenv sync ${PIPENV_SYNC_OPTIONS}
+
+# Copy source code (this WILL bust the cache)
+COPY ./ ${WORKING_DIR}/src
+
+# Install project (use pip so project is NOT added to Pipfile)
+RUN pipenv run pip install .
 
 # Ensure database, task queue, elasticsearch are initialized
 # and css + js is bundled
