@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Deployment script for convenience
+# USAGE: pipenv run ./scripts/deploy <host> <branch>
+
+# set -e
+
+HOST="$1"
+BRANCH="$2"
+
+# Load ansible-playbook CLI options
+OPTIONS=""
+if [[ -n "$3" ]]; then
+    while [[ -n "$3" ]]; do
+        OPTIONS+="$3 "
+        shift
+    done
+fi
+
+echo "Deploying ${BRANCH} to ${HOST}"
+
+cd deployment/ansible
+ansible-playbook playbook.yml --extra-vars "deploy_hosts=${HOST} deploy_branch=${BRANCH} ${OPTIONS}"
+cd -

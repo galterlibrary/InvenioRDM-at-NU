@@ -22,7 +22,7 @@ selenium = ">=3.4.3"
 Sphinx = ">=1.5.1"
 
 [packages]
-appnope = {version = "*", sys_platform = "== 'darwin'"}
+appnope = {version = "*",sys_platform = "== 'darwin'"}
 arrow = ">=0.12.1"
 Babel = ">=2.4.0"
 Flask-BabelEx = ">=0.9.3"
