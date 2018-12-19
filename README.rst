@@ -197,14 +197,13 @@ the appropriate IPs:
     stage ansible_host=<staging IP> ansible_user=deploy
     production ansible_host=<production IP> ansible_user=deploy
 
-Go to `deployment/ansible/` and run the playbook:
+Deploy the site via the `deploy` script :
 
 .. code-block:: console
 
-    cd deployment/ansible
-    pipenv run ansible-playbook playbook.yml --extra-vars "deploy_hosts=<stage (default) | production> deploy_branch=<master (default) | something else>"
-
-TODO: Fabric layer on top of Ansible to make the CLI more user-friendly
+    $ pipenv run ./scripts/deploy stage master
+    # For another <host> and <branch>
+    $ pipenv run ./scripts/deploy <host> <branch>
 
 
 Subsequent Deployments (updates)

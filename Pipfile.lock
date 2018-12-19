@@ -477,10 +477,10 @@
         },
         "invenio-base": {
             "hashes": [
-                "sha256:849cc80283acb23b1fc20f39cb983eefa4ac4a8c146bf44a76cb19971b990b56",
-                "sha256:b42f29a4758d334aab467c536d3930c392e4659fe21d57d263a50759fbef2f17"
+                "sha256:6e532854a43e4f54fc7d9b1cbda720ce4ce6383b00cee6ba5f7e86ef78f12fe2",
+                "sha256:f972e10b69a68a80c342f0bcf6b3b02a6a67af4fb6e8e347ce8b482fcb47e973"
             ],
-            "version": "==1.0.1"
+            "version": "==1.0.2"
         },
         "invenio-cache": {
             "hashes": [
@@ -571,10 +571,10 @@
         },
         "invenio-oaiserver": {
             "hashes": [
-                "sha256:09cf55273f9ecf01e705b236b5a67006e45ae6a45fe75d9157483245b3ce522e",
-                "sha256:cf4de59f0d5a5af8668852fa58d101badabbd608bc2689fbb08673949f7d3ca8"
+                "sha256:7dd298cb298b7f4789b31e75ffd5ebe8610b0a213e27add1d03399f7f6e2398b",
+                "sha256:a54d0ae881e956064c84b8157f561af5bedeef0d561c19b7227ccaf90cbb0a7d"
             ],
-            "version": "==1.0.0"
+            "version": "==1.0.1"
         },
         "invenio-oauth2server": {
             "hashes": [
@@ -599,10 +599,10 @@
         },
         "invenio-records": {
             "hashes": [
-                "sha256:e2203d26c1661ad3e681e6c844a4c299f89047508f16eef6166ec896dd66e0a8",
-                "sha256:f4a9ca9bdb27684ee431af007104c24c6bd75502c02f6f0c87c83d7820692d9d"
+                "sha256:56487d0b7b800877e45f385dbba831fc988ca4df935ced281543dcaa1b6dd351",
+                "sha256:d25c865c7ba3be059a5699e5e135a46e6fbb06370b58754ef22c7fdf337a12f1"
             ],
-            "version": "==1.0.0"
+            "version": "==1.0.1"
         },
         "invenio-records-files": {
             "editable": true,
@@ -611,10 +611,10 @@
         },
         "invenio-records-rest": {
             "hashes": [
-                "sha256:534eba23d788cf50258896f41efb859a5057d6658e29851fb47071d385ed4128",
-                "sha256:d225db7788d1650ffcd7f13cf9923ff223877efb34d290e02f59233f902935b5"
+                "sha256:6b81d790c2ff4cc0c9f744375117c0b06edea10042600a6bb67dbdff4da7746d",
+                "sha256:9b067710b0e98ccb763576155423c423be2f8245a5a137dd2566f3e386bd23c2"
             ],
-            "version": "==1.2.2"
+            "version": "==1.3.0"
         },
         "invenio-records-ui": {
             "hashes": [
@@ -692,10 +692,10 @@
         },
         "jedi": {
             "hashes": [
-                "sha256:0191c447165f798e6a730285f2eee783fff81b0d3df261945ecb80983b5c3ca7",
-                "sha256:b7493f73a2febe0dc33d51c99b474547f7f6c0b2c8fb2b21f453eef204c12148"
+                "sha256:571702b5bd167911fe9036e5039ba67f820d6502832285cde8c881ab2b2149fd",
+                "sha256:c8481b5e59d34a5c7c42e98f6625e633f6ef59353abea6437472c7ec2093f191"
             ],
-            "version": "==0.13.1"
+            "version": "==0.13.2"
         },
         "jinja2": {
             "hashes": [
@@ -993,10 +993,10 @@
         },
         "pygments": {
             "hashes": [
-                "sha256:6301ecb0997a52d2d31385e62d0a4a4cf18d2f2da7054a5ddad5c366cd39cee7",
-                "sha256:82666aac15622bd7bb685a4ee7f6625dd716da3ef7473620c192c0168aae64fc"
+                "sha256:5ffada19f6203563680669ee7f53b64dabbeb100eb51b61996085e99c03b284a",
+                "sha256:e8218dd399a61674745138520d0d4cf2621d7e032439341bc3f647bff125818d"
             ],
-            "version": "==2.3.0"
+            "version": "==2.3.1"
         },
         "pyjwt": {
             "hashes": [
@@ -1616,10 +1616,10 @@
         },
         "pygments": {
             "hashes": [
-                "sha256:6301ecb0997a52d2d31385e62d0a4a4cf18d2f2da7054a5ddad5c366cd39cee7",
-                "sha256:82666aac15622bd7bb685a4ee7f6625dd716da3ef7473620c192c0168aae64fc"
+                "sha256:5ffada19f6203563680669ee7f53b64dabbeb100eb51b61996085e99c03b284a",
+                "sha256:e8218dd399a61674745138520d0d4cf2621d7e032439341bc3f647bff125818d"
             ],
-            "version": "==2.3.0"
+            "version": "==2.3.1"
         },
         "pynacl": {
             "hashes": [
