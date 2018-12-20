@@ -53,7 +53,7 @@ instructions. You only need to execute them once to setup your environment:
     .. code-block:: console
 
         $ PIPENV_VENV_IN_PROJECT=1 pipenv install --dev
-        $ pipenv run pip install .
+        $ pipenv run pip install --editable .
 
 3.  Start the containers for the services
 
@@ -155,6 +155,10 @@ Then, run the CI tests (they enable end-to-end testing):
 .. code-block:: console
 
     $ pipenv run ./run-ci-tests.sh
+
+Tests destroy the local Elasticsearch index, recreate it:
+
+    $ pipenv run invenio index init --force
 
 
 Continuous Integration (CI)

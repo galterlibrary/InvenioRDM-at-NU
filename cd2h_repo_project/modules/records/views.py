@@ -12,6 +12,7 @@ from __future__ import absolute_import, print_function
 from flask import Blueprint, current_app, redirect, url_for
 from flask_menu import register_menu
 
+from .links import deposit_links_ui_factory
 from .marshmallow.json import LICENSES
 
 blueprint = Blueprint(
@@ -63,6 +64,12 @@ def license_value_to_name(value):
     for license in LICENSES:
         if license.value == value:
             return license.name
+
+
+@blueprint.app_template_filter('get_links')
+def get_links(pid, record):
+    """Return dictionary of related links."""
+    return deposit_links_ui_factory(pid, record)
 
 
 @blueprint.route('/deposits')

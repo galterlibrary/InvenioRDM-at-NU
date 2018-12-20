@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "02d674729e00dab719ddb2e98d70a33d392209b68d916627ef73d1f1149deafc"
+            "sha256": "418d1f762ab6028f3b1b1e0cf958c28b68b748e0fad800bdc4801ab43799bf11"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -553,7 +553,7 @@
         "invenio-ldapclient": {
             "editable": true,
             "git": "https://github.com/galterlibrary/invenio-ldapclient.git",
-            "ref": "954786d52ad1548192724d232ede0ff5d64b30ac"
+            "ref": "48b24b5bf46fd40c22dce042f54eaab6b7d377c3"
         },
         "invenio-logging": {
             "hashes": [
