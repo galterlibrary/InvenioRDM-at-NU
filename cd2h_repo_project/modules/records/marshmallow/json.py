@@ -9,7 +9,9 @@ from collections import namedtuple
 from invenio_records_rest.schemas import StrictKeysMixin
 from invenio_records_rest.schemas.fields import DateString, SanitizedUnicode
 from invenio_rest.errors import RESTValidationError
-from marshmallow import Schema, fields, missing, post_dump, post_load, validate
+from marshmallow import Schema, fields, missing, post_load, validate
+
+from cd2h_repo_project.modules.records.api import RecordType
 
 License = namedtuple('License', ['name', 'value'])
 # WARNING: Any change to this list should be reflected in deposit_form.json
@@ -53,11 +55,6 @@ class ContributorSchemaV1(StrictKeysMixin):
 class MetadataSchemaV1(Schema):
     """Schema for the record metadata."""
 
-    def get_id(self, obj):
-        """Get record id."""
-        pid = self.context.get('pid')
-        return pid.pid_value if pid else missing
-
     id = fields.Function(serialize=get_id, deserialize=get_id)
     title = SanitizedUnicode(required=True, validate=validate.Length(min=3))
     description = SanitizedUnicode(
@@ -71,17 +68,24 @@ class MetadataSchemaV1(Schema):
             labels=[l.name for l in LICENSES]
         )
     )
+    type = fields.Str(
+        dump_only=True,
+        validate=validate.OneOf([rt.value for rt in RecordType])
+    )
 
 
 class RecordSchemaV1(StrictKeysMixin):
-    """Record schema."""
+    """Record schema.
+
+    Note: When it comes to dumping, any data from the dumper that is not
+          accounted for by this, will not be present in the dump.
+    """
 
     id = fields.Function(serialize=get_id, deserialize=get_id)
     metadata = fields.Nested(MetadataSchemaV1)
     created = fields.Str(dump_only=True)
     updated = fields.Str(dump_only=True)
     links = fields.Dict(dump_only=True)
-    schema = fields.Str(attribute="$schema")
 
     @post_load
     def remove_envelope(self, data):
@@ -95,4 +99,5 @@ class RecordSchemaV1(StrictKeysMixin):
             'https://cd2hrepo.galter.northwestern.edu/'
             'schemas/records/record-v0.1.0.json'
         )
+
         return data

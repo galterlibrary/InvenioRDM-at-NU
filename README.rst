@@ -55,6 +55,9 @@ instructions. You only need to execute them once to setup your environment:
         $ PIPENV_VENV_IN_PROJECT=1 pipenv install --dev
         $ pipenv run pip install --editable .
 
+    Note: You may want to add PIPENV_VENV_IN_PROJECT=1 to your shell
+    (.bashrc, config.fish...) for ease of use.
+
 3.  Start the containers for the services
 
     .. code-block:: console
@@ -134,6 +137,9 @@ To run migrations, install new npm packages added via Bundles or collect/build
 
         $ pipenv run ./scripts/update
 
+In development, after you have added a *new* template, you need to collect
+it so that Flask can retrieve it. Once a template is collected (and linked),
+any changes to it will be automatically picked up.
 
 Running tests
 ~~~~~~~~~~~~~
@@ -156,7 +162,7 @@ Then, run the CI tests (they enable end-to-end testing):
 
     $ pipenv run ./run-ci-tests.sh
 
-Tests destroy the local Elasticsearch index, recreate it:
+Tests destroy the local Elasticsearch indices, to recreate them:
 
     $ pipenv run invenio index init --force
 

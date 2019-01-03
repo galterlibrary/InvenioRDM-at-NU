@@ -1,4 +1,8 @@
-"""Configuration for Deposit search."""
+"""Configuration for Deposit search.
+
+NOTE: In all search cases, the output from the index is serialized into JSON
+      as defined by json_v1_search in modules.records.serializers.
+"""
 
 from elasticsearch_dsl import Q, TermsFacet
 from flask import has_request_context
@@ -24,7 +28,7 @@ def records_filter():
             Permission(ActionNeed('admin-access')).can()):
         return Q()
     else:
-        return ~Q('term', _deposit__status='draft')
+        return Q('match', type='published')
 
 
 class RecordsSearch(_RecordsSearch):
@@ -42,24 +46,21 @@ class RecordsSearch(_RecordsSearch):
         default_filter = DefaultFilter(records_filter)
 
 
-def deposits_filter():
-    """Query ElasticSearch for a filtered list of Deposits.
+def owned_deposits_filter():
+    """Query ElasticSearch for a filtered list of owned Deposits.
 
-    Permit the user to see all if:
+    It returns:
+    - published records
+    - unpublished draft records (doesn't return published draft records)
 
-    * The user is an admin.
-
-    * It's called outside of a request.
-
-    Otherwise, it filters out any deposit where user is not the owner.
+    It sssumes its running inside a request context.
     """
-    if (not has_request_context() or
-            Permission(ActionNeed('admin-access')).can()):
-        return Q()
-    else:
-        return Q(
-            'match', **{'_deposit.owners': getattr(current_user, 'id', 0)}
-        )
+    # TODO: consider other cases like records_filter
+    return (
+        Q('match', **{'_deposit.owners': getattr(current_user, 'id', 0)}) &
+        (Q('match', **{'type': 'published'}) |
+         (Q('match', type='draft') & Q('match', _deposit__status='draft')))
+    )
 
 
 class DepositsSearch(_RecordsSearch):
@@ -68,10 +69,10 @@ class DepositsSearch(_RecordsSearch):
     class Meta:
         """Configuration for Deposit search."""
 
-        index = 'records'  # A Deposit is just an unpublished Record
+        index = 'records'  # Drafts and Published Records are indexed there
         doc_types = None
         fields = ('*', )
         facets = {
             'status': TermsFacet(field='_deposit.status'),
         }
-        default_filter = DefaultFilter(deposits_filter)
+        default_filter = DefaultFilter(owned_deposits_filter)

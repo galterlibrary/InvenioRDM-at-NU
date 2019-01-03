@@ -127,6 +127,13 @@ SQLALCHEMY_DATABASE_URI = (
 # ===========
 #: Hostname used in URLs for local JSONSchemas.
 JSONSCHEMAS_HOST = 'cd2hrepo.galter.northwestern.edu'
+# Custom settings for our instance
+DEPOSIT_JSONSCHEMAS_PREFIX = 'records/'
+RECORD_JSONSCHEMAS_PREFIX = 'records/'
+# Note: We set deposits and records to share the same schema
+# because they should contain the same data. We allow the schema to be
+# configurable (as per invenio-deposit) to give us some adaptability in the
+# future.
 
 # Flask configuration
 # ===================
@@ -185,6 +192,18 @@ APP_DEFAULT_SECURE_HEADERS = {
 
 # Invenio-Records
 # ===============
+# IMPORTANT NOTE: We collapse the user-interface for what Invenio calls a
+#                 Record and what it calls a Deposit into a Record. This
+#                 simplification makes it conceptually much simpler to work
+#                 with these things and, especially, talk about them.
+#                 In practice, this means the back-end keeps them separate
+#                 so we can leverage what Invenio has done for us, but any
+#                 external interface does not make the distinction Invenio
+#                 makes about Records and Deposits: it is all Records for the
+#                 onlooker. For us too, it is all Records conceptually.
+#                 Behind-the-scenes, Invenio-Deposit deals with creating and
+#                 editing; while Invenio-Record deals with viewing.
+
 RECORDS_REST_ENDPOINTS = {
     'recid': {
         'pid_type': 'recid',
@@ -211,7 +230,7 @@ RECORDS_REST_ENDPOINTS = {
                 'cd2h_repo_project.modules.records.loaders:json_v1'
             )
         },
-        'list_route': '/records/',
+        'list_route': '/records/',  # all published records
         'item_route': '/records/<pid(recid):pid_value>',
         'default_media_type': 'application/json',
         'max_result_window': 10000,
@@ -229,9 +248,9 @@ RECORDS_UI_ENDPOINTS = {
     'recid': {
         'pid_type': 'recid',
         'route': '/records/<pid_value>',
-        'template': 'records/record.html',
+        'template': 'records/view.html',
         # 'record_class': ....
-    },
+    }
 }
 """Records UI for Records."""
 
@@ -239,6 +258,18 @@ PIDSTORE_RECID_FIELD = 'id'
 
 # Invenio-Deposit
 # ===============
+# IMPORTANT NOTE: We collapse the user-interface for what Invenio calls a
+#                 Record and what it calls a Deposit into a Record. This
+#                 simplification makes it conceptually much simpler to work
+#                 with these things and, especially, talk about them.
+#                 In practice, this means the back-end keeps them separate
+#                 so we can leverage what Invenio has done for us, but any
+#                 external interface does not make the distinction Invenio
+#                 makes about Records and Deposits: it is all Records for the
+#                 onlooker. For us too, it is all Records conceptually.
+#                 Behind-the-scenes, Invenio-Deposit deals with creating and
+#                 editing; while Invenio-Record deals with viewing.
+
 DEPOSIT_DEFAULT_SCHEMAFORM = 'json/records/deposit_form.json'
 """Default Angular Schema **Form**.
 """
@@ -277,6 +308,7 @@ DEPOSIT_REST_ENDPOINTS = {
             'application/json': ('invenio_records_rest.serializers'
                                  ':json_v1_search'),
         },
+        # TODO: -> /draft-records/ ?
         'list_route': '/deposits/',
         'indexer_class': None,
         'item_route': '/deposits/<{0}:pid_value>'.format(_PID),
@@ -300,16 +332,22 @@ DEPOSIT_REST_ENDPOINTS = {
 DEPOSIT_RECORDS_UI_ENDPOINTS = {
     'depid': {
         'pid_type': 'depid',
-        'route': '/deposit/<pid_value>',
+        'route': '/records/<pid_value>/edit',
         'template': 'records/edit.html',
         'record_class': 'cd2h_repo_project.modules.records.api:Deposit',
-        'view_imp': 'invenio_deposit.views.ui.default_view_method',
+        'view_imp': 'cd2h_repo_project.modules.records.views.edit_view_method',
     },
 }
 """Basic deposit UI endpoints configuration."""
 
+DEPOSIT_UI_INDEX_URL = '/personal-records'
+"""The UI endpoint for the index page."""
+
 DEPOSIT_UI_INDEX_TEMPLATE = 'records/index.html'
 """Template for list of deposits page."""
+
+DEPOSIT_UI_NEW_URL = '/records/new'
+"""The UI endpoint for the new deposit page."""
 
 DEPOSIT_UI_NEW_TEMPLATE = 'records/edit.html'
 """Template for a new deposit page."""

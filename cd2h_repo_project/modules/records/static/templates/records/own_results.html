@@ -1,12 +1,12 @@
 <div ng-if="vm.invenioSearchResults.hits.total != 0">
   <div class="search-result" ng-repeat="record in vm.invenioSearchResults.hits.hits track by $index">
     <h4 class="title">
-      <a ng-if="record.metadata._deposit.status == 'published'"
-         target="_self" ng-href="/records/{{ record.metadata.id }}">
+      <a ng-if="record.metadata.type == 'published'"
+         target="_self" ng-href="/records/{{ record.metadata._deposit.pid.value }}">
         <i class="fa fa-file-text-o title-icon" title="published" aria-hidden="true"></i>{{ record.metadata.title }}
       </a>
-      <a ng-if="record.metadata._deposit.status == 'draft'"
-         target="_self" ng-href="/deposit/{{ record.metadata._deposit.id }}">
+      <a ng-if="record.metadata.type == 'draft'"
+         target="_self" ng-href="/records/{{ record.metadata._deposit.id }}/edit">
         <i class="fa fa-pencil-square-o title-icon" title="draft" aria-hidden="true"></i>{{ record.metadata.title }}
       </a>
     </h4>

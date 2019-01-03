@@ -4,12 +4,15 @@
       "date_detection": false,
       "numeric_detection": false,
       "properties": {
+        "id": {
+          "type": "keyword"
+        },
         "$schema": {
           "type": "text",
           "index": false
         },
-        "id": {
-          "type": "double"
+        "type": {
+          "type": "keyword"
         },
         "title": {
           "type": "text"
@@ -28,6 +31,37 @@
         },
         "_updated": {
           "type": "date"
+        },
+        "_deposit": {
+          "type": "object",
+          "properties": {
+            "created_by": {
+              "type": "integer"
+            },
+            "id": {
+              "type": "keyword"
+            },
+            "owners": {
+              "type": "integer"
+            },
+            "pid": {
+              "type": "object",
+              "properties": {
+                "revision_id": {
+                  "type": "integer"
+                },
+                "type": {
+                  "type": "keyword"
+                },
+                "value": {
+                  "type": "keyword"
+                }
+              }
+            },
+            "status": {
+              "type": "keyword"
+            }
+          }
         }
       }
     }

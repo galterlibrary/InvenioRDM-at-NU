@@ -9,8 +9,10 @@
 
 from __future__ import absolute_import, print_function
 
-from flask import Blueprint, current_app, redirect, url_for
+from flask import Blueprint, current_app, redirect, render_template, url_for
 from flask_menu import register_menu
+from invenio_db import db
+from invenio_records_ui.signals import record_viewed
 
 from .links import deposit_links_ui_factory
 from .marshmallow.json import LICENSES
@@ -72,10 +74,26 @@ def get_links(pid, record):
     return deposit_links_ui_factory(pid, record)
 
 
-@blueprint.route('/deposits')
-def personal_records():
-    """Redirect to list of deposits.
+def edit_view_method(pid, record, template=None):
+    """View method for updating record.
 
-    TODO: Change the deposit URL so that this redirect is not needed.
+    Sends ``record_viewed`` signal and renders template.
+
+    :param pid: PID object ('depid'-type PID).
+    :param record: Record object (Deposit API).
+    :param template: Template to render.
+
+    Taken from zenodo/zenodo
     """
-    return redirect(url_for('invenio_deposit_ui.index'))
+    # Put deposit in edit mode if not already.
+    if record['_deposit']['status'] != 'draft':
+        record = record.edit()
+        db.session.commit()
+
+    record_viewed.send(
+        current_app._get_current_object(),
+        pid=pid,
+        record=record,
+    )
+
+    return render_template(template, pid=pid, record=record)

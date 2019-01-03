@@ -1,5 +1,6 @@
 """Test Search integration."""
 
+import json
 import uuid
 
 import pytest
@@ -9,16 +10,25 @@ from invenio_pidstore.models import PersistentIdentifier, PIDStatus
 from invenio_records.api import Record
 from invenio_search import current_search
 
+from cd2h_repo_project.modules.records.api import RecordType
 from utils import login_request_and_session
 
 
 def assert_single_hit(response, expected_record):
     assert response.status_code == 200
-    assert len(response.json['hits']['hits']) == 1
-    search_hit = response.json['hits']['hits'][0]
-    for key in ['id', 'created', 'updated', 'metadata', 'links']:
+
+    search_hits = response.json['hits']['hits']
+
+    # Kept for debugging
+    for hit in search_hits:
+        print("Search hit:", json.dumps(hit, indent=4, sort_keys=True))
+
+    assert len(search_hits) == 1
+    search_hit = search_hits[0]
+    # only a record that has been published has an id, so we don't check for it
+    for key in ['created', 'updated', 'metadata', 'links']:
         assert key in search_hit
-    for key in ['title', 'author', 'description']:
+    for key in ['title', 'author', 'description', 'type']:
         assert search_hit['metadata'][key] == expected_record[key]
 
 
@@ -131,3 +141,58 @@ class TestDepositsSearch(object):
         assert published_record['title'] in hit_titles
         assert unpublished_record['title'] in hit_titles
         assert another_published_record['title'] not in hit_titles
+
+    def test_search_only_returns_appropriate_records(
+            self, client, create_record, es_clear, create_user, db):
+        user = create_user()
+        login_request_and_session(user, client)
+
+        print("Case: Newly created (draft) record should be returned")
+        unpublished_record = create_record(
+            {'title': 'A New Record'}, published=False)
+
+        response = client.get('/deposits/')
+
+        assert_single_hit(response, unpublished_record)
+        print("****")
+
+        print("Case: When published, only published record should be returned")
+        published_record = unpublished_record.publish()
+        db.session.commit()
+        current_search.flush_and_refresh(index='*')
+
+        response = client.get('/deposits/')
+
+        assert_single_hit(response, published_record)
+        print("****")
+
+        print("Case: When edited, draft and published record should be "
+              "returned")
+        draft_record = unpublished_record
+        edited_record = draft_record.edit()  # edit() is always called on draft
+        current_search.flush_and_refresh(index='*')
+        db.session.commit()
+
+        response = client.get('/deposits/')
+        search_hits = response.json['hits']['hits']
+
+        assert response.status_code == 200
+        assert len(search_hits) == 2
+        hit_types = [hit['metadata']['type'] for hit in search_hits]
+        assert published_record['type'] == RecordType.published.value
+        assert published_record['type'] in hit_types
+        assert edited_record['type'] == RecordType.draft.value
+        assert edited_record['type'] in hit_types
+        print("****")
+
+        # Case: When edited record is published,
+        print("Case: When re-published, only published record should be "
+              "returned")
+        published_record = edited_record.publish()
+        db.session.commit()
+        current_search.flush_and_refresh(index='*')
+
+        response = client.get('/deposits/')
+
+        assert_single_hit(response, published_record)
+        print("****")

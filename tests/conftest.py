@@ -69,14 +69,15 @@ def create_record(db, es_clear, locations, create_serialized_record):
         )
         data_to_use = create_serialized_record(data)
 
-        # A Deposit is an unpublished Record
         record = Deposit.create(data_to_use)
 
         if published:
-            record.publish()
+            record = record.publish()
 
+        # Flush to index and database
         current_search.flush_and_refresh(index='*')
         db.session.commit()
+
         return record
 
     return _create_record

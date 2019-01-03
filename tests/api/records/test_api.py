@@ -28,3 +28,20 @@ def test_deposit_create_fills_data(locations):
     deposit = Deposit.create(data)
 
     assert data['_buckets']['deposit']
+
+
+def test_deposit_publish(locations):
+    data = {}
+    deposit = Deposit.create(data)
+
+    published_record = deposit.publish()
+
+    assert published_record['type'] == 'published'
+
+
+def test_deposit_edit(create_record, db):
+    deposit = create_record()
+
+    draft_record = deposit.edit()
+
+    assert draft_record['type'] == 'draft'
