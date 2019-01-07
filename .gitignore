@@ -70,6 +70,7 @@ target/
 *.env
 !default.env
 deployment/ansible/hosts
+deployment/ansible/docker/daemon.json
 deployment/ansible/playbook.retry
 
 # SublimeText
