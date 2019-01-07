@@ -197,7 +197,18 @@ the appropriate IPs:
     stage ansible_host=<staging IP> ansible_user=deploy
     production ansible_host=<production IP> ansible_user=deploy
 
-Deploy the site via the `deploy` script :
+Add the missing `daemon.json` file in `deployment/ansible/docker` and populate
+it with your DNS IPs
+
+.. code-block:: console
+
+    {
+      "live-restore": true,
+      "group": "dockerroot",
+      "dns": [<your DNS IPs>, "208.67.222.222", "8.8.8.8"]
+    }
+
+Finally, deploy the site via the `deploy` script :
 
 .. code-block:: console
 
