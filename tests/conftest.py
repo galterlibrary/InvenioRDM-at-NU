@@ -99,7 +99,7 @@ def create_user(db):
         default_data = {'email': 'info@inveniosoftware.org',
                         'password': 'tester', 'active': True}
         user_info = default_data.copy()
-        is_super_user = info.pop('super', False)
+        provided_str_needs = info.pop('provides', [])
         user_info.update(info)
         datastore = current_app.extensions['security'].datastore
         user = datastore.create_user(**user_info)
@@ -107,10 +107,13 @@ def create_user(db):
         with db.session.begin_nested():
             # Note that db.session.begin_nested() is a shorthand way of
             # committing before and after the following
-            if is_super_user:
-                db.session.add(
-                    ActionUsers.create(action=superuser_access, user=user)
-                )
+            needs = current_app.extensions['invenio-access'].actions
+            for str_need in provided_str_needs:
+                need = needs.get(str_need, None)
+                if need:
+                    db.session.add(
+                        ActionUsers.create(action=need, user=user)
+                    )
 
         return user
 
@@ -123,5 +126,5 @@ def super_user(db, create_user):
     return create_user({
         'email': 'admin@example.com',
         'password': 'admin123',
-        'super': True
+        'provides': ['superuser-access']  # from invenio-access module
     })

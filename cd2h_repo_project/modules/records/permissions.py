@@ -1,6 +1,6 @@
 """Permission framework for Records."""
 
-from flask import current_app, request, session
+from flask import request
 from flask_principal import ActionNeed
 from flask_security import current_user
 from invenio_access import Permission
@@ -12,6 +12,12 @@ from invenio_records_files.api import FileObject
 from invenio_records_files.models import RecordsBuckets
 
 from cd2h_repo_project.utils import get_identity
+
+# Need instances #
+# These are granular badge-like permissions that can be assigned
+# via the cli or the admin
+cd2h_edit_metadata = ActionNeed('cd2h-edit-metadata')
+"""Permission to edit ANY record's metadata."""
 
 
 class CurrentUserFilesPermission(object):
@@ -126,11 +132,11 @@ class EditMetadataPermission(object):
 
     def can(self):
         """Return boolean if permission valid."""
+        identity = get_identity(self.user)
         return (
             is_owner(self.user, self.record) or
-            Permission().allows(get_identity(self.user))
-            # NOTE: by default any Permission
-            # has a super-user Need
+            Permission(cd2h_edit_metadata).allows(identity)
+            # NOTE: by default any Permission has a super-user Need
         )
 
 
@@ -145,11 +151,7 @@ def edit_metadata_permission_factory(record):
 def is_owner(user, record):
     """Check if user is an owner of the record."""
     user_id = int(user.get_id()) if user and user.is_authenticated else None
-    return (
-        # TODO: is this first condition needed?
-        # user_id in record.get('owners', []) or
-        user_id in record.get('_deposit', {}).get('owners', [])
-    )
+    return user_id in record.get('_deposit', {}).get('owners', [])
 
 
 # TODO: Enable when working on out-of-browser API interface

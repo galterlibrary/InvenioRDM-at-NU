@@ -17,10 +17,14 @@ invenio db init create
 invenio index init --force
 # invenio index queue init purge
 
-# Create SUPER_USER role to give ultimate power
+# Roles
+## Create SUPER_USER role to give ultimate power
 invenio roles create SUPER_USER
 invenio access allow superuser-access role SUPER_USER
 # ^ This is what makes SUPER_USER all-powerful
+## Create librarian role
+invenio roles create librarian
+invenio access allow cd2h-edit-metadata role librarian
 
 # CD2H Repo specific starter setup
 ## Create location to store files (idempotent)
