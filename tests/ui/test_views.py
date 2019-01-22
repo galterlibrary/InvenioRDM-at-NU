@@ -51,7 +51,6 @@ def test_front_page_has_only_one_search_bar_and_one_catalog_link(client):
 
 # Record Page
 def test_record_page_returns_200(client, create_record):
-    """Test record view."""
     record = create_record()
 
     # WARNING: In invenio record.id != record['id']
@@ -79,6 +78,29 @@ def test_record_page_shows_files(client, create_record):
     assert "8.9 kB" in html_text
 
 
+def test_record_page_shows_edit_action_if_permitted(
+        client, create_record, create_user):
+    user = create_user()
+    owned_record = create_record({'_deposit': {'owners': [user.id]}})
+    not_owned_record = create_record()
+    login_request_and_session(user, client)
+
+    response = client.get('/records/{}'.format(owned_record['id']))
+    page = response.get_data(as_text=True)
+    html_tree = html.fromstring(page)
+    edit_links = html_tree.cssselect('a#edit-action')
+
+    assert len(edit_links) == 1
+    pid_value = owned_record.pid.pid_value
+    assert edit_links[0].get('href') == '/records/{}/edit'.format(pid_value)
+
+    response = client.get('/records/{}'.format(not_owned_record['id']))
+    html_tree = html.fromstring(response.get_data(as_text=True))
+    edit_links = html_tree.cssselect('a#edit-action')
+
+    assert len(edit_links) == 0
+
+
 # Search Page
 def test_search_page_returns_200(client):
     """Test search page.
@@ -101,7 +123,7 @@ def test_search_page_has_only_one_search_bar(client):
     assert not role_search
 
 
-# New Record Page
+# New/Edit Record Page
 def test_new_record_page_requires_login(client, create_user):
     user = create_user()
     new_record_url = '/records/new'
@@ -131,6 +153,26 @@ def test_deposits_page_has_search_bar(client, create_user):
     assert len(role_search) == 1
 
 
+def test_edit_record_page_requires_edit_permission(
+        client, create_user, create_record):
+    user = create_user()
+    record = create_record({'_deposit': {'owners': [user.id]}})
+    login_request_and_session(user, client)
+
+    response = client.get('/records/{}/edit'.format(record['_deposit']['id']))
+
+    assert response.status_code == 200
+
+    another_user = create_user(
+        {'email': 'another@cd2h.galter.northwestern.edu'}
+    )
+    login_request_and_session(another_user, client)
+
+    response = client.get('/records/{}/edit'.format(record['_deposit']['id']))
+
+    assert response.status_code == 403
+
+
 # Activity Feed Page
 def test_activity_feed_page_requires_login(client, create_user):
     user = create_user()
@@ -149,8 +191,8 @@ def test_activity_feed_page_requires_login(client, create_user):
 
 
 def test_account_page_menu_contains_desired_links(
-        client, create_user, admin_user):
-    # NOTE: admin_user is needed because of a quirk in invenio-admin.
+        client, create_user, super_user):
+    # NOTE: super_user is needed because of a quirk in invenio-admin.
     #       A PR: https://github.com/inveniosoftware/invenio-admin/pull/67
     #       has been submitted.
     user = create_user()

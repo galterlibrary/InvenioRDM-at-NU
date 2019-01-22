@@ -16,6 +16,7 @@ from invenio_records_ui.signals import record_viewed
 
 from .links import deposit_links_ui_factory
 from .marshmallow.json import LICENSES
+from .permissions import EditMetadataPermission
 
 blueprint = Blueprint(
     'cd2hrepo_records',
@@ -97,3 +98,9 @@ def edit_view_method(pid, record, template=None):
     )
 
     return render_template(template, pid=pid, record=record)
+
+
+@blueprint.app_template_filter('has_edit_metadata_permission')
+def has_edit_metadata_permission(user, record):
+    """Return boolean whether user can update record."""
+    return EditMetadataPermission(user, record).can()

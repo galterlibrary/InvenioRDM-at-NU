@@ -12,7 +12,7 @@ import tempfile
 import pytest
 from flask import current_app
 from invenio_access.models import ActionUsers
-from invenio_admin.permissions import action_admin_access
+from invenio_access.permissions import superuser_access
 from invenio_files_rest.models import Bucket, Location
 from invenio_pidstore import current_pidstore
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
@@ -67,9 +67,18 @@ def create_record(db, es_clear, locations, create_serialized_record):
             current_app.extensions['invenio-jsonschemas']
             .path_to_url('records/record-v0.1.0.json')
         )
+        _deposit = data.pop('_deposit', {})
+
         data_to_use = create_serialized_record(data)
 
         record = Deposit.create(data_to_use)
+
+        # Have to modify `_deposit` content after the record is initially
+        # created because `_deposit` is used to choose to mint or not
+        if _deposit:
+            for key, value in _deposit.items():
+                record.model.json['_deposit'][key] = value
+            db.session.add(record.model)
 
         if published:
             record = record.publish()
@@ -90,7 +99,7 @@ def create_user(db):
         default_data = {'email': 'info@inveniosoftware.org',
                         'password': 'tester', 'active': True}
         user_info = default_data.copy()
-        is_admin = info.pop('admin', False)
+        is_super_user = info.pop('super', False)
         user_info.update(info)
         datastore = current_app.extensions['security'].datastore
         user = datastore.create_user(**user_info)
@@ -98,9 +107,9 @@ def create_user(db):
         with db.session.begin_nested():
             # Note that db.session.begin_nested() is a shorthand way of
             # committing before and after the following
-            if is_admin:
+            if is_super_user:
                 db.session.add(
-                    ActionUsers.create(action=action_admin_access, user=user)
+                    ActionUsers.create(action=superuser_access, user=user)
                 )
 
         return user
@@ -109,14 +118,10 @@ def create_user(db):
 
 
 @pytest.fixture
-def admin_user(db, create_user):
+def super_user(db, create_user):
     """Admin user."""
-    datastore = current_app.extensions['security'].datastore
-    user = datastore.create_user(email='admin@example.com', password='admin12')
-
-    with db.session.begin_nested():
-        db.session.add(
-            ActionUsers.create(action=action_admin_access, user=user)
-        )
-
-    return user
+    return create_user({
+        'email': 'admin@example.com',
+        'password': 'admin123',
+        'super': True
+    })

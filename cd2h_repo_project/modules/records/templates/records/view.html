@@ -78,10 +78,13 @@
 
           <br>
 
-          {# TODO: Permission check via current_user|has_record_perm(record, 'update') ? #}
-          <a class="btn btn-default btn-block" href="{{ url_for('invenio_deposit_ui.depid', pid_value=record._deposit.id) }}">
+          {# Actions #}
+          {% if current_user|has_edit_metadata_permission(record) %}
+          <a id="edit-action" class="btn btn-default btn-block"
+             href="{{ url_for('invenio_deposit_ui.depid', pid_value=record._deposit.id) }}">
             <i class="fa fa-pencil-square-o"></i> Edit
           </a>
+          {% endif %}
 
         </div>
 
