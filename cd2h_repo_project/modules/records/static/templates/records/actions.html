@@ -4,13 +4,14 @@
       <li>
         <button ng-disabled="depositionForm.$invalid || depositionForm.$prestine || recordsVM.invenioRecordsLoading"
                 class="btn btn-default" ng-click="recordsVM.actionHandler(['self', 'PUT'])">
-          Save your Changes
+          Save Draft
         </button>
       </li>
       <li>
         <button ng-disabled="depositionForm.$invalid || depositionForm.$dirty || recordsVM.invenioRecordsLoading"
-                class="btn btn-success" ng-click="recordsVM.actionHandler(['publish', 'POST'])">
-          Catalog your Research
+                class="btn btn-success" ng-click="recordsVM.actionHandler(['publish', 'POST'])"
+                title="You must save your changes before you can publish">
+          Publish Record
         </button>
       </li>
     </ul>
@@ -21,7 +22,14 @@
       <li>
         <button ng-disabled="depositionForm.$invalid || recordsVM.invenioRecordsLoading"
                 class="btn btn-default" ng-click="recordsVM.actionHandler(['self', 'PUT'])">
-          Save your Changes
+          Save Draft
+        </button>
+      </li>
+      <li>
+        <button ng-disabled="depositionForm.$invalid || depositionForm.$dirty || recordsVM.invenioRecordsLoading"
+                class="btn btn-success" ng-click="recordsVM.actionHandler(['publish', 'POST'])"
+                title="You must save your changes before you can publish">
+          Publish Record
         </button>
       </li>
     </ul>

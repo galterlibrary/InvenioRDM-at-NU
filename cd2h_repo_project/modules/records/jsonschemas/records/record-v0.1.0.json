@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Describe information needed for deposit module.",
+  "description": "Describe information needed for deposit and record module.",
   "id": "https://cd2hrepo.galter.northwestern.edu/schemas/records/record-v0.1.0.json",
   "title": "CD2H Data Model v0.1.0",
   "type": "object",
@@ -85,6 +85,10 @@
           "type": "string"
         }
       }
+    },
+    "type": {
+      "description": "Record type (draft or published record)",
+      "type": "string"
     }
   },
   "required": [

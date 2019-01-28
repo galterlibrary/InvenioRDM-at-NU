@@ -42,7 +42,7 @@ def test_front_page_has_only_one_search_bar_and_one_catalog_link(client):
     html_text = response.get_data(as_text=True)
     invenio_search_bar = re.findall('<invenio-search-bar', html_text)
     role_search = re.findall('role="search"', html_text)
-    catalog_links = re.findall('/deposit/new', html_text)
+    catalog_links = re.findall('/records/new', html_text)
 
     assert not invenio_search_bar
     assert len(role_search) == 1
@@ -101,19 +101,19 @@ def test_search_page_has_only_one_search_bar(client):
     assert not role_search
 
 
-# Deposit Page
-def test_deposits_page_requires_login(client, create_user):
+# New Record Page
+def test_new_record_page_requires_login(client, create_user):
     user = create_user()
-    deposits_page_url = url_for('invenio_deposit_ui.index')
+    new_record_url = '/records/new'
 
-    response = client.get(deposits_page_url)
+    response = client.get(new_record_url)
 
     assert response.status_code == 302
-    assert response.location.endswith('login/?next=%2Fdeposit')
+    assert response.location.endswith('login/?next=%2Frecords%2Fnew')
 
     login_request_and_session(user, client)
 
-    response = client.get(deposits_page_url)
+    response = client.get(new_record_url)
 
     assert response.status_code == 200
 
@@ -164,7 +164,7 @@ def test_account_page_menu_contains_desired_links(
 
     assert links == {
         '/account',
-        '/deposits',
+        '/personal-records',
         '/account/settings/profile/',
         '/account/settings/security/',
         '/account/settings/applications/',
@@ -275,7 +275,7 @@ def test_user_dropdown_contains_desired_links(client, create_user):
 
     assert links == {
         '/account',
-        '/deposits',
+        '/personal-records',
         '/account/settings/profile/',
         '/logout/'
     }
