@@ -81,7 +81,8 @@ def create_record(db, es_clear, locations, create_serialized_record):
             db.session.add(record.model)
 
         if published:
-            record = record.publish()
+            record.publish()
+            pid, record = record.fetch_published()
 
         # Flush to index and database
         current_search.flush_and_refresh(index='*')

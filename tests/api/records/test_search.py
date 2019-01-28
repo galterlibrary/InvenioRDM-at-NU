@@ -157,9 +157,10 @@ class TestDepositsSearch(object):
         print("****")
 
         print("Case: When published, only published record should be returned")
-        published_record = unpublished_record.publish()
+        unpublished_record.publish()
         db.session.commit()
         current_search.flush_and_refresh(index='*')
+        pid, published_record = unpublished_record.fetch_published()
 
         response = client.get('/deposits/')
 
@@ -168,8 +169,7 @@ class TestDepositsSearch(object):
 
         print("Case: When edited, draft and published record should be "
               "returned")
-        draft_record = unpublished_record
-        edited_record = draft_record.edit()  # edit() is always called on draft
+        edited_record = unpublished_record.edit()
         current_search.flush_and_refresh(index='*')
         db.session.commit()
 
@@ -188,9 +188,10 @@ class TestDepositsSearch(object):
         # Case: When edited record is published,
         print("Case: When re-published, only published record should be "
               "returned")
-        published_record = edited_record.publish()
+        edited_record.publish()
         db.session.commit()
         current_search.flush_and_refresh(index='*')
+        pid, published_record = edited_record.fetch_published()
 
         response = client.get('/deposits/')
 

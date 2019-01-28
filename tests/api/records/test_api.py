@@ -1,10 +1,8 @@
-from unittest import TestCase
-
 from invenio_files_rest.models import Bucket
 from invenio_records.models import RecordMetadata
 from invenio_records_files.models import RecordsBuckets
 
-from cd2h_repo_project.modules.records.api import Deposit
+from cd2h_repo_project.modules.records.api import Deposit, RecordType
 
 
 def test_deposit_create_creates_recordsbuckets(locations):
@@ -31,17 +29,19 @@ def test_deposit_create_fills_data(locations):
 
 
 def test_deposit_publish(locations):
-    data = {}
-    deposit = Deposit.create(data)
+    deposit = Deposit.create({})
 
-    published_record = deposit.publish()
+    deposit_record = deposit.publish()
+    pid, published_record = deposit_record.fetch_published()
 
-    assert published_record['type'] == 'published'
+    assert deposit_record['type'] == RecordType.draft.value
+    assert published_record['type'] == RecordType.published.value
 
 
-def test_deposit_edit(create_record, db):
-    deposit = create_record()
+def test_deposit_edit(create_record):
+    deposit = create_record(published=False)
+    deposit.publish()  # to set deposit's _deposit.status = 'published'
 
     draft_record = deposit.edit()
 
-    assert draft_record['type'] == 'draft'
+    assert draft_record['type'] == RecordType.draft.value

@@ -250,7 +250,13 @@ RECORDS_UI_ENDPOINTS = {
         'route': '/records/<pid_value>',
         'template': 'records/view.html',
         # 'record_class': ....
-    }
+    },
+    'recid_files': {
+        'pid_type': 'recid',
+        'route': '/records/<pid_value>/files/<path:filename>',
+        'view_imp': 'invenio_records_files.utils.file_download_ui',
+        'record_class': 'invenio_records_files.api:Record',
+    },
 }
 """Records UI for Records."""
 

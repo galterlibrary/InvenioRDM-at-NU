@@ -76,6 +76,10 @@ def test_record_page_shows_files(client, create_record):
     assert response.status_code == 200
     assert "fileA.png" in html_text
     assert "8.9 kB" in html_text
+    assert (
+        'href="/records/{}/files/fileA.png?download=1"'.format(record['id'])
+        in html_text
+    )
 
 
 def test_record_page_shows_edit_action_if_permitted(
@@ -91,7 +95,7 @@ def test_record_page_shows_edit_action_if_permitted(
     edit_links = html_tree.cssselect('a#edit-action')
 
     assert len(edit_links) == 1
-    pid_value = owned_record.pid.pid_value
+    pid_value = owned_record['_deposit']['id']
     assert edit_links[0].get('href') == '/records/{}/edit'.format(pid_value)
 
     response = client.get('/records/{}'.format(not_owned_record['id']))

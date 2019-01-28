@@ -72,7 +72,7 @@ def license_value_to_name(value):
 @blueprint.app_template_filter('get_links')
 def get_links(pid, record):
     """Return dictionary of related links."""
-    return deposit_links_ui_factory(pid, record)
+    return deposit_links_ui_factory(pid, record=record)
 
 
 def edit_view_method(pid, record, template=None):

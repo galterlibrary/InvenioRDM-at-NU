@@ -9,14 +9,22 @@ from invenio_deposit.links import \
     deposit_links_factory as _deposit_links_factory
 
 
-def deposit_links_api_factory(pid, record=None):
+def deposit_links_api_factory(pid, **kwargs):
     """
     Return, from the API applicaton, the useful URLs related to this record.
 
     Adapted from https://github.com/zenodo/zenodo
 
     Note: Zenodo separates this functionality between API and UI so we do too.
+    WARNING: **kwargs is necessary because Invenio does a backward
+             compatibility check solely based on presence of **kwargs
+             (invenio_records_rest/_compat.py). **kwargs indicates this is a
+             "new style" link factory.
+
+    :param pid: PersistentIdentifier of the record.
+    :param kwargs: Keyword arguments, key 'record' and value Record is required
     """
+    record = kwargs.get('record')
     links = _deposit_links_factory(pid)
 
     links['html'] = current_app.config['DEPOSIT_UI_ENDPOINT'].format(
@@ -35,14 +43,22 @@ def deposit_links_api_factory(pid, record=None):
     return links
 
 
-def deposit_links_ui_factory(pid, record=None):
+def deposit_links_ui_factory(pid, **kwargs):
     """
     Return, from the UI application, the useful URLs related to this record.
 
     Adapted from https://github.com/zenodo/zenodo
 
     Note: Zenodo separates this functionality between API and UI so we do too.
+    WARNING: **kwargs is necessary because Invenio does a backward
+             compatibility check solely based on presence of **kwargs
+             (invenio_records_rest/_compat.py). **kwargs indicates this is a
+             "new style" link factory.
+
+    :param pid: PersistentIdentifier of the record.
+    :param kwargs: Keyword arguments, key 'record' and value Record is required
     """
+    record = kwargs.get('record')
     base_API_url = current_app.config['DEPOSIT_RECORDS_API'].format(
         pid_value=pid.pid_value)
 

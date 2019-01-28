@@ -28,24 +28,13 @@ class RecordType(Enum):
 
 
 class Deposit(_Deposit):
-    """CD2H's version of a deposit.
+    """CD2H's in memory API interface to a draft record (a deposit in Invenio).
 
-    For all intents and purposes, this is our version of Record and we might
-    even change the name in the future.
-
-    Needed in order to manipulate our Records and their long lived drafts.
+    This is an attempt to rely as much as possible on invenio_deposit
+    while customizing for our needs.
 
     Sorry about the inheritance tree, Invenio started it!
     """
-
-    @property
-    def published_record_class(self):
-        """The Record API class used for published records.
-
-        Overrides parent's `published_record_class` and give
-        it this class as the value.
-        """
-        return self.__class__
 
     @property
     def record_schema(self):
@@ -152,7 +141,7 @@ class Deposit(_Deposit):
 
         :param pid: Force the new pid value. (Default: ``None``)
         :param id_: Force the new uuid value as deposit id. (Default: ``None``)
-        :returns: Returns itself.
+        :returns: Returns itself because this is what Invenio Deposit expects.
         """
         pid = pid or self.pid
 
@@ -163,15 +152,23 @@ class Deposit(_Deposit):
 
         if self['_deposit'].get('pid') is None:
             published_record = self._publish_new(id_=id_)
-        else:  # Update after edit
+        else:  # Publish after edit
             published_record = self._publish_edited()
 
         published_record['type'] = RecordType.published.value
 
         published_record.commit()
+
+        try:
+            self.indexer.index(published_record)
+        except RequestError:
+            current_app.logger.exception(
+                'Could not index {0}.'.format(published_record)
+            )
+
         self.commit()
 
-        return published_record
+        return self
 
     def _prepare_edit(self, published_record):
         """Prepare the data for the edited record.

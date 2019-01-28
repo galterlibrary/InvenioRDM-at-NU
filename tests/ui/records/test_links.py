@@ -1,9 +1,11 @@
+from invenio_pidstore.models import PersistentIdentifier
+
 from cd2h_repo_project.modules.records.links import deposit_links_ui_factory
 
 
 def test_deposit_links_ui_factory_contains_all_links(app, create_record):
-    record = create_record()
-    expected_pid_value = record.pid.pid_value
+    record = create_record(published=False)
+    expected_pid_value = record['_deposit']['id']
     expected_bucket_id = record['_buckets']['deposit']
 
     links = deposit_links_ui_factory(record.pid, record=record)

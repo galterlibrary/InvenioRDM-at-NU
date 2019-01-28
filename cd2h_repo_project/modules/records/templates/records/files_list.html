@@ -1,0 +1,30 @@
+{% if record._files %}
+<div class="panel panel-{{state}}" id="files">
+  <div class="collapse in" id="collapseTwo">
+    <table class="table table-striped" >
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Size</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {%- for file in record._files|sort(attribute='key') -%}
+      {%- set file_url = url_for('invenio_records_ui.recid_files', pid_value=pid.pid_value, filename=file.key, download=1) %}
+        <tr>
+          <td><a class="filename" href="{{file_url}}">{{ file.key }}</a></td>
+          <td class="nowrap">{{ file.size|filesizeformat }}</td>
+          <td class="nowrap"><span class="pull-right"><a class="btn btn-xs btn-default" href="{{file_url}}"><i class="fa fa-download"></i> Download</a></span></td>
+        </tr>
+      {%- endfor -%}
+        <tr>
+          <th>Total Size</th>
+          <td class="nowrap">{{record._files|sum(attribute='size')|filesizeformat}}</td>
+          <td class="nowrap"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
