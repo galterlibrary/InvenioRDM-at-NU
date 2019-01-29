@@ -4,11 +4,13 @@ from unittest.mock import Mock
 import pytest
 from flask import request
 from flask_principal import ActionNeed
+from flask_security import login_user
 from invenio_access import Permission
 from invenio_files_rest.models import Bucket
 
 from cd2h_repo_project.modules.records.permissions import (
-    CurrentUserFilesPermission, files_permission_factory, is_owner
+    CurrentUserFilesPermission, edit_metadata_permission_factory,
+    files_permission_factory, is_owner
 )
 
 
@@ -80,3 +82,31 @@ def test_files_permission_factory_for_bucket_obj_returns_CurrentUserFilesPermiss
     assert type(permission) == CurrentUserFilesPermission
     assert permission._can == is_owner
     assert request.current_file_record
+
+
+# Test Update Permission
+
+
+@pytest.mark.parametrize(
+    'user_id,owner_id,logged_in,super_user,allowed',
+    [
+        (1, 1, False, False, False),  # anonymous user
+        (2, 1, True, False, False),  # regular user but non-owner
+        (1, 1, True, False, True),  # owner
+        (3, 1, True, True, True),  # super-user
+    ]
+)
+def test_edit_metadata_permission_factory(
+        user_id, owner_id, logged_in, super_user, allowed, create_user,
+        request_ctx):
+    record = {'_deposit': {'owners': [owner_id]}}
+    if super_user:
+        user = create_user({'id': user_id, 'super': True})
+    else:
+        user = create_user({'id': user_id})
+    if logged_in:
+        login_user(user)
+
+    permission = edit_metadata_permission_factory(record)
+
+    assert permission.can() == allowed

@@ -19,12 +19,12 @@ import os
 import sys
 from datetime import timedelta
 
-from invenio_deposit.utils import (
-    check_oauth2_scope_write, check_oauth2_scope_write_elasticsearch
-)
 from invenio_indexer.api import RecordIndexer
 from invenio_records_rest.utils import allow_all, check_elasticsearch
 
+from cd2h_repo_project.modules.records.permissions import (
+    edit_metadata_permission_factory
+)
 from cd2h_repo_project.modules.records.search import RecordsSearch
 
 
@@ -319,10 +319,12 @@ DEPOSIT_REST_ENDPOINTS = {
         'links_factory_imp': (
             'cd2h_repo_project.modules.records.links:deposit_links_api_factory'
         ),
-        # TODO: Redefine these permissions to cover our auth needs
+        # TODO: Verify creation permission
         'create_permission_factory_imp': allow_all,
+        # TODO: Define reading permission
         'read_permission_factory_imp': check_elasticsearch,
-        'update_permission_factory_imp': allow_all,
+        'update_permission_factory_imp': edit_metadata_permission_factory,
+        # TODO: Define deleting permission
         'delete_permission_factory_imp': allow_all,
         'max_result_window': 10000,
     },
@@ -330,12 +332,17 @@ DEPOSIT_REST_ENDPOINTS = {
 """Basic REST deposit configuration."""
 
 DEPOSIT_RECORDS_UI_ENDPOINTS = {
+    # TODO: Move this inside RECORDS_UI_ENDPOINTS?
+    # NOTE: only import path strings are accepted
     'depid': {
         'pid_type': 'depid',
         'route': '/records/<pid_value>/edit',
         'template': 'records/edit.html',
         'record_class': 'cd2h_repo_project.modules.records.api:Deposit',
         'view_imp': 'cd2h_repo_project.modules.records.views.edit_view_method',
+        'permission_factory_imp': 'cd2h_repo_project.modules.records'
+                                  '.permissions'
+                                  '.edit_metadata_permission_factory'
     },
 }
 """Basic deposit UI endpoints configuration."""
