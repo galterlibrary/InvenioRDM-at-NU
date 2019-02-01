@@ -88,22 +88,20 @@ def test_files_permission_factory_for_bucket_obj_returns_CurrentUserFilesPermiss
 
 
 @pytest.mark.parametrize(
-    'user_id,owner_id,logged_in,super_user,allowed',
+    'user_id,owner_id,logged_in,provides,allowed',
     [
-        (1, 1, False, False, False),  # anonymous user
-        (2, 1, True, False, False),  # regular user but non-owner
-        (1, 1, True, False, True),  # owner
-        (3, 1, True, True, True),  # super-user
+        (1, 1, False, None, False),  # anonymous user
+        (2, 1, True, None, False),  # regular user but non-owner
+        (1, 1, True, None, True),  # owner
+        (3, 1, True, 'cd2h-edit-metadata', True),  # librarian for instance
+        (3, 1, True, 'superuser-access', True),  # super-user
     ]
 )
 def test_edit_metadata_permission_factory(
-        user_id, owner_id, logged_in, super_user, allowed, create_user,
+        user_id, owner_id, logged_in, provides, allowed, create_user,
         request_ctx):
     record = {'_deposit': {'owners': [owner_id]}}
-    if super_user:
-        user = create_user({'id': user_id, 'super': True})
-    else:
-        user = create_user({'id': user_id})
+    user = create_user({'id': user_id, 'provides': [provides]})
     if logged_in:
         login_user(user)
 

@@ -70,6 +70,9 @@ setup(
         'invenio_base.apps': [
             'cd2hrepo_records = cd2h_repo_project.modules.records.ext:Records',
         ],
+        'invenio_access.actions': [
+          'cd2h-edit-metadata = cd2h_repo_project.modules.records.permissions:cd2h_edit_metadata',
+        ],
     },
     classifiers=[
         'Environment :: Web Environment',
