@@ -36,6 +36,7 @@
   {% assets "invenio_deposit_dependencies_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {% assets "invenio_deposit_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {% assets "cd2hrepo_deposit_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+  {{ super() }}
 {%- endblock javascript %}
 
 {% set title = "Catalog your Research" %}
