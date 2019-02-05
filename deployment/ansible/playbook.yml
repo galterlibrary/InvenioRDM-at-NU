@@ -69,7 +69,7 @@
     # Note that this task is long and will always be run right now
     # TODO: Use prebuilt image from registry
     - name: containers are up and running
-      command: docker-compose --file docker-compose.prod.yml up --build --detach
+      command: docker-compose --verbose --file docker-compose.prod.yml up --build --detach
       args:
         chdir: cd2h-repo-project
 
@@ -80,3 +80,8 @@
         creates: setup_was_run.flag
       tags:
         - setup
+
+    - name: update script is run
+      # NOTE: update script can only be run now that the containers are up
+      #       (dependency on db for instance) and the volumes are mounted
+      shell: docker exec cd2h-repo-project_web-ui_1 pipenv run ./scripts/update

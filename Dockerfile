@@ -44,9 +44,6 @@ RUN pip install --upgrade \
     setuptools \
     wheel \
     pip==18.1 \
-    uwsgi \
-    uwsgitop \
-    uwsgi-tools \
     pipenv==2018.11.14
 
 # Copy uwsgi config files (will typically not bust the cache)
@@ -63,11 +60,21 @@ ARG PIPENV_SYNC_OPTIONS
 
 RUN mkdir -p ${WORKING_DIR}/src
 
-## Install locked production dependencies now to speed up build
-## (by having this step cached)
+# Install locked production dependencies now to speed up build
+# (by having this step cached)
 COPY Pipfile Pipfile.lock ${WORKING_DIR}/src/
 WORKDIR ${WORKING_DIR}/src
 RUN pipenv sync ${PIPENV_SYNC_OPTIONS}
+
+# Install global nodejs tools
+## Reset global npm location to avoid permission issues
+ENV NPM_CONFIG_PREFIX=${INVENIO_INSTANCE_PATH}/.npm-global
+RUN mkdir ${NPM_CONFIG_PREFIX}
+RUN npm config set prefix ${NPM_CONFIG_PREFIX}
+ENV PATH=${NPM_CONFIG_PREFIX}/bin:$PATH
+RUN npm update  && \
+    npm install --global --unsafe-perm \
+    node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
 
 # Copy source code (this WILL bust the cache)
 COPY ./ ${WORKING_DIR}/src
@@ -75,8 +82,10 @@ COPY ./ ${WORKING_DIR}/src
 # Install project (use pip so project is NOT added to Pipfile)
 RUN pipenv run pip install .
 
-# Ensure database, task queue, elasticsearch are initialized
-# and css + js is bundled
+# Preliminary static asset setup to give a usable image
+# WARNING: scripts/update needs to be run on the final image to
+#          really have everything setup properly
+# TODO: Remove?
 RUN pipenv run ./scripts/bootstrap
 
 # Set folder permissions
@@ -84,7 +93,7 @@ RUN chgrp -R 0 ${WORKING_DIR} && \
     chmod -R g=u ${WORKING_DIR}
 # RUN chmod -R g=u ${WORKING_DIR}
 
-RUN useradd invenio --uid 1000 --gid 0 && \
+RUN useradd invenio --uid 1000 --gid 0 --create-home && \
     chown -R invenio:root ${WORKING_DIR}
 USER 1000
 

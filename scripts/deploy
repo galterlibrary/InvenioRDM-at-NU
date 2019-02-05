@@ -1,9 +1,7 @@
 #!/bin/bash
 
 # Deployment script for convenience
-# USAGE: pipenv run ./scripts/deploy <host> <branch>
-
-# set -e
+# USAGE: pipenv run ./scripts/deploy <host> <branch> [options]
 
 HOST="$1"
 BRANCH="$2"

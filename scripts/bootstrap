@@ -8,11 +8,6 @@
 
 set -e
 
-## Nodejs
-VENV=`pipenv --venv`
-npm update --prefix "$VENV"
-npm install --prefix "$VENV" --global --unsafe-perm node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
-
 # Create and install package.json in static folder
 invenio npm
 STATIC_FOLDER=$(invenio shell --no-term-title -c "print(app.static_folder)")
@@ -21,7 +16,6 @@ cd "$STATIC_FOLDER"
 npm install
 cd -
 
-# Making a change to bust the cache and test CI problems
 # Collect and build assets
 invenio collect --verbose
 invenio assets build
