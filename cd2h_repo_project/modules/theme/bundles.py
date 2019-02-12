@@ -8,6 +8,7 @@ css = NpmBundle(
         'scss/styles.scss',
         filters='node-scss, cleancss',
         output="gen/cd2hrepo.local.styles.%(version)s.css",
+        depends=('scss/*.scss', ),
     ),
     Bundle(
         'node_modules/angular-loading-bar/build/loading-bar.css',

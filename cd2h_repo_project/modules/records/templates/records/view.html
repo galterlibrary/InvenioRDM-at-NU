@@ -68,13 +68,7 @@
     <div class="row">
       <div id="invenio-records">
         <div class="col-md-4">
-          {% if record._files %}
-          <ul>
-            {% for file in record._files %}
-              <li>{{ file.key }} ({{file.size | filesizeformat}})</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
+          {%- include "records/files_list.html" %}
 
           <br>
 

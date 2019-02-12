@@ -4,7 +4,7 @@ from cd2h_repo_project.modules.records.links import deposit_links_api_factory
 
 
 def test_deposit_links_api_factory_contains_bucket(app, create_record):
-    record = create_record()
+    record = create_record(published=False)
     expected_bucket_id = record['_buckets']['deposit']
 
     with patch(
@@ -17,7 +17,7 @@ def test_deposit_links_api_factory_contains_bucket(app, create_record):
 
 
 def test_deposit_links_api_factory_contains_html(app, create_record):
-    record = create_record()
+    record = create_record(published=False)
     expected_pid_value = record.pid.pid_value
 
     with patch(
