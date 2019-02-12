@@ -55,7 +55,7 @@ class ContributorSchemaV1(StrictKeysMixin):
 class MetadataSchemaV1(Schema):
     """Schema for the record metadata."""
 
-    id = fields.Function(serialize=get_id, deserialize=get_id)
+    id = fields.Function(serialize=get_id, deserialize=get_id, dump_only=True)
     title = SanitizedUnicode(required=True, validate=validate.Length(min=3))
     description = SanitizedUnicode(
         required=True, validate=validate.Length(min=3)
@@ -81,7 +81,7 @@ class RecordSchemaV1(StrictKeysMixin):
           accounted for by this, will not be present in the dump.
     """
 
-    id = fields.Function(serialize=get_id, deserialize=get_id)
+    id = fields.Function(serialize=get_id, deserialize=get_id, dump_only=True)
     metadata = fields.Nested(MetadataSchemaV1)
     created = fields.Str(dump_only=True)
     updated = fields.Str(dump_only=True)
