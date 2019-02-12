@@ -182,6 +182,17 @@ code changes.
 
     If the ``scripts/setup`` file gets added commands, run those.
 
+5.  [Exceptional] Uncomment the destructive commands from ./scripts/setup
+    and run it
+
+    .. code-block:: console
+
+        pipenv run ./scripts/setup
+
+    This is only to be done in rare cases, if there still seems to be issues.
+    The database or index may be at fault then. Wipe them out to start from a
+    clean slate.
+
 That should cover it!
 
 Running tests

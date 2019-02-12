@@ -91,7 +91,6 @@ RUN pipenv run ./scripts/bootstrap
 # Set folder permissions
 RUN chgrp -R 0 ${WORKING_DIR} && \
     chmod -R g=u ${WORKING_DIR}
-# RUN chmod -R g=u ${WORKING_DIR}
 
 RUN useradd invenio --uid 1000 --gid 0 --create-home && \
     chown -R invenio:root ${WORKING_DIR}
