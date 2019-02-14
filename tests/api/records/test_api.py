@@ -45,3 +45,13 @@ def test_deposit_edit(create_record):
     draft_record = deposit.edit()
 
     assert draft_record['type'] == RecordType.draft.value
+
+
+def test_fetch_deposit(create_record):
+    unpublished_record = create_record(published=False)
+    unpublished_record.publish()
+    _, published_record = unpublished_record.fetch_published()
+
+    _, deposit = Deposit.fetch_deposit(published_record)
+
+    assert unpublished_record == deposit

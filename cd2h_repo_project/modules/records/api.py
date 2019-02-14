@@ -6,14 +6,19 @@ from flask import current_app
 from invenio_deposit.api import Deposit as _Deposit
 from invenio_deposit.api import has_status, preserve
 from invenio_deposit.utils import mark_as_action
+from invenio_deposit.providers import DepositProvider
 from invenio_files_rest.models import Bucket
 from invenio_pidstore.errors import PIDInvalidAction
+from invenio_pidstore.resolver import Resolver
 from invenio_records_files.models import RecordsBuckets
 from werkzeug.local import LocalProxy
 
 current_jsonschemas = LocalProxy(
     lambda: current_app.extensions['invenio-jsonschemas']
 )
+
+
+RECORD_OBJECT_TYPE = 'rec'
 
 
 class RecordType(Enum):
@@ -30,11 +35,26 @@ class RecordType(Enum):
 class Deposit(_Deposit):
     """CD2H's in memory API interface to a draft record (a deposit in Invenio).
 
+    This is the model for a draft and Record is the model for a published
+    record.
+
     This is an attempt to rely as much as possible on invenio_deposit
     while customizing for our needs.
 
     Sorry about the inheritance tree, Invenio started it!
     """
+
+    @classmethod
+    def fetch_deposit(cls, record):
+        """
+        Return a tuple with PID and Deposit of corresponding published record.
+        """
+        resolver = Resolver(
+            pid_type=DepositProvider.pid_type, object_type=RECORD_OBJECT_TYPE,
+            getter=cls.get_record
+        )
+        return resolver.resolve(record['_deposit']['id'])
+
 
     @property
     def record_schema(self):
