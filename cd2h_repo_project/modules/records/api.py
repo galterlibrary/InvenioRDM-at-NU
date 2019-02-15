@@ -5,8 +5,8 @@ from enum import Enum
 from flask import current_app
 from invenio_deposit.api import Deposit as _Deposit
 from invenio_deposit.api import has_status, preserve
-from invenio_deposit.utils import mark_as_action
 from invenio_deposit.providers import DepositProvider
+from invenio_deposit.utils import mark_as_action
 from invenio_files_rest.models import Bucket
 from invenio_pidstore.errors import PIDInvalidAction
 from invenio_pidstore.resolver import Resolver
@@ -46,15 +46,12 @@ class Deposit(_Deposit):
 
     @classmethod
     def fetch_deposit(cls, record):
-        """
-        Return a tuple with PID and Deposit of corresponding published record.
-        """
+        """Return PID and Deposit tuple of corresponding published record."""
         resolver = Resolver(
             pid_type=DepositProvider.pid_type, object_type=RECORD_OBJECT_TYPE,
             getter=cls.get_record
         )
         return resolver.resolve(record['_deposit']['id'])
-
 
     @property
     def record_schema(self):
@@ -178,15 +175,15 @@ class Deposit(_Deposit):
         published_record['type'] = RecordType.published.value
 
         published_record.commit()
+        self.commit()
 
+        # TODO: Remove? because invenio-deposit takes care of it via signal
         try:
             self.indexer.index(published_record)
         except RequestError:
             current_app.logger.exception(
                 'Could not index {0}.'.format(published_record)
             )
-
-        self.commit()
 
         return self
 
@@ -206,11 +203,11 @@ class Deposit(_Deposit):
         return data
 
     @has_status
-    @preserve(result=False, fields=('_deposit', 'type'))
+    @preserve(result=False, fields=('_deposit', 'type', 'id', '_buckets'))
     def clear(self, *args, **kwargs):
-        """Clear draft-record of all fields except for `_deposit` and `type`.
+        """Clear draft-record of all fields except for the specified ones.
 
-        Overrides parent's `clear` to preserve 'type'.
+        Overrides parent's `clear` to choose what to preserve.
 
         Status required: ``'draft'``.
         """

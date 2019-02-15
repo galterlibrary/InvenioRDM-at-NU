@@ -77,6 +77,12 @@ class MetadataSchemaV1(Schema):
 class RecordSchemaV1(StrictKeysMixin):
     """Record schema.
 
+    This acts as a bi-directonal form and data transformer.
+    It *loads*, validates and transforms data from the external world, to get a
+    "cleaned" data dict.
+    It *dumps* data from internal system to get a data dict for external
+    consumption.
+
     Note: When it comes to dumping, any data from the dumper that is not
           accounted for by this, will not be present in the dump.
     """

@@ -55,3 +55,22 @@ def test_fetch_deposit(create_record):
     _, deposit = Deposit.fetch_deposit(published_record)
 
     assert unpublished_record == deposit
+
+
+def test_clear_deposit_preserves_appropriate_fields(create_record):
+    record = create_record()
+    _, deposit = Deposit.fetch_deposit(record)
+    fields_to_preserve = ['_buckets', '_deposit', 'id', 'type']
+    preserved = {}
+
+    assert deposit['$schema']  # Example of field not to preserve
+    for field in fields_to_preserve:
+        assert deposit[field]
+        preserved[field] = deposit[field]
+
+    deposit['_deposit']['status'] = 'draft'  # Needed to clear
+    cleared_deposit = deposit.clear()
+
+    assert '$schema' not in deposit
+    for field in fields_to_preserve:
+        assert preserved[field] == deposit[field]
