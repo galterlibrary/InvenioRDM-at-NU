@@ -1,13 +1,7 @@
 """Test Search integration."""
 
 import json
-import uuid
 
-import pytest
-from flask import current_app, url_for
-from invenio_indexer.api import RecordIndexer
-from invenio_pidstore.models import PersistentIdentifier, PIDStatus
-from invenio_records.api import Record
 from invenio_search import current_search
 
 from cd2h_repo_project.modules.records.api import RecordType

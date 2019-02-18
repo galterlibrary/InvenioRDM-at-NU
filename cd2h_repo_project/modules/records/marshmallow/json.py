@@ -55,7 +55,7 @@ class ContributorSchemaV1(StrictKeysMixin):
 class MetadataSchemaV1(Schema):
     """Schema for the record metadata."""
 
-    id = fields.Function(serialize=get_id, deserialize=get_id)
+    id = fields.Function(serialize=get_id, deserialize=get_id, dump_only=True)
     title = SanitizedUnicode(required=True, validate=validate.Length(min=3))
     description = SanitizedUnicode(
         required=True, validate=validate.Length(min=3)
@@ -77,11 +77,17 @@ class MetadataSchemaV1(Schema):
 class RecordSchemaV1(StrictKeysMixin):
     """Record schema.
 
+    This acts as a bi-directonal form and data transformer.
+    It *loads*, validates and transforms data from the external world, to get a
+    "cleaned" data dict.
+    It *dumps* data from internal system to get a data dict for external
+    consumption.
+
     Note: When it comes to dumping, any data from the dumper that is not
           accounted for by this, will not be present in the dump.
     """
 
-    id = fields.Function(serialize=get_id, deserialize=get_id)
+    id = fields.Function(serialize=get_id, deserialize=get_id, dump_only=True)
     metadata = fields.Nested(MetadataSchemaV1)
     created = fields.Str(dump_only=True)
     updated = fields.Str(dump_only=True)
