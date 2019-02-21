@@ -73,6 +73,9 @@ setup(
         'invenio_access.actions': [
           'cd2h-edit-metadata = cd2h_repo_project.modules.records.permissions:cd2h_edit_metadata',
         ],
+        'invenio_pidstore.minters': [
+            'cd2h_recid = cd2h_repo_project.modules.records.minters:mint_record',
+        ],
     },
     classifiers=[
         'Environment :: Web Environment',

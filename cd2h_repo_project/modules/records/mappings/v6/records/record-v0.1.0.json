@@ -7,6 +7,9 @@
         "id": {
           "type": "keyword"
         },
+        "doi": {
+          "type": "keyword"
+        },
         "$schema": {
           "type": "text",
           "index": false
