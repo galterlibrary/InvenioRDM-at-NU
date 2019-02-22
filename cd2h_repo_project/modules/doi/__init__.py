@@ -1,0 +1,1 @@
+"""Digital Object Identifier module."""

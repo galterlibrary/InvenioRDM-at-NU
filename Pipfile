@@ -20,18 +20,21 @@ pytest-flask = "==0.12.0"
 pytest-runner = ">=3.0.0,<5"
 selenium = ">=3.4.3"
 Sphinx = ">=1.5.1"
+python-dotenv = "*"
+pytest-env = "*"
 
 [packages]
 appnope = {version = "*",sys_platform = "== 'darwin'"}
 arrow = ">=0.12.1"
 Babel = ">=2.4.0"
+datacite = {git = "https://github.com/caltechlibrary/datacite.git",ref = "doi-mint-enhance"}
 Flask-BabelEx = ">=0.9.3"
 invenio = {version = "~=3.0.0",extras = ["base", "metadata", "postgresql", "auth", "elasticsearch6"]}
 invenio-accounts = ">=1.0.2"
 invenio-deposit = {editable = true,git = "https://github.com/galterlibrary/invenio-deposit.git",ref = "113_fix_dependencies"}
 invenio-records-files = {editable = true,git = "https://github.com/galterlibrary/invenio-records-files.git",ref = "make_non_pre"}
 invenio-files-rest = {editable = true,git = "https://github.com/galterlibrary/invenio-files-rest.git",ref = "make_non_pre"}
-invenio-records-rest = ">=1.1.0"
+invenio-records-rest = {version = ">=1.1.0",extras = ["datacite"]}
 IPython = "<7.0.0"
 marshmallow = ">=2.15.5,<2.30.0"
 SQLAlchemy-Continuum = "==1.3.4"

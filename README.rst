@@ -58,7 +58,11 @@ instructions. You only need to execute them once to setup your environment:
     Note: You may want to add ``PIPENV_VENV_IN_PROJECT=1`` to your shell
     (``.bashrc``, ``config.fish``...) for ease of use.
 
-3.  Start the containers for the services
+3.  Ask your colleagues for the current `.env` file and place it in the root
+    directory of the project. This file contains the sensitive or
+    "live specific" environment variables you will need.
+
+4.  Start the containers for the services
 
     .. code-block:: console
 
@@ -68,7 +72,7 @@ instructions. You only need to execute them once to setup your environment:
     This will create and run 4 docker containers. These containers will then
     keep themselves running even across reboots.
 
-4.  Execute the Invenio initial bootstrap and setup code
+5.  Execute the Invenio initial bootstrap and setup code
 
     .. code-block:: console
 
