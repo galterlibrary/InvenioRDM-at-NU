@@ -80,3 +80,4 @@ deployment/ansible/playbook.retry
 .DS_Store
 
 # AD HOC ignores
+.swap*
