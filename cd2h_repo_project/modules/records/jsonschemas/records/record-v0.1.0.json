@@ -5,6 +5,10 @@
   "title": "CD2H Data Model v0.1.0",
   "type": "object",
   "properties": {
+    "doi": {
+      "description": "Digital Object Identifier (DOI).",
+      "type": "string"
+    },
     "$schema": {
       "type": "string"
     },

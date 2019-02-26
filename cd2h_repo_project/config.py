@@ -123,6 +123,15 @@ SQLALCHEMY_DATABASE_URI = (
     'cd2h-repo-project@localhost/cd2h-repo-project'
 )
 
+# Datacite and related Invenio-Pidstore integration
+# =================================================
+PIDSTORE_DATACITE_DOI_PREFIX = '10.5072'  # Test prefix, CHANGE ME in PROD
+PIDSTORE_DATACITE_TESTMODE = True  # Set to False in PROD
+
+PIDSTORE_DATACITE_USERNAME = ''
+PIDSTORE_DATACITE_PASSWORD = ''
+PIDSTORE_DATACITE_URL = ''
+
 # JSONSchemas
 # ===========
 #: Hostname used in URLs for local JSONSchemas.
@@ -275,6 +284,7 @@ PIDSTORE_RECID_FIELD = 'id'
 #                 onlooker. For us too, it is all Records conceptually.
 #                 Behind-the-scenes, Invenio-Deposit deals with creating and
 #                 editing; while Invenio-Record deals with viewing.
+DEPOSIT_PID_MINTER = 'cd2h_recid'
 
 DEPOSIT_DEFAULT_SCHEMAFORM = 'json/records/deposit_form.json'
 """Default Angular Schema **Form**.

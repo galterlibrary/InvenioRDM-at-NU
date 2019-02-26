@@ -1,4 +1,9 @@
+from unittest.mock import Mock
+
+import jsonschema
+import pytest
 from invenio_files_rest.models import Bucket
+from invenio_pidstore import current_pidstore
 from invenio_records.models import RecordMetadata
 from invenio_records_files.models import RecordsBuckets
 
@@ -28,7 +33,28 @@ def test_deposit_create_fills_data(locations):
     assert data['_buckets']['deposit']
 
 
-def test_deposit_publish(locations):
+def test_deposit_publish_calls_configured_minters(
+        config, create_record, mocker):
+    mocked_mint_record_recid = mocker.patch(
+        'cd2h_repo_project.modules.records.minters.mint_record_recid'
+    )
+    mocked_mint_record_doi = mocker.patch(
+        'cd2h_repo_project.modules.records.minters.mint_record_doi'
+    )
+    deposit = create_record(published=False)
+
+    assert config['DEPOSIT_PID_MINTER'] == 'cd2h_recid'
+
+    # We expect deposit.publish to fail here because we patched it
+    # What is important is that the patches were called
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        deposit.publish()
+
+    assert mocked_mint_record_recid.called
+    assert mocked_mint_record_doi.called
+
+
+def test_deposit_publish_sets_appropriate_types(locations):
     deposit = Deposit.create({})
 
     deposit_record = deposit.publish()
