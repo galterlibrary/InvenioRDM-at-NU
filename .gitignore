@@ -75,3 +75,8 @@ deployment/ansible/playbook.retry
 
 # SublimeText
 *.sublime-*
+
+# OS specific
+.DS_Store
+
+# AD HOC ignores
