@@ -26,5 +26,5 @@ def test_deposit_links_api_factory_contains_html(app, create_record):
     ):
         links = deposit_links_api_factory(record.pid, record=record)
 
-    expected_link = 'https://localhost:5000/deposit/' + expected_pid_value
+    expected_link = 'http://localhost:5000/deposit/' + expected_pid_value
     assert links['html'] == expected_link
