@@ -1,17 +1,6 @@
-{% extends "cd2hrepo_theme/page.html" %}
+{% extends config.BASE_TEMPLATE %}
 
 {% set title = "Contact Us" %}
-
-{%- block page_body %}
-<div id="contact-us-page" class="container body-container">
-
-  {%- block title %}
-  {%- if title %}
-  <div class="page-header">
-    <h1>{{ title }}</h1>
-  </div>
-  {%- endif %}
-  {%- endblock title %}
 
 {# TODO: If useful enough place in new utilities modules #}
 {% macro errors(field) %}
@@ -26,53 +15,51 @@
   {% endif %}
 {% endmacro %}
 
-  {# content-body #}
-  <form class="form-horizontal" method="POST">
-    {{ form.csrf_token }}
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="{{ form.name.id }}">{{ form.name.label }}</label>
-      <div class="col-md-4">
-        <input id="{{ form.name.id }}" name="{{ form.name.name }}" class="form-control"
-               required="required" type="text" value="{{ form.name.data | default('', true) }}">
-        {{ errors(form.name) }}
-      </div>
+{% block content %}
+<form class="form-horizontal" method="POST">
+  {{ form.csrf_token }}
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="{{ form.name.id }}">{{ form.name.label }}</label>
+    <div class="col-md-4">
+      <input id="{{ form.name.id }}" name="{{ form.name.name }}" class="form-control"
+             required="required" type="text" value="{{ form.name.data | default('', true) }}">
+      {{ errors(form.name) }}
     </div>
+  </div>
 
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="{{ form.email.id }}">{{ form.email.label }}</label>
-      <div class="col-md-4">
-        <input id="{{ form.email.id }}" name="{{ form.email.name }}" class="form-control"
-               required="required" type="email" value="{{ form.email.data | default('', true) }}">
-        {{ errors(form.email) }}
-      </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="{{ form.email.id }}">{{ form.email.label }}</label>
+    <div class="col-md-4">
+      <input id="{{ form.email.id }}" name="{{ form.email.name }}" class="form-control"
+             required="required" type="email" value="{{ form.email.data | default('', true) }}">
+      {{ errors(form.email) }}
     </div>
+  </div>
 
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="{{ form.subject.id }}">Subject</label>
-      <div class="col-sm-9">
-        <input id="{{ form.subject.id }}" name="{{ form.subject.name }}" class="form-control"
-               required="required" type="text" placeholder="e.g. Question about cataloging"
-               value="{{ form.subject.data | default('', true) }}">
-        {{ errors(form.subject) }}
-      </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="{{ form.subject.id }}">Subject</label>
+    <div class="col-sm-9">
+      <input id="{{ form.subject.id }}" name="{{ form.subject.name }}" class="form-control"
+             required="required" type="text" placeholder="e.g. Question about cataloging"
+             value="{{ form.subject.data | default('', true) }}">
+      {{ errors(form.subject) }}
     </div>
+  </div>
 
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="{{ form.message.id }}">Message</label>
-      <div class="col-sm-9">
-        <textarea id="{{ form.message.id }}" name="{{ form.message.name }}"
-          class="form-control" required="required"
-          rows="5" placeholder="Dear Galter Staff,
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="{{ form.message.id }}">Message</label>
+    <div class="col-sm-9">
+      <textarea id="{{ form.message.id }}" name="{{ form.message.name }}"
+        class="form-control" required="required"
+        rows="5" placeholder="Dear Galter Staff,
 
 I was wondering about ...
 
 Thanks for your help!" value="{{ form.message.data | default('', true) }}"></textarea>
-        {{ errors(form.message) }}
-      </div>
+      {{ errors(form.message) }}
     </div>
+  </div>
 
-    <input type="submit" name="commit" value="Submit" class="btn btn-primary pull-right">
-  </form>
-
-</div>
-{%- endblock page_body %}
+  <input type="submit" name="commit" value="Submit" class="btn btn-primary pull-right">
+</form>
+{% endblock content %}

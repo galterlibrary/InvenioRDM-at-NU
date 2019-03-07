@@ -8,79 +8,71 @@
   under the terms of the MIT License; see LICENSE file for more details.
 #}
 
-{%- extends config.THEME_BASE_TEMPLATE %}
+{% extends "cd2hrepo_theme/page.html" %}
 
-{%- block page_body scoped %}
-<div class="container">
+{% set title = "Your Dashboard" %}
 
-  {%- block title %}
-  <div class="page-header">
-    <h1>Your Dashboard</h1>
-  </div>
-  {%- endblock title %}
+{%- block content %}
+<div class="row">
+    <div class="col-sm-3 col-md-3 col-pad-left-0">
+      {%- block settings_menu scoped %}
+      <div class="panel-group">
+        <div class="panel panel-default">
+          <ul class="list-group">
 
-  <div class="row">
-      <div class="col-sm-3 col-md-3 col-pad-left-0">
-        {%- block settings_menu scoped %}
-        <div class="panel-group">
-          <div class="panel panel-default">
+            <a href="{{ url_for('user_dashboard.activity_feed') }}"
+               class="list-group-item {% if activity_feed_active %}active{% endif %}">
+              <i class="fa fa-flash fa-fw"></i> Activity Feed
+            </a>
+
+            <a href="{{ url_for('invenio_deposit_ui.index') }}"
+               class="list-group-item {% if entries_active %}active{% endif %}">
+              <i class="fa fa-th-list fa-fw"></i> Your Records
+            </a>
+
+            <div class="list-group-item"><strong>Settings</strong></div>
+
+            {%- block settings_menu_item scoped %}
             <ul class="list-group">
-
-              <a href="{{ url_for('user_dashboard.activity_feed') }}"
-                 class="list-group-item {% if activity_feed_active %}active{% endif %}">
-                <i class="fa fa-flash fa-fw"></i> Activity Feed
-              </a>
-
-              <a href="{{ url_for('invenio_deposit_ui.index') }}"
-                 class="list-group-item {% if entries_active %}active{% endif %}">
-                <i class="fa fa-th-list fa-fw"></i> Your Records
-              </a>
-
-              <div class="list-group-item"><strong>Settings</strong></div>
-
-              {%- block settings_menu_item scoped %}
-              <ul class="list-group">
-                {%- for item in current_menu.submenu('settings').children if item.visible %}
-                  <a href="{{ item.url }}" class="list-group-item{% if item.active %} active{% endif %}">
-                    {{ item.text|safe }}
-                  </a>
-                {% endfor %}
-              </ul>
-              {%- endblock %}
-
+              {%- for item in current_menu.submenu('settings').children if item.visible %}
+                <a href="{{ item.url }}" class="list-group-item{% if item.active %} active{% endif %}">
+                  {{ item.text|safe }}
+                </a>
+              {% endfor %}
             </ul>
+            {%- endblock %}
 
-          </div>
+          </ul>
+
         </div>
-        {%- endblock %}
-
       </div>
+      {%- endblock %}
+    </div>
 
-      <div class="col-sm-9 col-md-9 col-pad-right-0">
-        {%- block settings_content scoped %}
-        <div class="panel-group panel-bot-margin">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              {%- block settings_content_title scoped %}
-              {%- if panel_icon %}
-              {%- block settings_content_title_icon scoped %}
-              <i class="{{panel_icon}}"></i>
-              {%- endblock %}
-              {%- endif %}
-              <strong>{{ panel_title|default("") }}</strong>
-              {%- endblock %}
-            </div>
-            {%- block settings_body scoped %}
-            <div class="panel-body">
-              {%- block settings_form scoped %}
-              {%- endblock settings_form %}
-            </div>
-            {%- endblock settings_body %}
+    <div class="col-sm-9 col-md-9 col-pad-right-0">
+      {%- block settings_content scoped %}
+      <div class="panel-group panel-bot-margin">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            {%- block settings_content_title scoped %}
+            {%- if panel_icon %}
+            {%- block settings_content_title_icon scoped %}
+            <i class="{{panel_icon}}"></i>
+            {%- endblock %}
+            {%- endif %}
+            <strong>{{ panel_title|default("") }}</strong>
+            {%- endblock %}
           </div>
+          {%- block settings_body scoped %}
+          <div class="panel-body">
+            {%- block settings_form scoped %}
+            {%- endblock settings_form %}
+          </div>
+          {%- endblock settings_body %}
         </div>
-        {%- endblock %}
       </div>
+      {%- endblock %}
+    </div>
 
-  </div>
 </div>
 {%- endblock %}
