@@ -27,6 +27,17 @@ from cd2h_repo_project.modules.records.permissions import (
 )
 from cd2h_repo_project.modules.records.search import RecordsSearch
 
+# When run in a container (production-like-environments), the container
+# infrastructure takes care of loading environment variables, but when
+# running outside a container (development-like-environments) we need to do it
+# ourselves. Since dotenv is only needed in a development environment, it is
+# only installed in that environment.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(verbose=True)
+except ImportError:
+    pass
+
 
 def _(x):
     """Identity function used to trigger string extraction."""
@@ -65,9 +76,9 @@ SETTINGS_TEMPLATE = 'cd2hrepo_theme/page_settings.html'
 # Theme configuration
 # ===================
 #: Site name
-THEME_SITENAME = _('Next Generation Research Discovery')
+THEME_SITENAME = _('Next Generation Research Repository')
 #: Frontpage title.
-THEME_FRONTPAGE_TITLE = _('Next Generation Research Discovery')
+THEME_FRONTPAGE_TITLE = _('Next Generation Research Repository')
 # THEME_HEADER_LOGIN_TEMPLATE = 'invenio_theme/header_login.html'
 
 # Email configuration
@@ -123,14 +134,27 @@ SQLALCHEMY_DATABASE_URI = (
     'cd2h-repo-project@localhost/cd2h-repo-project'
 )
 
-# Datacite and related Invenio-Pidstore integration
+# Digital Object Identifier (DOI), Datacite and Invenio-Pidstore integration
 # =================================================
-PIDSTORE_DATACITE_DOI_PREFIX = '10.5072'  # Test prefix, CHANGE ME in PROD
-PIDSTORE_DATACITE_TESTMODE = True  # Set to False in PROD
-
+DOI_REGISTER_SIGNALS = False
+"""Set this to True to mint DOIs."""
+DOI_PUBLISHER = "YOUR PLATFORM NAME"
+"""REQUIRED if DOI_REGISTER_SIGNALS is True. Set this to your repository's
+   institution or name."""
 PIDSTORE_DATACITE_USERNAME = ''
+"""REQUIRED if DOI_REGISTER_SIGNALS is True. Set this to your DataCite client
+   account."""
 PIDSTORE_DATACITE_PASSWORD = ''
-PIDSTORE_DATACITE_URL = ''
+"""REQUIRED if DOI_REGISTER_SIGNALS is True. Set this to your DataCite client
+   account password."""
+PIDSTORE_DATACITE_DOI_PREFIX = ''
+"""REQUIRED if DOI_REGISTER_SIGNALS is True. Change this to your institution's
+   DOI prefix."""
+PIDSTORE_DATACITE_TESTMODE = True
+"""Whether to interact with DataCite in test mode or not.
+   Set to False in production"""
+PIDSTORE_DATACITE_URL = "https://mds.datacite.org"
+"""The DataCite minting endpoint."""
 
 # JSONSchemas
 # ===========
@@ -161,6 +185,9 @@ SESSION_COOKIE_SECURE = True
 #: should be set to the correct host and it is strongly recommended to only
 #: route correct hosts to the application.
 APP_ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+#: It should be set to your server name
+SERVER_NAME = 'localhost:5000'
+PREFERRED_URL_SCHEME = 'https'
 
 # OAI-PMH
 # =======

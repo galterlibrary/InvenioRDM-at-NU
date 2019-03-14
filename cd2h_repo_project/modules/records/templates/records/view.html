@@ -57,6 +57,13 @@
 
 {% set title = record.title + " | " + config.THEME_SITENAME %}
 
+{%- block head_meta %}
+  {{ super() }}
+  {# HighWire meta tag compatible with Altmetric and Google Scholar... #}
+  {# TODO: Investigate what format we want to use to embed meta tag #}
+  {% if record.doi %}<meta name="citation_doi" content="{{record.doi}}" />{% endif %}
+{%- endblock %}
+
 {%- block page_body %}
   <div class="container body-container">
     {%- block title %}
@@ -79,26 +86,28 @@
             <i class="fa fa-pencil-square-o"></i> Edit
           </a>
           {% endif %}
-
         </div>
 
         <div class="col-md-8">
+
           <div>
             <p>
               <span><i class="fa fa-user"></i></span>
               <span class="text-muted">{{ record.author }}</span>
             </p>
           </div>
+
           <div><p><em>{{record.description}}</em></p></div>
-          <div>
-            <label class="col-sm-3" for="license">
-              <span><i class="fa fa-certificate"></i></span>
-              License
-            </label>
-            <div class="col-sm-9">
-              {{ record.license | license_value_to_name }}
-            </div>
+
+          <div id="metadata-section">
+            <dl class="dl-horizontal">
+              <dt>Digital Object Identifier (DOI)</dt>
+              <dd>{{ record | to_doi_field | safe }}</dd>
+              <dt><span><i class="fa fa-certificate"></i></span> License</dt>
+              <dd>{{ record.license | license_value_to_name }}</dd>
+            </dl>
           </div>
+
         </div>
 
       </div>

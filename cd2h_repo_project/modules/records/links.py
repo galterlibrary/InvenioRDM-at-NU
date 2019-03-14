@@ -1,12 +1,54 @@
 """Deposit links factory."""
 
-from __future__ import absolute_import, print_function
-
 import os
 
-from flask import current_app, request, url_for
+from flask import current_app, url_for
 from invenio_deposit.links import \
     deposit_links_factory as _deposit_links_factory
+
+
+def url_for_deposit_ui_recid_external(pid_value):
+    """Return the invenio_deposit_ui.recid endpoint from any app.
+
+    Inside a Flask app other than the ui app (api or celery app), ui urls are
+    inaccessible (and vice versa). This function reconstructs the appropriate
+    URL to get the equivalent of
+
+        url_for(
+            'invenio_deposit_ui.<pid_type>',
+            pid_value=pid_value,
+            _external=True)
+
+    from within any app.
+    Note: No request context needed.
+    """
+    return current_app.config['DEPOSIT_UI_ENDPOINT'].format(
+            scheme=current_app.config['PREFERRED_URL_SCHEME'],
+            host=current_app.config['SERVER_NAME'],
+            pid_value=pid_value,
+        )
+
+
+def url_for_record_ui_recid_external(pid_value):
+    """Return the invenio_records_ui.recid endpoint from app other than ui.
+
+    Inside a Flask app other than the ui app (api or celery app), ui urls are
+    inaccessible (and vice versa). This function reconstructs the appropriate
+    URL to get the equivalent of
+
+        url_for(
+            'invenio_records_ui.recid',
+            pid_value=pid_value,
+            _external=True)
+
+    from within any app.
+    Note: No request context needed.
+    """
+    return '{scheme}://{host}/records/{pid_value}'.format(
+        scheme=current_app.config['PREFERRED_URL_SCHEME'],
+        host=current_app.config['SERVER_NAME'],
+        pid_value=pid_value,
+    )
 
 
 def deposit_links_api_factory(pid, **kwargs):
@@ -27,11 +69,7 @@ def deposit_links_api_factory(pid, **kwargs):
     record = kwargs.get('record')
     links = _deposit_links_factory(pid)
 
-    links['html'] = current_app.config['DEPOSIT_UI_ENDPOINT'].format(
-        host=request.host,
-        scheme=request.scheme,
-        pid_value=pid.pid_value,
-    )
+    links['html'] = url_for_deposit_ui_recid_external(pid.pid_value)
 
     bucket_id = record.get('_buckets', {}).get('deposit') if record else None
 

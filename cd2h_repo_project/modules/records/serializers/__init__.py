@@ -2,11 +2,10 @@
 
 """Record serializers."""
 
-from __future__ import absolute_import, print_function
-
 from invenio_records_rest.serializers.json import JSONSerializer
-from invenio_records_rest.serializers.response import record_responsify, \
-    search_responsify
+from invenio_records_rest.serializers.response import (
+    record_responsify, search_responsify
+)
 
 from ..marshmallow import RecordSchemaV1
 

@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+from elasticsearch.exceptions import RequestError
 from flask import current_app
 from invenio_deposit.api import Deposit as _Deposit
 from invenio_deposit.api import has_status, preserve
@@ -12,6 +13,8 @@ from invenio_pidstore.errors import PIDInvalidAction
 from invenio_pidstore.resolver import Resolver
 from invenio_records_files.models import RecordsBuckets
 from werkzeug.local import LocalProxy
+
+from cd2h_repo_project.modules.doi.tasks import register_doi
 
 current_jsonschemas = LocalProxy(
     lambda: current_app.extensions['invenio-jsonschemas']
@@ -184,6 +187,12 @@ class Deposit(_Deposit):
             current_app.logger.exception(
                 'Could not index {0}.'.format(published_record)
             )
+
+        # NOTE: If we can figure out how to not raise
+        #       sqlalchemy.orm.exc.DetachedInstanceError in client.post tests,
+        #       we could use signal and receivers from client.post.
+        if current_app.config['DOI_REGISTER_SIGNALS']:
+            register_doi.delay(published_record['id'])
 
         return self
 
