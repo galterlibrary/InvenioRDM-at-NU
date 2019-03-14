@@ -1,5 +1,11 @@
 {%- extends "invenio_theme/page.html" %}
 
+{%- block head_title %}
+{%- if title %}
+<title>{{ title + " | " + config.THEME_SITENAME }}</title>
+{% endif %}
+{%- endblock head_title %}
+
 {%- block css %}
 {% include "cd2hrepo_theme/css.html" %}
 {%- endblock css %}
@@ -7,6 +13,19 @@
 {%- block page_header %}
 {% include "cd2hrepo_theme/header.html" %}
 {%- endblock page_header %}
+
+{%- block page_body %}
+<div class="container body-container">
+{%- block title %}
+  {%- if title %}
+  <div class="page-header">
+    <h1>{% block main_title %}{{ title }}{% endblock %}</h1>
+  </div>
+  {%- endif %}
+{%- endblock title %}
+{%- block content %}{%- endblock content %}
+</div>
+{%- endblock page_body %}
 
 {%- block page_footer %}
 {% include "cd2hrepo_theme/footer.html" %}

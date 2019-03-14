@@ -1,6 +1,8 @@
-{% extends "cd2hrepo_theme/page.html" %}
+{%- extends config.BASE_TEMPLATE %}
 
-{% set title = config.THEME_SITENAME + " - Medical knowledge. Emerging." %}
+{%- block head_title %}
+<title>{{ config.THEME_SITENAME + " - Medical knowledge. Emerging." }}</title>
+{% endblock %}
 
 {%- block page_header %}
 {% include "cd2hrepo_frontpage/header.html" %}
@@ -31,13 +33,9 @@
 
   <div>
     <h1>About</h1>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus urna purus. Sed venenatis pulvinar dui, quis consequat elit sollicitudin sed. Proin sodales mauris lorem, ut finibus elit dignissim sed. Nulla quis sem neque. Nullam porta augue a urna pretium, in viverra ipsum euismod. Integer lacus eros, faucibus at porta eu, placerat id lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam sollicitudin commodo enim volutpat pretium. Duis commodo hendrerit eros sit amet lobortis.
-    </p>
+    {{ lipsum(2) }}
     <h1>Center for Data to Health</h1>
-    <p>
-      Cras id metus sem. Integer rutrum ligula arcu, quis sollicitudin arcu efficitur ac. Quisque rhoncus euismod nisl eget sagittis. Aenean molestie rhoncus feugiat. Suspendisse tempus massa ut finibus tempor. Phasellus tristique ultrices lectus eu tincidunt. Mauris non magna rhoncus, maximus augue vitae, ultricies lectus. In in interdum neque. Vivamus in augue lorem. Pellentesque laoreet ullamcorper massa quis interdum. Fusce varius dolor ultricies lorem vehicula, vel viverra enim gravida. Etiam luctus justo ipsum, sagittis efficitur lorem efficitur non. Integer quis est tellus. In maximus tortor quis quam bibendum consequat. Aenean pulvinar feugiat sem, a tincidunt arcu congue eu. Phasellus a quam orci.
-    </p>
+    {{ lipsum(2) }}
   </div>
 </div>
 {%- endblock page_body %}
