@@ -13,7 +13,8 @@ def test_deposit_links_api_factory_contains_bucket(app, create_record):
     ):
         links = deposit_links_api_factory(record.pid, record=record)
 
-    assert links['bucket'] == '/api/files/' + expected_bucket_id
+    expected_link = 'http://localhost:5000/api/files/' + expected_bucket_id
+    assert links['bucket'] == expected_link
 
 
 def test_deposit_links_api_factory_contains_html(app, create_record):

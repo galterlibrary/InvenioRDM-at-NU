@@ -1,0 +1,5 @@
+-e git+https://github.com/galterlibrary/invenio-records-files.git@7f419275e1df6c8f99553c71c3a1d72c6fe98e8f#egg=invenio_records_files
+-e git+https://github.com/galterlibrary/invenio-deposit.git@d844b9bafebd9995fc3fc2f2b5ee0b0066e4f7e8#egg=invenio_deposit
+-e git+https://github.com/galterlibrary/invenio-files-rest.git@0755644a10f274b7821ea512ecdf9dff833ece84#egg=invenio_files_rest
+-e git+https://github.com/galterlibrary/invenio-ldapclient.git@48b24b5bf46fd40c22dce042f54eaab6b7d377c3#egg=invenio_ldapclient
+-e git+https://github.com/caltechlibrary/datacite.git@doi-mint-enhance#egg=datacite

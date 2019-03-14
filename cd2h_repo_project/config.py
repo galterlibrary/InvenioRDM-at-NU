@@ -185,9 +185,11 @@ SESSION_COOKIE_SECURE = True
 #: should be set to the correct host and it is strongly recommended to only
 #: route correct hosts to the application.
 APP_ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-#: It should be set to your server name
-SERVER_NAME = 'localhost:5000'
 PREFERRED_URL_SCHEME = 'https'
+
+#: Custom constant for host name
+#: Using Flask's SERVER_NAME breaks the containerized setup
+SERVER_HOSTNAME = 'localhost:5000'
 
 # OAI-PMH
 # =======

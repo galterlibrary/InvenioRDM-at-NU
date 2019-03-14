@@ -10,10 +10,14 @@
 .dockerignore
 Dockerfile
 docker-compose.yml
-docker-compose-dev.yml
+docker-compose.prod.yml
+docker-compose.full.yml
 
 Procfile*
 
 .pytest_cache/
 
 .venv/
+*.egg-info/
+
+private/

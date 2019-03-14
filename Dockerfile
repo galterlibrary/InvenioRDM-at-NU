@@ -6,7 +6,10 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 # Dockerfile for main CD2H-Repo-Project image
-
+#
+# ENV sets up Dockerfile and container run-time environment variables
+# ARG sets up build-time variables (NOT available at run-time)
+#
 # TODO: Use python 3.6
 FROM python:3.5
 
@@ -20,23 +23,23 @@ RUN apt-get update && apt-get upgrade --yes && apt-get install --yes \
     git \
     gdebi-core \
     unzip \
-    emacs-nox
+    emacs-nox \
+    cowsay
+# NOTE: Add or remove cowsay from the above list to force refresh of libraries
 
 RUN curl --silent --location https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update && apt-get install --yes nodejs tree
 
-# Setup Dockerfile and container run-time environment variables
-ENV WORKING_DIR=/opt/cd2h-repo-project
-ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
-# This will create the virtualenv locally (see below: ${WORKING_DIR}/src)
-ENV PIPENV_VENV_IN_PROJECT=1
-
 # Install Chrome+chromedriver
+# TODO: update urls
 RUN curl --silent --remote-name --location https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN gdebi --non-interactive google-chrome-stable_current_amd64.deb
 RUN curl --silent --remote-name --location https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip
-RUN mkdir -p ${WORKING_DIR}/bin
+
+ENV WORKING_DIR=/opt/cd2h-repo-project
+
 # Note that unzip has no long options
+RUN mkdir -p ${WORKING_DIR}/bin
 RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 
 # Global python tools
@@ -44,10 +47,12 @@ RUN pip install --upgrade \
     setuptools \
     wheel \
     pip==18.1 \
-    pipenv==2018.11.14
+    pipenv==2018.11.26 \
+    uwsgi
 
 # Copy uwsgi config files (will typically not bust the cache)
 # This only copies the files and NOT the directory itself
+ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 COPY docker/uwsgi/ ${INVENIO_INSTANCE_PATH}
 
@@ -62,9 +67,12 @@ RUN mkdir -p ${WORKING_DIR}/src
 
 # Install locked production dependencies now to speed up build
 # (by having this step cached)
-COPY Pipfile Pipfile.lock ${WORKING_DIR}/src/
+COPY Pipfile Pipfile.lock requirements-vcs.txt ${WORKING_DIR}/src/
 WORKDIR ${WORKING_DIR}/src
+# This will create the virtualenv locally (see below: ${WORKING_DIR}/src)
+ENV PIPENV_VENV_IN_PROJECT=1
 RUN pipenv sync ${PIPENV_SYNC_OPTIONS}
+RUN pipenv run pip install -r requirements-vcs.txt
 
 # Install global nodejs tools
 ## Reset global npm location to avoid permission issues
