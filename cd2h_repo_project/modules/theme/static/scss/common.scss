@@ -1,2 +1,7 @@
 $northwestern-color: #514689;
 $white: #fff;
+
+/* Common utility-CSS for the win */
+.titlecase {
+  text-transform: capitalize;
+}

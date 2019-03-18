@@ -1,10 +1,14 @@
 """Test Search integration."""
 
 import json
+from io import BytesIO
 
+from invenio_records_rest.facets import _post_filter
 from invenio_search import current_search
+from werkzeug.datastructures import MultiDict
 
 from cd2h_repo_project.modules.records.api import RecordType
+from cd2h_repo_project.modules.records.search import RecordsSearch
 from utils import login_request_and_session
 
 
@@ -108,6 +112,50 @@ class TestRecordsSearch(object):
         response = client.get("/records/?q=far+galaxy")
 
         assert_single_hit(response, record1)
+
+    def test_search_is_selective_about_post_filter(self, app, config):
+        post_filters = config['RECORDS_REST_FACETS']['records']['post_filters']
+        assert 'file_type' in post_filters
+
+        with app.test_request_context('?file_type=png'):
+            search = RecordsSearch().query()
+
+            search, args = _post_filter(search, MultiDict(), post_filters)
+
+            search_dict = search.to_dict()
+            assert 'post_filter' in search_dict
+
+        with app.test_request_context('?not_a_post_filter=png'):
+            search = RecordsSearch().query()
+
+            search, args = _post_filter(search, MultiDict(), post_filters)
+
+            search_dict = search.to_dict()
+            assert 'post_filter' not in search_dict
+
+    def test_search_post_filter_filters_records(
+            self, client, create_record, es_clear):
+        deposit = create_record(published=False)
+        deposit.files['test.txt'] = BytesIO(b'Hello world!')
+        deposit.publish()
+        _, record1 = deposit.fetch_published()
+        record2 = create_record()
+
+        response = client.get("/records/?file_type=txt")
+
+        assert_single_hit(response, record1)
+
+    def test_search_post_filter_aggregates_records(
+            self, client, create_record, es_clear):
+        deposit = create_record(published=False)
+        deposit.files['test.txt'] = BytesIO(b'Hello world!')
+        deposit.publish()
+        _, record1 = deposit.fetch_published()
+        record2 = create_record()
+
+        response = client.get("/records/?file_type=txt")
+
+        assert 'file_type' in response.json['aggregations']
 
 
 class TestDepositsSearch(object):
