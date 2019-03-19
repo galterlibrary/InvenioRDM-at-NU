@@ -52,8 +52,14 @@ instructions. You only need to execute them once to setup your environment:
 
     .. code-block:: console
 
-        $ PIPENV_VENV_IN_PROJECT=1 pipenv install --dev
+        $ PIPENV_VENV_IN_PROJECT=1 pipenv sync --dev
+        $ pipenv run pip install -r requirements-vcs.txt
         $ pipenv run pip install --editable .
+
+    This will install the Python dependencies, then the dependencies that are
+    just code held in version control systems and finally the project
+    itself. The code has to be installed this way, because pipenv
+    doesn't deal with the dependencies correctly at time of writing.
 
     Note: You may want to add ``PIPENV_VENV_IN_PROJECT=1`` to your shell
     (``.bashrc``, ``config.fish``...) for ease of use.
@@ -66,10 +72,11 @@ instructions. You only need to execute them once to setup your environment:
 
     .. code-block:: console
 
-        $ docker-compose up --detach
+        $ docker-compose up --build --detach
 
     Note you don't have to be in a virtual environment to do so.
-    This will create and run 4 docker containers. These containers will then
+    This will create and run 4 docker containers: database, queue,
+    cache and search engine. These containers will then
     keep themselves running even across reboots.
 
 5.  Execute the Invenio initial bootstrap and setup code
@@ -103,7 +110,6 @@ This will start the Celery queue service in the background and the development
 server at https://localhost:5000 .
 
 Once you are done you can:
-
 
 -   In the terminal where you started the celery worker
 
@@ -165,12 +171,20 @@ code changes.
 
     .. code-block:: console
 
-        pipenv sync
+        pipenv sync --dev
 
     This will install the locked dependencies that are known to work. Run this
     if you see the ``Pipfile`` or ``Pipfile.lock`` files have changed.
 
-3.  Run the ``scripts/update`` script
+3.  Reinstall the project's Python version control system (VCS) dependencies
+
+    .. code-block:: console
+
+        pipenv run pip install -r requirements-vcs.txt
+
+    Run this if you see the ``requirements-vcs.txt`` file has changed.
+
+4.  Run the ``scripts/update`` script
 
     .. code-block:: console
 
@@ -182,11 +196,11 @@ code changes.
     migrations. Whenever any of the above changes --which is pretty much all
     the time-- run this script.
 
-4.  [Optional] Run added lines in the ``setup`` script
+5.  [Optional] Run added lines in the ``setup`` script
 
     If the ``scripts/setup`` file gets added commands, run those.
 
-5.  [Exceptional] Uncomment the destructive commands from ./scripts/setup
+6.  [Exceptional] Uncomment the destructive commands from ``./scripts/setup``
     and run it
 
     .. code-block:: console

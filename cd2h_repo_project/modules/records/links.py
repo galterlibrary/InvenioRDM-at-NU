@@ -24,7 +24,7 @@ def url_for_deposit_ui_recid_external(pid_value):
     """
     return current_app.config['DEPOSIT_UI_ENDPOINT'].format(
             scheme=current_app.config['PREFERRED_URL_SCHEME'],
-            host=current_app.config['SERVER_NAME'],
+            host=current_app.config['SERVER_HOSTNAME'],
             pid_value=pid_value,
         )
 
@@ -46,7 +46,7 @@ def url_for_record_ui_recid_external(pid_value):
     """
     return '{scheme}://{host}/records/{pid_value}'.format(
         scheme=current_app.config['PREFERRED_URL_SCHEME'],
-        host=current_app.config['SERVER_NAME'],
+        host=current_app.config['SERVER_HOSTNAME'],
         pid_value=pid_value,
     )
 
@@ -74,9 +74,11 @@ def deposit_links_api_factory(pid, **kwargs):
     bucket_id = record.get('_buckets', {}).get('deposit') if record else None
 
     if bucket_id:
-        # TODO: Make this a nice complete URL starting with `https://`
-        #       so it is usable by API clients
-        links['bucket'] = os.path.join('/api/files', bucket_id)
+        links['bucket'] = '{scheme}://{host}/api/files/{bucket_id}'.format(
+            scheme=current_app.config['PREFERRED_URL_SCHEME'],
+            host=current_app.config['SERVER_HOSTNAME'],
+            bucket_id=bucket_id,
+        )
 
     return links
 

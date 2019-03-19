@@ -30,6 +30,7 @@ services:
         - FLASK_SKIP_DOTENV=${FLASK_SKIP_DOTENV}
         - PIPENV_SYNC_OPTIONS=${PIPENV_SYNC_OPTIONS}
     image: cd2h-repo-project
+    restart: "always"
     env_file:
       - default.env
       - .env
