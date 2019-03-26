@@ -1,6 +1,7 @@
 """CD2H's version of a deposit."""
 
 from enum import Enum
+from os.path import splitext
 
 from elasticsearch.exceptions import RequestError
 from flask import current_app
@@ -11,6 +12,8 @@ from invenio_deposit.utils import mark_as_action
 from invenio_files_rest.models import Bucket
 from invenio_pidstore.errors import PIDInvalidAction
 from invenio_pidstore.resolver import Resolver
+from invenio_records_files.api import FileObject as _FileObject
+from invenio_records_files.api import Record as _Record
 from invenio_records_files.models import RecordsBuckets
 from werkzeug.local import LocalProxy
 
@@ -22,6 +25,37 @@ current_jsonschemas = LocalProxy(
 
 
 RECORD_OBJECT_TYPE = 'rec'
+
+
+class FileObject(_FileObject):
+    """menrva file object."""
+
+    def _extract_filetype(self, filename):
+        """Extract the file extension without the leading '.'.
+
+        If no file type, return 'other'.
+        """
+        dot_extension = splitext(filename)[1]
+        return dot_extension[1:].lower() if dot_extension else 'other'
+
+    def dumps(self):
+        """Serialize as a json compatible dict.
+
+        Add file type as key.
+        WARNING: This is a stateful function.
+        """
+        data = super(FileObject, self).dumps()
+        data['type'] = self._extract_filetype(data['key'])
+        return data
+
+
+class Record(_Record):
+    """menrva Record.
+
+    Needed because we customized the file class.
+    """
+
+    file_cls = FileObject
 
 
 class RecordType(Enum):
@@ -46,6 +80,9 @@ class Deposit(_Deposit):
 
     Sorry about the inheritance tree, Invenio started it!
     """
+
+    file_cls = FileObject
+    published_record_class = Record
 
     @classmethod
     def fetch_deposit(cls, record):

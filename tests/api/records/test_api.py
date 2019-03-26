@@ -1,3 +1,4 @@
+from io import BytesIO
 from unittest.mock import Mock
 
 import jsonschema
@@ -7,7 +8,9 @@ from invenio_pidstore import current_pidstore
 from invenio_records.models import RecordMetadata
 from invenio_records_files.models import RecordsBuckets
 
-from cd2h_repo_project.modules.records.api import Deposit, RecordType
+from cd2h_repo_project.modules.records.api import (
+    Deposit, FileObject, RecordType
+)
 
 
 def test_deposit_create_creates_recordsbuckets(locations):
@@ -100,3 +103,33 @@ def test_clear_deposit_preserves_appropriate_fields(create_record):
     assert '$schema' not in deposit
     for field in fields_to_preserve:
         assert preserved[field] == deposit[field]
+
+
+def test_fileobject_dumps_serializes_filetype(create_record):
+    deposit = create_record(published=False)
+
+    # Normal case
+    # Easiest way to create a FileObject
+    deposit.files['test.TXT'] = BytesIO(b'Hello world!')
+    file_object = deposit.files['test.TXT']
+
+    data = file_object.dumps()
+
+    assert isinstance(file_object, FileObject)
+    assert data['type'] == 'txt'
+
+    # No file extension case
+    deposit.files['testfile'] = BytesIO(b'Hello world!')
+    file_object = deposit.files['testfile']
+
+    data = file_object.dumps()
+
+    assert data['type'] == 'other'
+
+    # Multiple extensions case
+    deposit.files['test.tar.gz'] = BytesIO(b'Hello world!')
+    file_object = deposit.files['test.tar.gz']
+
+    data = file_object.dumps()
+
+    assert data['type'] == 'gz'

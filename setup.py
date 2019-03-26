@@ -58,6 +58,7 @@ setup(
             'cd2hrepo_theme_css = cd2h_repo_project.modules.theme.bundles:css',
             'cd2hrepo_theme_js = cd2h_repo_project.modules.theme.bundles:js',
             'cd2hrepo_deposit_js = cd2h_repo_project.modules.records.bundles:js_deposit',
+            'cd2hrepo_search_js = cd2h_repo_project.modules.records.bundles:js_search',
         ],
         'invenio_i18n.translations': [
             'messages = cd2h_repo_project',

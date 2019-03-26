@@ -65,6 +65,26 @@
               "type": "keyword"
             }
           }
+        },
+        "_files": {
+          "type": "object",
+          "properties": {
+            "bucket": {
+              "type": "keyword"
+            },
+            "key": {
+              "type": "keyword"
+            },
+            "size": {
+              "type": "long"
+            },
+            "checksum": {
+              "type": "keyword"
+            },
+            "type": {
+              "type": "keyword"
+            }
+          }
         }
       }
     }

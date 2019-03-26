@@ -5,12 +5,9 @@
   {% assets "invenio_search_ui_search_css" %}<link href="{{ ASSET_URL }}" rel="stylesheet">{% endassets %}
 {%- endblock css %}
 
-{%- block javascript %}
-  {{ super() }}
-  {% assets "invenio_search_ui_search_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{%- endblock javascript %}
 
 {% set title = "Search" %}
+
 
 {%- block page_header %}
 {% include "records/header.html" %}
@@ -126,3 +123,18 @@
   </invenio-search>
 </div>
 {% endblock %}
+
+
+{%- block javascript %}
+  {{ super() }}
+  {% assets "invenio_search_ui_search_js" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+  {% assets "cd2hrepo_search_js" %}
+    <script src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+  {# Note that this page logs a `o.invenioSearchResults.aggregations[l.name]
+     is undefined` error. This is a bug in Zenodo/Invenio that has no effect
+     on the functionality of the page and can be safely ignored. It is not
+     fixed by Invenio because they are working on a new search frontend. #}
+ {%- endblock javascript %}

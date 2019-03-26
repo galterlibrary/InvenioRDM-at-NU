@@ -20,6 +20,7 @@ import sys
 from datetime import timedelta
 
 from invenio_indexer.api import RecordIndexer
+from invenio_records_rest.facets import terms_filter
 from invenio_records_rest.utils import allow_all, check_elasticsearch
 
 from cd2h_repo_project.modules.records.permissions import (
@@ -282,18 +283,37 @@ RECORDS_REST_ENDPOINTS = {
 }
 """REST API for Records."""
 
+RECORDS_REST_FACETS = {
+    # This is the name of the index in ElasticSearch and not the pid type
+    'records': {
+        'aggs': {
+            'file_type': {
+                # Dynamically creates a bucket for each unique `_files.type`
+                'terms': {'field': "_files.type"},
+            },
+            # TODO: Add other facets here
+        },
+        # Filters the results further AFTER aggregation
+        'post_filters': {
+            'file_type': terms_filter('_files.type'),
+            # TODO: Add other post_filters here
+        }
+    }
+}
+"""REST facets for Records."""
+
 RECORDS_UI_ENDPOINTS = {
     'recid': {
         'pid_type': 'recid',
         'route': '/records/<pid_value>',
         'template': 'records/view.html',
-        # 'record_class': ....
+        'record_class': 'cd2h_repo_project.modules.records.api:Record',
     },
     'recid_files': {
         'pid_type': 'recid',
         'route': '/records/<pid_value>/files/<path:filename>',
         'view_imp': 'invenio_records_files.utils.file_download_ui',
-        'record_class': 'invenio_records_files.api:Record',
+        'record_class': 'cd2h_repo_project.modules.records.api:Record',
     },
 }
 """Records UI for Records."""
@@ -475,7 +495,7 @@ FIXTURES_ARCHIVE_LOCATION = 'archive/'
 SEARCH_UI_SEARCH_TEMPLATE = 'records/search.html'
 SEARCH_UI_JSTEMPLATE_RESULTS = 'templates/records/results.html'
 SEARCH_UI_JSTEMPLATE_SEARCHBAR = 'templates/records/searchbar.html'
-
+SEARCH_UI_JSTEMPLATE_FACETS = 'templates/records/facets.html'
 
 # Contact Us
 # ==========
