@@ -4,6 +4,7 @@ import json
 from io import BytesIO
 
 from invenio_records_rest.facets import _post_filter
+from invenio_records_rest.sorter import default_sorter_factory
 from invenio_search import current_search
 from werkzeug.datastructures import MultiDict
 
@@ -156,6 +157,81 @@ class TestRecordsSearch(object):
         response = client.get("/records/?file_type=txt")
 
         assert 'file_type' in response.json['aggregations']
+
+    def test_search_is_selective_about_sort_field(self, app, config):
+        sort_fields = [
+            v['fields'] for (k, v) in
+            config['RECORDS_REST_SORT_OPTIONS']['records'].items()
+        ]
+        assert ['-_score'] in sort_fields
+        assert ['_score'] in sort_fields
+        assert ['_created'] in sort_fields
+        assert ['-_created'] in sort_fields
+        assert ['_updated'] in sort_fields
+        assert ['-_updated'] in sort_fields
+        assert ['title.raw'] in sort_fields
+        assert ['-title.raw'] in sort_fields
+
+        with app.test_request_context('?sort=title_asc'):
+            search = RecordsSearch().query()
+            search, args = default_sorter_factory(search, "records")
+
+            search_dict = search.to_dict()
+            assert 'sort' in search_dict
+
+        with app.test_request_context('?sort=invalid'):
+            search = RecordsSearch().query()
+            search, args = default_sorter_factory(search, "records")
+
+            search_dict = search.to_dict()
+            assert 'sort' not in search_dict
+
+    def test_search_sort_orders_records(
+            self, client, create_record, es_clear):
+        record2 = create_record({"title": "ZZZyxas' True Abyss"})
+        record1 = create_record({"title": "Aardvark true facts"})
+
+        # Case for 'title_asc' (special because it is a 'text' type)
+        response = client.get("/records/?sort=title_asc")
+
+        hit1 = response.json['hits']['hits'][0]
+        assert hit1['metadata']['title'] == "Aardvark true facts"
+
+        # Case for 'updated_desc'
+        response = client.get("/records/?sort=updated_desc")
+
+        hit1 = response.json['hits']['hits'][0]
+        assert hit1['metadata']['title'] == "Aardvark true facts"
+
+        # Case for 'bestmatch_asc'
+        response = client.get("/records/?q=true+facts&sort=bestmatch_asc")
+
+        hit1 = response.json['hits']['hits'][0]
+        assert hit1['metadata']['title'] == "ZZZyxas' True Abyss"
+
+    def test_search_orders_by_created_desc_if_no_query(
+            self, client, create_record, es_clear):
+        record1 = create_record({"title": "Old record"})
+        record2 = create_record({"title": "More recent record"})
+
+        response = client.get("/records/")
+
+        hit1 = response.json['hits']['hits'][0]
+        assert hit1['metadata']['title'] == "More recent record"
+        hit2 = response.json['hits']['hits'][1]
+        assert hit2['metadata']['title'] == "Old record"
+
+    def test_search_orders_by_bestmatch_desc_if_query_but_no_sort(
+            self, client, create_record, es_clear):
+        record1 = create_record({"title": "Old record"})
+        record2 = create_record({"title": "More recent record"})
+
+        response = client.get("/records/?q=old+record")
+
+        hit1 = response.json['hits']['hits'][0]
+        assert hit1['metadata']['title'] == "Old record"
+        hit2 = response.json['hits']['hits'][1]
+        assert hit2['metadata']['title'] == "More recent record"
 
 
 class TestDepositsSearch(object):

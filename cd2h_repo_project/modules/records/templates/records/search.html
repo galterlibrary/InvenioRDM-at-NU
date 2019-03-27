@@ -36,42 +36,37 @@
           {%- block search_header %}
           <div class="row">
             {%- block search_count %}
-            <div class="col-md-3 col-sm-12">
+            <div class="col-md-6 col-sm-12">
               <invenio-search-count
                template="{{ url_for('static', filename=config.SEARCH_UI_JSTEMPLATE_COUNT) }}">
               </invenio-search-count>
             </div>
             {%- endblock search_count %}
+
+            {%- block search_sort %}
+            {%- set sort_options = config.get('RECORDS_REST_SORT_OPTIONS', {}).get(config.SEARCH_UI_SEARCH_INDEX) %}
+            {%- if sort_options %}
+            <div class="col-md-6 col-sm-12 text-right">
+              {%- block search_sort_select scoped %}
+              <invenio-search-select-box
+                sort-key="sort"
+                available-options='{{ sort_options|to_available_options|tojson }}'
+                template="{{ url_for('static', filename=config.SEARCH_UI_JSTEMPLATE_SELECT_BOX) }}"
+                >
+              </invenio-search-select-box>
+              {%- endblock search_sort_select %}
+            </div>
+            {%- endif %}
+            {%- endblock search_sort %}
+
             {%- block search_pagination_top %}
-            <div class="col-md-6 col-sm-12 text-center">
+            <div align="center">
               <invenio-search-pagination
                 template="{{ url_for('static', filename=config.SEARCH_UI_JSTEMPLATE_PAGINATION) }}">
               </invenio-search-pagination>
             </div>
             {%- endblock search_pagination_top %}
-            {%- block search_sort %}
-            {%- set sort_options = config.get('RECORDS_REST_SORT_OPTIONS', {}).get(config.SEARCH_UI_SEARCH_INDEX) %}
-            {%- if sort_options %}
-            <div class="col-md-3 col-sm-12 text-right">
-              {%- block search_sort_select scoped %}
-              Sort by:
-              <invenio-search-select-box
-                 sort-key="sort"
-                 available-options='{{ sort_options|format_sortoptions|safe }}'
-                 template="{{ url_for('static', filename=config.SEARCH_UI_JSTEMPLATE_SELECT_BOX) }}"
-                >
-              </invenio-search-select-box>
-              {%- endblock search_sort_select %}
-              {%- block search_sort_order scoped %}
-              <invenio-search-sort-order
-               sort-key="sort"
-               template="{{ url_for('static', filename=config.SEARCH_UI_JSTEMPLATE_SORT_ORDER) }}"
-              >
-              </invenio-search-sort-order>
-              {%- endblock search_sort_order %}
-            </div>
-            {%- endif %}
-            {%- endblock search_sort %}
+
           </div>
           <hr class="no-margin-top" />
           {%- endblock search_header %}

@@ -302,6 +302,62 @@ RECORDS_REST_FACETS = {
 }
 """REST facets for Records."""
 
+RECORDS_REST_SORT_OPTIONS = {
+    "records": {
+        # Note that we have sort values for both asc and desc to workaround
+        # a "separate ordering" bug in invenio-search-js.
+        "bestmatch_desc": {  # 'sort' query string value: ?sort=bestmatch_desc
+            "title": 'best match in desc.',
+            "fields": ['-_score'],
+            "order": 1,
+        },
+        "bestmatch_asc": {
+            "title": 'best match in asc.',
+            "fields": ['_score'],
+            "order": 2,
+        },
+        "created_desc": {
+            "title": 'publication date in desc.',
+            "fields": ['-_created'],
+            "order": 3,
+        },
+        "created_asc": {
+            "title": 'publication date in asc.',
+            "fields": ['_created'],
+            "order": 4,
+        },
+        "updated_desc": {
+            "title": 'modification date in desc.',
+            "fields": ['-_updated'],
+            "order": 5,
+        },
+        "updated_asc": {
+            "title": 'modification date in asc.',
+            "fields": ['_updated'],
+            "order": 6,
+        },
+        "title_asc": {
+            "title": 'title in asc.',
+            "fields": ['title.raw'],
+            "order": 7,
+        },
+        "title_desc": {
+            "title": 'title in desc.',
+            "fields": ['-title.raw'],
+            "order": 8,
+        }
+    }
+}
+"""REST sort options per index."""
+
+RECORDS_REST_DEFAULT_SORT = {
+    "records": {
+        "query": 'bestmatch_desc',
+        "noquery": 'created_desc',
+    }
+}
+"""Default sort option per index with/without query string."""
+
 RECORDS_UI_ENDPOINTS = {
     'recid': {
         'pid_type': 'recid',
@@ -493,9 +549,11 @@ FIXTURES_ARCHIVE_LOCATION = 'archive/'
 # Search
 # ======
 SEARCH_UI_SEARCH_TEMPLATE = 'records/search.html'
-SEARCH_UI_JSTEMPLATE_RESULTS = 'templates/records/results.html'
-SEARCH_UI_JSTEMPLATE_SEARCHBAR = 'templates/records/searchbar.html'
-SEARCH_UI_JSTEMPLATE_FACETS = 'templates/records/facets.html'
+SEARCH_UI_JSTEMPLATE_SEARCHBAR = 'templates/search/searchbar.html'
+SEARCH_UI_JSTEMPLATE_COUNT = 'templates/search/count.html'
+SEARCH_UI_JSTEMPLATE_SELECT_BOX = 'templates/search/sort_by.html'
+SEARCH_UI_JSTEMPLATE_RESULTS = 'templates/search/results.html'
+SEARCH_UI_JSTEMPLATE_FACETS = 'templates/search/facets.html'
 
 # Contact Us
 # ==========

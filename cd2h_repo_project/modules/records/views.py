@@ -104,3 +104,24 @@ def edit_view_method(pid, record, template=None):
 def has_edit_metadata_permission(user, record):
     """Return boolean whether user can update record."""
     return EditMetadataPermission(user, record).can()
+
+
+@blueprint.app_template_filter('to_available_options')
+def to_available_options(sort_options):
+    """Create JSON-compatible sort options dict for Invenio-Search-JS.
+
+    :param sort_options: A dictionary of sort identifier as keys and sort
+                         configuration as values.
+                         See RECORDS_REST_SORT_OPTIONS[<index>].
+    :returns: A JSON compatible dict of sorting options for a <select> tag.
+    """
+    return {
+        'options': [
+            {'value': identifier, 'title': configuration['title']}
+            for identifier, configuration in
+            sorted(
+                sort_options.items(),
+                key=lambda id_conf: id_conf[1].get('order', 0)
+            )
+        ]
+    }
