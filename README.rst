@@ -238,8 +238,9 @@ Tests destroy the local Elasticsearch indices, to recreate them:
 
 .. code-block:: console
 
-    $ pipenv run invenio index init --force
+    $ pipenv run scripts/reindex
 
+This script re-indexes from the database.
 
 Continuous Integration (CI)
 ===========================

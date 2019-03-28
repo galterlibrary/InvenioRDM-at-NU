@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+pipenv run invenio index init --force
+pipenv run invenio index reindex --pid-type recid --yes-i-know
+pipenv run invenio index run
