@@ -5,7 +5,7 @@ from flask import current_app
 from invenio_pidstore.models import PersistentIdentifier
 
 from cd2h_repo_project.modules.doi.serializers import datacite_v41
-from cd2h_repo_project.modules.records.minters import mint_record
+from cd2h_repo_project.modules.records.minters import mint_pids_for_record
 from cd2h_repo_project.modules.records.serializers import json_v1
 
 
@@ -51,7 +51,7 @@ class TestJsonV1(object):
 @pytest.fixture
 def serialized_record(create_record):
     record = create_record(published=False)
-    mint_record(record.id, record)
+    mint_pids_for_record(record.id, record)
     pid = PersistentIdentifier.get('doi', record['id'])
     return datacite_v41.serialize(pid, record)
 

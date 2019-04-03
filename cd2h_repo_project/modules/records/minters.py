@@ -4,10 +4,10 @@ from flask import current_app
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
 from invenio_pidstore.providers.recordid import RecordIdProvider
 
-from cd2h_repo_project.modules.doi.minters import mint_record_doi
+from cd2h_repo_project.modules.doi.minters import mint_doi_pid
 
 
-def mint_record(record_uuid, data):
+def mint_pids_for_record(record_uuid, data):
     """Record PersistentIdentifiers minter.
 
     Mints:
@@ -18,12 +18,12 @@ def mint_record(record_uuid, data):
     :param data: Record object as dict (or dict-like).
     :returns: recid PersistentIdentifier
     """
-    pid = mint_record_recid(record_uuid, data)
-    mint_record_doi(record_uuid, data)
+    pid = mint_recid_pid(record_uuid, data)
+    mint_doi_pid(record_uuid, data)
     return pid
 
 
-def mint_record_recid(record_uuid, data):
+def mint_recid_pid(record_uuid, data):
     """Mint recid PersistentIdentifier.
 
     A recid PersistentIdentifier can only be minted if the Record has not

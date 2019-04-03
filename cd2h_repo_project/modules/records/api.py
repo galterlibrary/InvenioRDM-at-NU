@@ -17,7 +17,7 @@ from invenio_records_files.api import Record as _Record
 from invenio_records_files.models import RecordsBuckets
 from werkzeug.local import LocalProxy
 
-from cd2h_repo_project.modules.doi.tasks import register_doi
+from .signals import menrva_record_published
 
 current_jsonschemas = LocalProxy(
     lambda: current_app.extensions['invenio-jsonschemas']
@@ -83,6 +83,13 @@ class Deposit(_Deposit):
 
     file_cls = FileObject
     published_record_class = Record
+    NON_FORM_FIELDS_TO_PRESERVE = (
+        '_deposit',
+        'type',
+        'id',
+        '_buckets',
+        'doi'
+    )
 
     @classmethod
     def fetch_deposit(cls, record):
@@ -225,11 +232,10 @@ class Deposit(_Deposit):
                 'Could not index {0}.'.format(published_record)
             )
 
-        # NOTE: If we can figure out how to not raise
-        #       sqlalchemy.orm.exc.DetachedInstanceError in client.post tests,
-        #       we could use signal and receivers from client.post.
-        if current_app.config['DOI_REGISTER_SIGNALS']:
-            register_doi.delay(published_record['id'])
+        # We DONT rely on invenio-deposit's signal because we want
+        # this method to be enough to publish a Record and perform all
+        # associated work
+        menrva_record_published.send(published_record['id'])
 
         return self
 
@@ -239,17 +245,17 @@ class Deposit(_Deposit):
         Overrides parent's `_prepare_edit`.
 
         :param record: The published-record from which data should be
-        initially taken.
+                       initially taken.
         """
         data = published_record.dumps()
-        # TODO: Check if we need to keep current record revision for merging.
-        # data['_deposit']['pid']['revision_id'] = record.revision_id
+        # Needed for merging. Interesting location for it though.
+        data['_deposit']['pid']['revision_id'] = published_record.revision_id
         data['_deposit']['status'] = 'draft'
         data['type'] = RecordType.draft.value
         return data
 
     @has_status
-    @preserve(result=False, fields=('_deposit', 'type', 'id', '_buckets'))
+    @preserve(result=False, fields=NON_FORM_FIELDS_TO_PRESERVE)
     def clear(self, *args, **kwargs):
         """Clear draft-record of all fields except for the specified ones.
 

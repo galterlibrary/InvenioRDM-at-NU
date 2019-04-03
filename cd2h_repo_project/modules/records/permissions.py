@@ -7,10 +7,9 @@ from invenio_access import Permission
 from invenio_deposit.scopes import write_scope
 from invenio_deposit.utils import check_oauth2_scope
 from invenio_files_rest.models import Bucket, MultipartObject, ObjectVersion
-from invenio_records.api import Record
-from invenio_records_files.api import FileObject
 from invenio_records_files.models import RecordsBuckets
 
+from cd2h_repo_project.modules.records.api import FileObject, Record
 from cd2h_repo_project.utils import get_identity
 
 # Need instances #

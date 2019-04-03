@@ -4,7 +4,7 @@ from flask import current_app
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
 
 
-def mint_record_doi(record_uuid, data):
+def mint_doi_pid(record_uuid, data):
     """Mint doi PersistentIdentifier in an initial New state.
 
     Because DOIs are minted by an external service, we create a PID for
