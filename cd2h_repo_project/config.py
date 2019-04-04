@@ -307,42 +307,42 @@ RECORDS_REST_SORT_OPTIONS = {
         # Note that we have sort values for both asc and desc to workaround
         # a "separate ordering" bug in invenio-search-js.
         "bestmatch_desc": {  # 'sort' query string value: ?sort=bestmatch_desc
-            "title": 'best match in desc.',
+            "title": 'most relevant match',
             "fields": ['-_score'],
             "order": 1,
         },
         "bestmatch_asc": {
-            "title": 'best match in asc.',
+            "title": 'least relevant match',
             "fields": ['_score'],
             "order": 2,
         },
         "created_desc": {
-            "title": 'publication date in desc.',
+            "title": 'most recently published',
             "fields": ['-_created'],
             "order": 3,
         },
         "created_asc": {
-            "title": 'publication date in asc.',
+            "title": 'least recently published',
             "fields": ['_created'],
             "order": 4,
         },
         "updated_desc": {
-            "title": 'modification date in desc.',
+            "title": 'most recently updated',
             "fields": ['-_updated'],
             "order": 5,
         },
         "updated_asc": {
-            "title": 'modification date in asc.',
+            "title": 'least recently updated',
             "fields": ['_updated'],
             "order": 6,
         },
         "title_asc": {
-            "title": 'title in asc.',
+            "title": 'title A to Z',
             "fields": ['title.raw'],
             "order": 7,
         },
         "title_desc": {
-            "title": 'title in desc.',
+            "title": 'title Z to A',
             "fields": ['-title.raw'],
             "order": 8,
         }
