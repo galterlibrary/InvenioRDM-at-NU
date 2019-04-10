@@ -95,27 +95,25 @@ def test_fetch_deposit(create_record):
     assert unpublished_record == deposit
 
 
-def test_clear_deposit_preserves_appropriate_fields(create_record):
-    record = create_record()
-    _, deposit = Deposit.fetch_deposit(record)
-    # TODO: Update with fields not available on the deposit form
-    fields_to_preserve = ['_buckets', '_deposit', 'id', 'type', 'doi']
+def test_deposit_clear_keeps_fields_to_preserve(create_record):
+    deposit = create_record(published=False)
+    deposit['_files'] = "foo"
+    deposit['$schema'] = "bar"
+    fields_to_preserve = [
+        '_buckets', '_deposit', 'id', 'type', 'doi', '_files'
+    ]
+    expected_preservation = {
+        field: deposit[field]
+        for field in fields_to_preserve
+        if field in deposit
+    }
 
-    # Pre-condition
-    assert set(fields_to_preserve) == set(Deposit.NON_FORM_FIELDS_TO_PRESERVE)
-    preserved = {}
-    assert deposit['$schema']  # Example of field not to preserve
-    for field in fields_to_preserve:
-        assert field in deposit
-        preserved[field] = deposit[field]
-
-    deposit['_deposit']['status'] = 'draft'  # Needed to clear
     cleared_deposit = deposit.clear()
 
-    # Post-condition
+    assert set(fields_to_preserve) == set(Deposit.NON_FORM_FIELDS_TO_PRESERVE)
     assert '$schema' not in deposit
-    for field in fields_to_preserve:
-        assert preserved[field] == cleared_deposit[field]
+    for field, value in expected_preservation.items():
+        assert cleared_deposit[field] == value
 
 
 def test_fileobject_dumps_serializes_filetype(create_record):

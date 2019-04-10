@@ -88,7 +88,8 @@ class Deposit(_Deposit):
         'type',
         'id',
         '_buckets',
-        'doi'
+        'doi',
+        '_files'
     )
 
     @classmethod
@@ -260,6 +261,10 @@ class Deposit(_Deposit):
         """Clear draft-record of all fields except for the specified ones.
 
         Overrides parent's `clear` to choose what to preserve.
+
+        This is called by invenio_records_rest/views.py::RecordResource.put()
+        and is meant to clear a draft-record's **form** fields before they are
+        refilled by the ones in the uploaded form.
 
         Status required: ``'draft'``.
         """
