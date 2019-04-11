@@ -7,6 +7,9 @@
 
 """Flask extension for DOI."""
 
+from cd2h_repo_project.modules.doi.triggers import doi_minting_trigger
+from cd2h_repo_project.modules.records.signals import menrva_record_published
+
 
 class DigitalObjectIdentifier(object):
     """Digital Object Identifier extension."""
@@ -19,3 +22,4 @@ class DigitalObjectIdentifier(object):
     def init_app(self, app):
         """Flask application initialization."""
         app.extensions['cd2h-doi'] = self
+        menrva_record_published.connect(doi_minting_trigger)

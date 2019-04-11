@@ -3,17 +3,17 @@ import uuid
 import pytest
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
 
-from cd2h_repo_project.modules.records.minters import mint_record
+from cd2h_repo_project.modules.records.minters import mint_pids_for_record
 
 
-def test_mint_record_creates_recid_pid(config, db):
+def test_mint_pids_for_record_creates_recid_pid(config, db):
     rec_uuid = uuid.uuid4()
     data = {}
     assert (
         PersistentIdentifier.query.filter_by(pid_type='recid').first() is None
     )
 
-    mint_record(rec_uuid, data)
+    mint_pids_for_record(rec_uuid, data)
 
     recid_value = data[config['PIDSTORE_RECID_FIELD']]
     assert recid_value
@@ -22,15 +22,16 @@ def test_mint_record_creates_recid_pid(config, db):
     assert pid.status == PIDStatus.REGISTERED
 
 
-def test_mint_record_already_minted_recid_pid_raises_exception(config, db):
+def test_mint_pids_for_record_for_already_minted_recid_pid_raises_exception(
+        config, db):
     rec_uuid = uuid.uuid4()
     data = {config['PIDSTORE_RECID_FIELD']: 'a value'}
 
     with pytest.raises(AssertionError):
-        mint_record(rec_uuid, data)
+        mint_pids_for_record(rec_uuid, data)
 
 
-def test_mint_record_creates_doi_pid(config, db):
+def test_mint_pids_for_record_creates_doi_pid(config, db):
     recid_field = config['PIDSTORE_RECID_FIELD']
     rec_uuid = uuid.uuid4()
     data = {}
@@ -38,7 +39,7 @@ def test_mint_record_creates_doi_pid(config, db):
         PersistentIdentifier.query.filter_by(pid_type='doi').first() is None
     )
 
-    mint_record(rec_uuid, data)
+    mint_pids_for_record(rec_uuid, data)
 
     doi_value = data['doi']
     assert doi_value == ''
@@ -47,10 +48,11 @@ def test_mint_record_creates_doi_pid(config, db):
     assert pid.status == PIDStatus.NEW
 
 
-def test_mint_record_already_minted_doi_pid_raises_exception(config, db):
+def test_mint_pids_for_record_for_already_minted_doi_pid_raises_exception(
+        config, db):
     recid_field = config['PIDSTORE_RECID_FIELD']
     rec_uuid = uuid.uuid4()
     data = {'doi': 'a value'}
 
     with pytest.raises(AssertionError):
-        mint_record(rec_uuid, data)
+        mint_pids_for_record(rec_uuid, data)

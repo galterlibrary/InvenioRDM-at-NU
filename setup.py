@@ -69,14 +69,20 @@ setup(
         'invenio_search.mappings': [
             'records = cd2h_repo_project.modules.records.mappings'
         ],
+        # Loaded when create_ui/create_app is used as application factory
         'invenio_base.apps': [
             'cd2hrepo_records = cd2h_repo_project.modules.records.ext:Records',
+            'cd2hrepo_doi = cd2h_repo_project.modules.doi.ext:DigitalObjectIdentifier',
+        ],
+        # Loaded when create_api/create_app is used as application factory
+        'invenio_base.api_apps': [
+            'cd2hrepo_doi = cd2h_repo_project.modules.doi.ext:DigitalObjectIdentifier',
         ],
         'invenio_access.actions': [
           'cd2h-edit-metadata = cd2h_repo_project.modules.records.permissions:cd2h_edit_metadata',
         ],
         'invenio_pidstore.minters': [
-            'cd2h_recid = cd2h_repo_project.modules.records.minters:mint_record',
+            'cd2h_recid = cd2h_repo_project.modules.records.minters:mint_pids_for_record',
         ],
     },
     classifiers=[
