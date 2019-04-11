@@ -291,11 +291,15 @@ RECORDS_REST_FACETS = {
                 # Dynamically creates a bucket for each unique `_files.type`
                 'terms': {'field': "_files.type"},
             },
+            'license': {
+                'terms': {'field': 'license'}
+            }
             # TODO: Add other facets here
         },
         # Filters the results further AFTER aggregation
         'post_filters': {
             'file_type': terms_filter('_files.type'),
+            'license': terms_filter('license'),
             # TODO: Add other post_filters here
         }
     }

@@ -14,7 +14,11 @@
     <div class="panel-body">
       <ul class="list-unstyled" ng-init="values = getValues(aggr.key)" ng-repeat="item in aggr.value.buckets">
         <li>
-          <input type="checkbox" ng-checked="values.indexOf(item.key) > -1" ng-click="handleClick(aggr.key, item.key)" /> {{ item.key }} ({{ item.doc_count }})
+          <input type="checkbox" ng-checked="values.indexOf(item.key) > -1" ng-click="handleClick(aggr.key, item.key)" />
+            <span ng-switch="aggr.key">
+              <span ng-switch-when="license">{{ item.key | to_license_name }} ({{ item.doc_count }})</span>
+              <span ng-switch-default>{{ item.key }} ({{ item.doc_count }})</span>
+            </span>
           <small>
             <a
               ng-init="tree_more[item.key] = false; tree[item.key] = (values.indexOf(item.key) > -1) ? true : false"
