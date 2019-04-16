@@ -1,0 +1,38 @@
+<div
+ class="form-group schema-form-uiselectmultiple {{form.htmlClass}}"
+ ng-controller="dynamicSelectController"
+ ng-class="{'has-error': hasError(), 'has-success': hasSuccess(), 'has-feedback': form.feedback !== false}"
+ ng-init="$$value$$=$$value$$||[];uiMultiSelectInitInternalModel($$value$$)">
+  <label
+   class="control-label col-sm-3"
+   ng-show="showTitle()">
+    <i ng-if="form.fa_cls" class="fa fa-fw {{ form.fa_cls }}"></i>&nbsp;{{form.title}}
+  </label>
+  <div
+   ng-class="{'col-sm-9': !form.notitle, 'col-sm-12': form.notitle}">
+    <ui-select
+     multiple
+     sortable-options="{{form.sortableOptions}}"
+     ng-model="internalModel"
+     theme="bootstrap"
+     on-select="$$value$$.push($item.value)"
+     on-remove="$$value$$.splice($$value$$.indexOf($item.value), 1)"
+     class="{{form.options.uiClass}}">
+      <ui-select-match placeholder="{{form.placeholder || form.schema.placeholder || ('placeholders.select' | translate)}}">  {{$item.name}}
+      </ui-select-match>
+      <ui-select-choices
+       repeat="item in form.titleMap"
+       refresh="populateTitleMap(form, $select.search)"
+       refresh-delay="form.options.refreshDelay"
+       group-by="form.options.groupBy">
+        <div ng-bind-html="item.name | highlight: $select.search"></div>
+      </ui-select-choices>
+    </ui-select>
+
+    <!-- TODO: Better error feedback. Just general right now.-->
+
+    <div class="help-block"
+     ng-show="(hasError() && errorMessage(schemaError())) || form.description"
+     ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div>
+  </div>
+</div>

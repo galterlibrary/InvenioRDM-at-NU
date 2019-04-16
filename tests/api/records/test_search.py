@@ -211,7 +211,7 @@ class TestRecordsSearch(object):
 
     def test_search_orders_by_created_desc_if_no_query(
             self, client, create_record, es_clear):
-        record1 = create_record({"title": "Old record"})
+        record1 = create_record({"title": "old record"})
         record2 = create_record({"title": "More recent record"})
 
         response = client.get("/records/")
@@ -219,17 +219,17 @@ class TestRecordsSearch(object):
         hit1 = response.json['hits']['hits'][0]
         assert hit1['metadata']['title'] == "More recent record"
         hit2 = response.json['hits']['hits'][1]
-        assert hit2['metadata']['title'] == "Old record"
+        assert hit2['metadata']['title'] == "old record"
 
     def test_search_orders_by_bestmatch_desc_if_query_but_no_sort(
             self, client, create_record, es_clear):
-        record1 = create_record({"title": "Old record"})
+        record1 = create_record({"title": "old record"})
         record2 = create_record({"title": "More recent record"})
 
         response = client.get("/records/?q=old+record")
 
         hit1 = response.json['hits']['hits'][0]
-        assert hit1['metadata']['title'] == "Old record"
+        assert hit1['metadata']['title'] == "old record"
         hit2 = response.json['hits']['hits'][1]
         assert hit2['metadata']['title'] == "More recent record"
 

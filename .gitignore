@@ -77,4 +77,4 @@ deployment/ansible/playbook.retry
 *.sublime-*
 
 # Private directory to store anything else (mostly debug logs)
-private/
+_private/

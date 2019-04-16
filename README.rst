@@ -142,6 +142,11 @@ In development, after you have added a *new* template, you need to collect
 it so that Flask can retrieve it. Once a template is collected (and linked),
 any changes to it will be automatically picked up.
 
+If you have local scripts you don't want to commit (yet!), place them in a
+``_private/`` directory in an appropriate location. Tests are setup to ignore
+directories named ``_private``.
+
+
 Running a pull request locally
 ------------------------------
 

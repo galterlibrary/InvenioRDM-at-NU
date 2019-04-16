@@ -38,15 +38,17 @@ class TestRecordSchemaV1(object):
         assert not unmarshalled_record.data
 
 
-class Test_MetadataSchemaV1Unique(object):
+class TestMetadataSchemaV1(object):
 
-    def test_extra_key_doesnt_return_errors(self, create_serialized_record):
+    def test_extra_key_is_ignored(self, create_serialized_record):
         serialized_record = create_serialized_record({'foo': 'bar'})
 
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
+        loaded_record = unmarshalled_record.data
 
         # marshmallow does not care about additional keys
         assert 'foo' not in unmarshalled_record.errors
+        assert 'foo' not in loaded_record
 
     def test_missing_keys_return_errors(self):
         serialized_record = {'foo': 'bar'}
@@ -75,3 +77,66 @@ class Test_MetadataSchemaV1Unique(object):
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
         assert 'description' in unmarshalled_record.errors
+
+    def test_one_term_loaded(self, create_serialized_record):
+        terms = [{'source': 'MeSH', 'value': 'Cognitive Neuroscience'}]
+        serialized_record = create_serialized_record({
+            'terms': terms
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'terms' in deserialized_metadata
+        assert deserialized_metadata['terms'] == terms
+
+    def test_multiple_terms_loaded(self, create_serialized_record):
+        terms = [
+            {'source': 'MeSH', 'value': 'Cognitive Neuroscience'},
+            {'source': 'MeSH', 'value': 'Acanthamoeba'}
+        ]
+        serialized_record = create_serialized_record({
+            'terms': terms
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'terms' in deserialized_metadata
+        assert deserialized_metadata['terms'] == terms
+
+    def test_no_terms_loaded(self, create_serialized_record):
+        terms = []
+        serialized_record = create_serialized_record({
+            'terms': terms
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'terms' in deserialized_metadata
+        assert deserialized_metadata['terms'] == terms
+
+        serialized_record2 = create_serialized_record()
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record2)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'terms' not in deserialized_metadata
+
+    def test_incorrect_format_terms_returns_error(
+            self, create_serialized_record):
+        terms = ["bar"]
+        serialized_record = create_serialized_record({
+            'terms': terms
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert 'terms' in unmarshalled_metadata.errors
+        assert deserialized_metadata['terms'] == [{}]
