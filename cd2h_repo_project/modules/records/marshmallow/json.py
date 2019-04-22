@@ -14,12 +14,13 @@ from marshmallow import Schema, fields, missing, post_load, validate
 from cd2h_repo_project.modules.records.api import RecordType
 
 License = namedtuple('License', ['name', 'value'])
-# WARNING: Any change to this list should be reflected in deposit_form.json
+# WARNING: Any change to this list should be reflected in:
+# - modules/records/static/json/records/deposit_form.json
+# - modules/records/static/js/search/filters.js
 LICENSES = [
     License(name="MIT License", value="mit-license"),
     License(name="Creative Commons Attribution", value="cc-by"),
-    License(name="Creative Commons Attribution Share-Alike",
-            value="cc-by-sa"),
+    License(name="Creative Commons Attribution Share-Alike", value="cc-by-sa"),
     License(name="Creative Commons CCZero", value="cc-zero"),
     License(name="Creative Commons Non-Commercial (Any)", value="cc-nc"),
     License(name="GNU General Public License version 3.0 (GPLv3)",
