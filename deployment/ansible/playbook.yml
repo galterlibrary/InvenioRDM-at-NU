@@ -56,7 +56,6 @@
         line: vm.max_map_count=262144
       become: yes
 
-    # TODO: Automate file generation?
     - name: custom .env file exists
       stat:
         path: /home/deploy/cd2h-repo-project/.env

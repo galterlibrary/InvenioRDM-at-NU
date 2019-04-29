@@ -13,3 +13,4 @@ script_path=$(dirname "$0")
 
 invenio alembic upgrade
 invenio index init --force
+menrva mesh index
