@@ -90,6 +90,17 @@
               "type": "keyword"
             }
           }
+        },
+        "terms": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "keyword"
+            },
+            "value": {
+              "type": "keyword"
+            }
+          }
         }
       }
     }

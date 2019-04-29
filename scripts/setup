@@ -28,4 +28,6 @@ invenio access allow cd2h-edit-metadata role librarian
 
 # CD2H Repo specific starter setup
 ## Create location to store files (idempotent)
-invenio locations setup_storage
+menrva locations setup_storage
+## Index MeSH terms (idempotent)
+menrva mesh index
