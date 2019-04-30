@@ -1,0 +1,231 @@
+
+*NEWRECORD
+RECTYPE = D
+MH = Abnormalities, Multiple
+DE = ABNORM MULTIPLE
+AQ = BL CF CI CL DG DH DI DT EC EH EM EN EP ET GE HI IM ME MI MO NU PA PC PP PS PX RH RT SU TH UR VE VI
+ENTRY = Multiple Abnormalities|T019|NON|EQV|UNK (19XX)|860101|MULTIPLE ABNORM|abcdefv
+MN = C16.131.077
+FX = Intellectual Disability
+MH_TH = NLM (1968)
+ST = T019
+AN = coordinate with specific abnormalities
+PI = Abnormalities (1966-1967)
+MS = Congenital abnormalities that affect more than one organ or body structure.
+PM = 68
+HN = 68
+CATSH = CAT LIST
+MR = 20151201
+DA = 19990101
+DC = 1
+DX = 19680101
+UI = D000015
+
+*NEWRECORD
+RECTYPE = D
+MH = Graphic Novels
+ENTRY = Comic Books|T170|NON|BRD|NLM (2018)|170301|abcdef
+MN = V02.503
+MN = V02.700.375
+MH_TH = NLM (2016)
+ST = T170
+AN = This heading is used as a Publication Type.  INDEXER: Do not use
+PI = Cartoons (2014-2015)
+MS = Book-length narratives told using a combination of words and sequential art, often presented in comic book style. from (Fletcher-Spear et al., ALA Review, Winter 2005)
+HN = 2016; use CARTOONS 2014-2015
+MR = 20170301
+DA = 20150701
+DC = 2
+DX = 20160101
+UI = D000068036
+
+*NEWRECORD
+RECTYPE = D
+MH = Fiji
+AQ = EH EP
+MN = Z01.639.760.590.373
+MH_TH = POPLINE (1978)
+ST = T083
+AN = an island group in Melanesia
+MS = A republic consisting of an island group in Melanesia, in the southwest Pacific Ocean. Its capital is Suva. It was discovered by Abel Tasman in 1643 and was visited by Captain Cook in 1774. It was used by escaped convicts from Australia as early as 1804. It was annexed by Great Britain in 1874 but achieved independence in 1970. The name Fiji is of uncertain origin. In its present form it may represent that of Viti, the main island in the group. (From Webster's New Geographical Dictionary, 1988, p396 & Room, Brewer's Dictionary of Names, 1992, p186)
+HN = 75
+MR = 20120703
+DA = 19741111
+DC = 4
+DX = 19750101
+UI = D005367
+
+*NEWRECORD
+RECTYPE = D
+MH = Seed Bank
+AQ = CL EC ES HI LJ OG SD SN ST TD UT
+ENTRY = Germplasm Bank|T002|NON|BRD|NLM (2016)|150121|abcdef
+ENTRY = Seedbank|T002|NON|EQV|NLM (2016)|150121|abcdef
+ENTRY = Seeds Bank|T002|NON|EQV|NLM (2016)|150121|abcdef
+ENTRY = Bank, Germplasm
+ENTRY = Bank, Seed
+ENTRY = Bank, Seeds
+ENTRY = Banks, Germplasm
+ENTRY = Banks, Seed
+ENTRY = Germplasm Banks
+ENTRY = Seed Banks
+ENTRY = Seedbanks
+MN = N02.278.065.650
+MH_TH = NLM (2016)
+ST = T002
+PI = Seeds (2000-2015)
+MS = A repository of seeds maintained under optimal conditions that ensure long term storage, intended for use as a source of replenishment of seed stock or plant genetic material.
+PM = 2016
+HN = 2016
+MR = 20150302
+DA = 20150701
+DC = 1
+DX = 20160101
+UI = D000068098
+
+*NEWRECORD
+RECTYPE = D
+MH = Female
+ENTRY = Females|T032|NON|EQV|BIOETHICS (1974)|770317|abcdef
+MH_TH = NLM (1966)
+ST = T032
+AN = check tag only for female organs, diseases, physiologic processes, genetics, etc.; do not confuse with WOMEN as a social, cultural, political, economic force; CATALOGER: Do not use
+HN = 1966; for FEMALES use WOMEN 1978-2005
+MR = 20150610
+DA = 19990101
+DC = 3
+DX = 19660101
+UI = D005260
+
+*NEWRECORD
+RECTYPE = D
+MH = Filariasis
+AQ = BL CF CI CL CN CO DG DH DI DT EC EH EM EN EP ET GE HI IM ME MI MO NU PA PC PP PS PX RH RT SU TH TM UR VE VI
+PRINT ENTRY = Elaeophoriasis|T047|NON|NRW|NLM (1993)|911115|abcdef
+PRINT ENTRY = Filarioidea Infections|T047|NON|EQV|UNK (19XX)|740330|FILARIOIDEA INFECT|abcdefv
+ENTRY = Infections, Filarioidea|T047|NON|EQV|NLM (1992)|910612|INFECT FILARIOIDEA|abcdefv
+ENTRY = Elaeophoriases
+ENTRY = Filariases
+ENTRY = Filarioidea Infection
+ENTRY = Infection, Filarioidea
+MN = C03.335.508.700.750.361
+MH_TH = POPLINE (1994)
+ST = T047
+AN = GEN: prefer specifics; drug ther: consider FILARICIDES
+MS = Infections with nematodes of the superfamily FILARIOIDEA. The presence of living worms in the body is mainly asymptomatic but the death of adult worms leads to granulomatous inflammation and permanent fibrosis. Organisms of the genus Elaeophora infect wild elk and domestic sheep causing ischemic necrosis of the brain, blindness, and dermatosis of the face.
+OL = use FILARIASIS to search ELAEOPHORIASIS 1975-92
+PM = ELAEOPHORIASIS was heading 1975-92 (see under FILARIASIS 1975-90)
+HN = ELAEOPHORIASIS was heading 1975-92 (see under FILARIASIS 1975-90)
+CATSH = CAT LIST
+MR = 20040727
+DA = 19990101
+DC = 1
+DX = 19600101
+UI = D005368
+
+*NEWRECORD
+RECTYPE = D
+MH = Congenital Abnormalities
+DE = CONGEN ABNORM
+AQ = BL CF CL DG DH DI DT EC EH EM EN EP ET GE HI IM ME MI MO NU PA PC PP PS PX RH RT SU TH UR VE VI
+PRINT ENTRY = Birth Defects|T019|NON|EQV|UNK (19XX)|760508|abcdef
+PRINT ENTRY = Congenital Defects|T019|NON|EQV|UNK (19XX)|770322|CONGEN DEFECTS|abcdefv
+PRINT ENTRY = Deformities|T019|NON|EQV|UNK (19XX)|740329|abcdef
+ENTRY = Abnormalities, Congenital|T019|NON|EQV|UNK (19XX)|781218|ABNORM CONGEN|abcdefv
+ENTRY = Defects, Congenital|T019|NON|EQV|UNK (19XX)|770322|DEFECTS CONGEN|abcdefv
+ENTRY = Abnormality, Congenital
+ENTRY = Birth Defect
+ENTRY = Congenital Abnormality
+ENTRY = Congenital Defect
+ENTRY = Defect, Birth
+ENTRY = Defect, Congenital
+ENTRY = Defects, Birth
+ENTRY = Deformity
+MN = C16.131
+EC = chemically induced:Abnormalities, Drug-Induced
+MH_TH = NLM (1980)
+ST = T019
+AN = general only: prefer /abnorm with specific anatomical term or specific animal: Manual 19.7+, 19.8.1; policy: Manual 23.20+
+MS = Malformations of organs or body parts during development in utero.
+PM = 2008; see ABNORMALITIES 1963-2007
+HN = 2008 (1963)
+CATSH = CAT LIST
+MR = 20070709
+DA = 19990101
+DC = 1
+DX = 20080101
+UI = D000013
+
+*NEWRECORD
+RECTYPE = D
+MH = Abdominal Injuries
+DE = ABDOMINAL INJ
+AQ = BL CF CI CL CN CO DG DH DI DT EC EH EM EN EP ET GE HI IM ME MI MO NU PA PC PP PS PX RH RT SU TH UR VE VI
+ENTRY = Injuries, Abdominal|T037|NON|EQV|UNK (19XX)|860101|INJ ABDOMINAL|abcdefv
+ENTRY = Abdominal Injury
+ENTRY = Injury, Abdominal
+MN = C26.017
+MH_TH = NLM (1966)
+ST = T037
+AN = general term for inj of organs in the abdom cavity; prefer specific organs /inj
+MS = General or unspecified injuries involving organs in the abdominal cavity.
+CATSH = CAT LIST
+MR = 20100625
+DA = 19990101
+DC = 1
+DX = 19660101
+UI = D000007
+
+*NEWRECORD
+RECTYPE = D
+MH = Abdominal Neoplasms
+DE = ABDOMINAL NEOPL
+AQ = BL BS CF CH CI CL CN CO DG DH DI DT EC EH EM EN EP ET GE HI IM ME MI MO NU PA PC PP PS PX RH RT SC SE SU TH UL UR VE VI
+ENTRY = Abdominal Neoplasm
+ENTRY = Neoplasm, Abdominal
+ENTRY = Neoplasms, Abdominal
+MN = C04.588.033
+MH_TH = NLM (1966)
+ST = T191
+AN = general term for neoplasms of organs in the abdominal cavity; prefer specific organ/neoplasm terms; coordinate IM with histological type of neoplasm if given (IM)
+MS = New abnormal growth of tissue in the ABDOMEN.
+CATSH = CAT LIST
+MR = 20151124
+DA = 19990101
+DC = 1
+DX = 19660101
+UI = D000008
+
+*NEWRECORD
+RECTYPE = D
+MH = Abbreviations as Topic
+ENTRY = Acronyms as Topic|T170|NON|NRW|NLM (2008)|070629|abcdef
+MN = L01.559.598.400.556.131
+MH_TH = NLM (2008)
+ST = T170
+AN = includes acronyms; do not confuse with Publication Type ABBREVIATIONS
+MS = Works about shortened forms of written words or phrases used for brevity.
+PM = 2008; see ABBREVIATIONS 1963-2007
+HN = 2008(1963)
+MR = 20170630
+DA = 19990101
+DC = 1
+DX = 19600101
+UI = D000004
+
+*NEWRECORD
+RECTYPE = D
+MH = Abdomen
+AQ = AB AH BS DG EM GD IR MI PA PH PP PS RE SU VI
+ENTRY = Abdomens
+MN = A01.923.047
+EC = injuries:Abdominal Injuries
+MH_TH = NLM (1966)
+ST = T029
+AN = GEN: prefer specifics; abdom muscles = ABDOMINAL MUSCLES but RECTUS ABDOMINIS is available; abdominal pain = ABDOMINAL PAIN; abrupt dis requiring emerg surg = ABDOMEN, ACUTE
+MS = That portion of the body that lies between the THORAX and the PELVIS.
+MR = 20160809
+DA = 19990101
+DC = 1
+DX = 19660101
+UI = D000005

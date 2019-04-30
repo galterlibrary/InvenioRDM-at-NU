@@ -9,7 +9,7 @@ from collections import namedtuple
 from invenio_records_rest.schemas import StrictKeysMixin
 from invenio_records_rest.schemas.fields import DateString, SanitizedUnicode
 from invenio_rest.errors import RESTValidationError
-from marshmallow import Schema, fields, missing, post_load, validate
+from marshmallow import Schema, fields, missing, post_load, pre_load, validate
 
 from cd2h_repo_project.modules.records.api import RecordType
 
@@ -53,6 +53,13 @@ class ContributorSchemaV1(StrictKeysMixin):
     email = fields.Str()
 
 
+class TermSchemaV1(StrictKeysMixin):
+    """Term schema."""
+
+    source = fields.Str()
+    value = fields.Str()
+
+
 class MetadataSchemaV1(Schema):
     """Schema for the record metadata."""
 
@@ -73,6 +80,7 @@ class MetadataSchemaV1(Schema):
         dump_only=True,
         validate=validate.OneOf([rt.value for rt in RecordType])
     )
+    terms = fields.Nested(TermSchemaV1, many=True)
 
 
 class RecordSchemaV1(StrictKeysMixin):

@@ -99,8 +99,17 @@
         <dl class="dl-horizontal">
           <dt>Digital Object Identifier (DOI)</dt>
           <dd>{{ record | to_doi_field | safe }}</dd>
+
           <dt><span><i class="fa fa-certificate"></i></span> License</dt>
           <dd>{{ record.license | license_value_to_name }}</dd>
+
+          <dt><span><i class="fa fa-tag"></i></span> MeSH Terms</dt>
+          <dd>
+            {% for term in record.terms | map(attribute='value') | sort %}
+            <span class="label label-default">{{ term }}</span>
+            {% endfor %}
+          </dd>
+
         </dl>
       </div>
 

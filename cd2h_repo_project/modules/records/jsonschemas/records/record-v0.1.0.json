@@ -25,7 +25,7 @@
       "type": "string"
     },
     "license": {
-      "description": "License for embargoed/open access content.",
+      "description": "License for content usage.",
       "type": "string"
     },
     "_deposit": {
@@ -93,6 +93,28 @@
     "type": {
       "description": "Record type (draft or published record)",
       "type": "string"
+    },
+    "terms": {
+      "description": "Record terms.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "description": "Source of the term (MeSH, LCSH, User...).",
+            "title": "Term Source",
+            "type": "string",
+            "enum": ["MeSH"]
+          },
+          "value": {
+            "description": "Actual term.",
+            "title": "Term Value",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": ["source", "value"]
+      }
     }
   },
   "required": [
