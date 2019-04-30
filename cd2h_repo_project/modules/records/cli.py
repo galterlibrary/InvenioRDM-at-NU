@@ -53,11 +53,8 @@ def locations():
 
     Usage on the command line becomes:
 
-        cd2h-repo-project locations <command>
+        menrva locations <command>
 
-        OR (shorter)
-
-        invenio locations <command>
     """
     pass
 
