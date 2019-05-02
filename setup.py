@@ -45,6 +45,7 @@ setup(
         'flask.commands': [
             'locations = cd2h_repo_project.modules.records.cli:locations',
             'mesh = cd2h_repo_project.modules.mesh.cli:mesh',
+            'fast = cd2h_repo_project.modules.mesh.cli:fast',
         ],
         'invenio_base.blueprints': [
             'cd2h_repo_project = cd2h_repo_project.views:blueprint',

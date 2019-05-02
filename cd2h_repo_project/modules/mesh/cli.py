@@ -13,10 +13,11 @@ from elasticsearch.helpers import bulk
 from flask.cli import with_appcontext
 from invenio_search import current_search_client
 
+from .fast import FAST
 from .loaders import indexable
 from .mesh import MeSH
 
-DEFAULT_MESH_FILE = join(dirname(realpath(__file__)), 'd2018.bin')
+DEFAULT_MESH_FILE = join(dirname(realpath(__file__)), 'data', 'd2018.bin')
 
 
 @click.group()
@@ -28,7 +29,7 @@ def mesh():
 @mesh.command('index')
 @click.option('--source', '-s', default=DEFAULT_MESH_FILE)
 @with_appcontext
-def index(source):
+def index_mesh(source):
     """Load MeSH terms to local index."""
     click.secho(
         'Loading MeSH topical headings from {}'.format(source), fg='blue'
@@ -58,3 +59,23 @@ def index(source):
         click.secho('Errors:', fg='red')
         for error in errors:
             click.secho('{}'.format(error), fg='red')
+
+
+@click.group()
+def fast():
+    """Invenio-FAST commands."""
+    pass
+
+
+NT_FAST_FILE = join(dirname(realpath(__file__)), 'data', 'FASTTopical.nt.zip')
+
+
+@fast.command('index')
+@click.option('--source', '-s', default=NT_FAST_FILE)
+@with_appcontext
+def index_fast(source):
+    """Load FAST terms in memory for now. TODO: Index them."""
+    terms = FAST.load(NT_FAST_FILE)
+
+    print("First term:", terms[0])
+    print("Last term:", terms[-1])

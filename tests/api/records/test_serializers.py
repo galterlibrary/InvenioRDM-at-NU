@@ -1,3 +1,4 @@
+import html
 from datetime import date
 
 import pytest
@@ -83,7 +84,9 @@ class TestDataCiteV4(object):
     def test_serializes_publisher(self, serialized_record):
         assert (
             "<publisher>{}</publisher>".format(
-                current_app.config['DOI_PUBLISHER']) in serialized_record
+                html.escape(current_app.config['DOI_PUBLISHER'])
+            )
+            in serialized_record
         )
 
     def test_serializes_publicationYear(self, serialized_record):
