@@ -14,7 +14,7 @@ from flask.cli import with_appcontext
 from invenio_search import current_search_client
 
 from .fast import FAST
-from .loaders import mesh_indexable
+from .loaders import fast_indexable, mesh_indexable
 from .mesh import MeSH
 
 
@@ -81,8 +81,32 @@ NT_FAST_FILE = join(dirname(realpath(__file__)), 'data', 'FASTTopical.nt.zip')
 @click.option('--source', '-s', default=NT_FAST_FILE)
 @with_appcontext
 def index_fast(source):
-    """Load FAST terms in memory for now. TODO: Index them."""
-    terms = FAST.load(NT_FAST_FILE)
+    """Load FAST terms to local index."""
+    click.secho(
+        'Loading FAST topical headings from {}'.format(source), fg='blue'
+    )
 
-    print("First term:", terms[0])
-    print("Last term:", terms[-1])
+    terms = FAST.load(source)
+
+    # Adapt to indexer
+    index_name = 'terms-term-v1.0.0'
+    type_name = 'term-v1.0.0'
+    indexable_terms = [
+        fast_indexable(t, index=index_name, doc_type=type_name) for t in terms
+    ]
+
+    # Index them
+    es = current_search_client
+    successes, errors = bulk(es, indexable_terms)
+    es.indices.refresh(index=index_name)
+
+    click.secho(
+        'Loaded {loaded}/{total} FAST topical headings from {source}'.format(
+            loaded=successes, total=len(indexable_terms), source=source),
+        fg='green'
+    )
+
+    if errors:
+        click.secho('Errors:', fg='red')
+        for error in errors:
+            click.secho('{}'.format(error), fg='red')
