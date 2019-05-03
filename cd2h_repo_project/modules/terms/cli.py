@@ -14,16 +14,23 @@ from flask.cli import with_appcontext
 from invenio_search import current_search_client
 
 from .fast import FAST
-from .loaders import indexable
+from .loaders import mesh_indexable
 from .mesh import MeSH
-
-DEFAULT_MESH_FILE = join(dirname(realpath(__file__)), 'data', 'd2018.bin')
 
 
 @click.group()
+def terms():
+    """Invenio-terms commands."""
+    pass
+
+
+@terms.group()
 def mesh():
     """Invenio-MeSH commands."""
     pass
+
+
+DEFAULT_MESH_FILE = join(dirname(realpath(__file__)), 'data', 'd2018.bin')
 
 
 @mesh.command('index')
@@ -41,7 +48,7 @@ def index_mesh(source):
     index_name = 'terms-term-v1.0.0'
     type_name = 'term-v1.0.0'
     indexable_terms = [
-        indexable(t, index=index_name, doc_type=type_name) for t in terms
+        mesh_indexable(t, index=index_name, doc_type=type_name) for t in terms
     ]
 
     # Index them
@@ -61,7 +68,7 @@ def index_mesh(source):
             click.secho('{}'.format(error), fg='red')
 
 
-@click.group()
+@terms.group()
 def fast():
     """Invenio-FAST commands."""
     pass

@@ -2,7 +2,7 @@
 
 from os.path import dirname, join, realpath
 
-from cd2h_repo_project.modules.mesh.mesh import MeSH
+from cd2h_repo_project.modules.terms.mesh import MeSH
 
 
 class TestMeSH(object):

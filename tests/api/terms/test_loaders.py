@@ -4,7 +4,7 @@ from os.path import dirname, join, realpath
 
 from elasticsearch.helpers import bulk
 
-from cd2h_repo_project.modules.mesh.loaders import indexable
+from cd2h_repo_project.modules.terms.loaders import mesh_indexable
 
 
 def test_indexable_single_term():
@@ -16,7 +16,7 @@ def test_indexable_single_term():
     index_name = 'terms'
     type_name = 'term-v1.0.0'
 
-    indexable_topic = indexable(
+    indexable_topic = mesh_indexable(
         mesh_topic, index=index_name, doc_type=type_name
     )
 
@@ -39,7 +39,7 @@ def test_indexable_spaced_term():
     index_name = 'terms'
     type_name = 'term-v1.0.0'
 
-    indexable_topic = indexable(
+    indexable_topic = mesh_indexable(
         mesh_topic, index=index_name, doc_type=type_name
     )
 
@@ -62,7 +62,7 @@ def test_indexable_comma_separated_term():
     index_name = 'terms'
     type_name = 'term-v1.0.0'
 
-    indexable_topic = indexable(
+    indexable_topic = mesh_indexable(
         mesh_topic, index=index_name, doc_type=type_name
     )
 

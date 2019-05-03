@@ -5,10 +5,10 @@
 # menRva is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""MeSH loaders."""
+"""Terms loaders."""
 
 
-def indexable(mesh_topic, index, doc_type):
+def mesh_indexable(mesh_topic, index, doc_type):
     """Return an ES indexable dict from MeSH dict."""
     mesh_term = mesh_topic['MH']
 

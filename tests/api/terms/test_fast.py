@@ -2,7 +2,7 @@
 
 from os.path import dirname, join, realpath
 
-from cd2h_repo_project.modules.mesh.fast import FAST
+from cd2h_repo_project.modules.terms.fast import FAST
 
 
 class TestFAST(object):

@@ -5,4 +5,4 @@
 # menRva is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-"""Invenio module integrating Medical Subject Headers (MeSH)."""
+"""Invenio module integrating controlled vocabulary terms (MeSH, FAST...)."""

@@ -23,7 +23,7 @@ class MeSH(object):
     """MeSH term extractor."""
 
     filter_to_dc = {
-        'all': '\d',
+        'all': r'\d',
         'topics': '1',
         'types': '2',
         'check_tags': '3',

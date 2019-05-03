@@ -5,13 +5,13 @@ from os.path import dirname, join, realpath
 import pytest
 from elasticsearch.helpers import bulk
 
-from cd2h_repo_project.modules.mesh.loaders import indexable
-from cd2h_repo_project.modules.mesh.mesh import MeSH
-from cd2h_repo_project.modules.mesh.suggester import suggest_terms
+from cd2h_repo_project.modules.terms.loaders import mesh_indexable
+from cd2h_repo_project.modules.terms.mesh import MeSH
+from cd2h_repo_project.modules.terms.suggester import suggest_terms
 
 
 @pytest.fixture(scope='module')
-def index_terms(es):
+def index_mesh_terms(es):
     filename = 'descriptors_test_file.txt'
     filepath = join(dirname(realpath(__file__)), filename)
     terms = MeSH.load(filepath, filter='topics')
@@ -19,7 +19,7 @@ def index_terms(es):
     index_name = 'terms-term-v1.0.0'
     type_name = 'term-v1.0.0'
     indexable_terms = [
-        indexable(t, index=index_name, doc_type=type_name) for t in terms
+        mesh_indexable(t, index=index_name, doc_type=type_name) for t in terms
     ]
 
     successes, errors = bulk(es, indexable_terms)
@@ -29,7 +29,7 @@ def index_terms(es):
 class TestSuggester(object):
     """Test Suggester."""
 
-    def test_prefixing_query_matches(self, index_terms):
+    def test_prefixing_query_matches(self, index_mesh_terms):
         query = "See"
 
         terms = suggest_terms(query)
