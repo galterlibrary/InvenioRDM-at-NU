@@ -1,0 +1,17 @@
+@import 'common';
+
+.deposit-panel {
+  a.panel-toggle {
+    color: $text-color;
+    text-decoration: none;
+
+    &:hover, &:active {
+      color: $text-color;
+      text-decoration: none;
+    }
+
+    .pull-right {
+      cursor: pointer;
+    }
+  }
+}

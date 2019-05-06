@@ -101,10 +101,10 @@
         "type": "object",
         "properties": {
           "source": {
-            "description": "Source of the term (MeSH, LCSH, User...).",
+            "description": "Source of the term (MeSH, FAST, User...).",
             "title": "Term Source",
             "type": "string",
-            "enum": ["MeSH"]
+            "enum": ["MeSH", "FAST"]
           },
           "value": {
             "description": "Actual term.",

@@ -56,8 +56,7 @@ class TestMetadataSchemaV1(object):
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
         missing_keys = ['title', 'description', 'author', 'license']
-        assert set(unmarshalled_record.errors) == set(missing_keys)
-        assert not unmarshalled_record.data
+        assert set(unmarshalled_record.errors.keys()) == set(missing_keys)
 
     def test_empty_required_key_return_errors(self, create_serialized_record):
         serialized_record = create_serialized_record({'title': None})
@@ -126,7 +125,8 @@ class TestMetadataSchemaV1(object):
         deserialized_metadata = unmarshalled_metadata.data
 
         assert not unmarshalled_metadata.errors
-        assert 'terms' not in deserialized_metadata
+        assert 'terms' in deserialized_metadata
+        assert deserialized_metadata['terms'] == terms
 
     def test_incorrect_format_terms_returns_error(
             self, create_serialized_record):
@@ -140,3 +140,23 @@ class TestMetadataSchemaV1(object):
 
         assert 'terms' in unmarshalled_metadata.errors
         assert deserialized_metadata['terms'] == [{}]
+
+    def test_coalesce_terms_loaded(self, create_serialized_record):
+        terms = [
+            {'source': 'MeSH', 'value': 'Cognitive Neuroscience'},
+            {'source': 'FAST', 'value': 'Glucagonoma'}
+        ]
+
+        serialized_record = create_serialized_record({
+            'mesh_terms': [terms[0]],
+            'fast_terms': [terms[1]],
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'terms' in deserialized_metadata
+        assert 'mesh_terms' not in deserialized_metadata
+        assert 'fast_terms' not in deserialized_metadata
+        assert deserialized_metadata['terms'] == terms
