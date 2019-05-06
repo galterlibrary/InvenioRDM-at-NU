@@ -10,6 +10,7 @@
 from flask import Blueprint, jsonify, request
 from flask_security import login_required
 
+from .constants import FAST_SOURCE, MESH_SOURCE
 from .suggester import suggest_terms
 
 blueprint = Blueprint(
@@ -19,15 +20,37 @@ blueprint = Blueprint(
 )
 
 
-@blueprint.route('/mesh/_suggest', methods=['GET'])
-@login_required
-def mesh_suggest():
-    """Suggest a MeSH keyword on the deposit form."""
+def suggest(source=None):
+    """Return term suggestions."""
     q = request.args.get('q', '')
     limit = request.args.get('limit', type=int)
 
-    terms = suggest_terms(q, limit=limit) if limit else suggest_terms(q)
+    if limit:
+        terms = suggest_terms(q, source=source, limit=limit)
+    else:
+        terms = suggest_terms(q, source=source)
 
     response = {'terms': terms}
 
     return jsonify(response)
+
+
+@blueprint.route('/_suggest', methods=['GET'])
+@login_required
+def all_suggest():
+    """Suggest keywords from *all* sources."""
+    return suggest()
+
+
+@blueprint.route('/mesh/_suggest', methods=['GET'])
+@login_required
+def mesh_suggest():
+    """Suggest MeSH keywords."""
+    return suggest(MESH_SOURCE)
+
+
+@blueprint.route('/fast/_suggest', methods=['GET'])
+@login_required
+def fast_suggest():
+    """Suggest FAST keywords."""
+    return suggest(FAST_SOURCE)

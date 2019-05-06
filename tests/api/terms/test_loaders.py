@@ -6,7 +6,7 @@ import pytest
 from elasticsearch.helpers import bulk
 
 from cd2h_repo_project.modules.terms.loaders import (
-    fast_indexable, mesh_indexable
+    DOC_TYPE, INDEX, fast_indexable, mesh_indexable
 )
 
 
@@ -137,8 +137,8 @@ class TestFASTLoader(object):
         indexable_topic = fast_indexable(fast_topic)
 
         assert indexable_topic == {
-            '_index': 'terms',
-            '_type': 'term-v1.0.0',
+            '_index': INDEX,
+            '_type': DOC_TYPE,
             '_id': _id,
             'source': 'FAST',
             'value': term,
@@ -146,12 +146,10 @@ class TestFASTLoader(object):
         }
 
     def test_bulk_loading(self, es, es_clear):
-        index_name = 'terms'
-        doc_type = 'term-v1.0.0'
         indexable_terms = [
             {
-                '_index': index_name,
-                '_type': doc_type,
+                '_index': INDEX,
+                '_type': DOC_TYPE,
                 '_id': 1136653,
                 'source': 'FAST',
                 'value': 'Submarines (Ships)--Recognition',
@@ -169,10 +167,9 @@ class TestFASTLoader(object):
         assert successes == 1
         assert not errors
 
-        es.indices.refresh(index=index_name)
+        es.indices.refresh(index=INDEX)
 
-        term = es.get(index=index_name, doc_type='term-v1.0.0', id=1136653)
-        print("term from index", term)
+        term = es.get(index=INDEX, doc_type=DOC_TYPE, id=1136653)
         assert term['_source']['source'] == 'FAST'
         assert term['_source']['value'] == 'Submarines (Ships)--Recognition'
         assert term['_source']['suggest'] == [

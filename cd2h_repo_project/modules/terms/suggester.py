@@ -10,6 +10,8 @@
 from elasticsearch_dsl import Search
 from invenio_search import current_search_client
 
+from cd2h_repo_project.modules.terms.constants import SOURCES
+
 
 def to_frontend_dict(es_suggestion):
     """Return JS-object-compatible Python dict from ES suggestion result."""
@@ -27,12 +29,18 @@ def to_frontend_dict(es_suggestion):
     }
 
 
-def suggest_terms(query, limit=5):
-    """Return front-end consumable ES value suggestions from query."""
+def suggest_terms(query, source=None, limit=5):
+    """Return front-end consumable ES value suggestions from query.
+
+    For now, only allow one `source` or None (all sources).
+    """
     result_bucket = 'terms'
     completion = {
         "field": "suggest",
-        "size": limit
+        "size": limit,
+        "contexts": {
+            "source_filter": [s for s in SOURCES if s == source or not source]
+        }
     }
     suggester = (
         Search(using=current_search_client, index='terms')

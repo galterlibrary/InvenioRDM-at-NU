@@ -8,7 +8,7 @@
 """Terms loaders."""
 import re
 
-INDEX = 'terms'
+INDEX = 'terms-term-v1.0.0'
 DOC_TYPE = 'term-v1.0.0'
 
 

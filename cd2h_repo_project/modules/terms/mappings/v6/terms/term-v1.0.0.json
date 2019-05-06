@@ -12,7 +12,14 @@
         },
         "suggest": {
           "type": "completion",
-          "analyzer" : "standard"
+          "analyzer" : "standard",
+          "contexts": [
+            {
+              "name": "source_filter",
+              "type": "category",
+              "path": "source"
+            }
+          ]
         }
       }
     }
