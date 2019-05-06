@@ -30,4 +30,6 @@ invenio access allow cd2h-edit-metadata role librarian
 ## Create location to store files (idempotent)
 menrva locations setup_storage
 ## Index MeSH terms (idempotent)
-menrva mesh index
+menrva terms mesh index
+## Index FAST terms (idempotent)
+menrva terms fast index
