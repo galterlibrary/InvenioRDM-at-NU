@@ -115,6 +115,11 @@
         "additionalProperties": false,
         "required": ["source", "value"]
       }
+    },
+    "permissions": {
+      "description": "Record visibility (for now).",
+      "type": "string",
+      "enum": ["all_view", "restricted_view", "private_view"]
     }
   },
   "required": [

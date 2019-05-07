@@ -12,6 +12,7 @@ from invenio_rest.errors import RESTValidationError
 from marshmallow import Schema, fields, missing, post_load, pre_load, validate
 
 from cd2h_repo_project.modules.records.api import RecordType
+from cd2h_repo_project.modules.records.permissions import RecordPermissions
 
 License = namedtuple('License', ['name', 'value'])
 # WARNING: Any change to this list should be reflected in:
@@ -81,6 +82,11 @@ class MetadataSchemaV1(Schema):
         validate=validate.OneOf([rt.value for rt in RecordType])
     )
     terms = fields.Nested(TermSchemaV1, many=True)
+    # TODO: Replace with more complex object
+    permissions = fields.Str(
+        required=True,
+        validate=validate.OneOf(RecordPermissions.get_values())
+    )
 
     @pre_load
     def coalesce_terms(self, data):
@@ -95,6 +101,7 @@ class MetadataSchemaV1(Schema):
         data['terms'] = terms
 
         return data
+
 
 class RecordSchemaV1(StrictKeysMixin):
     """Record schema.
@@ -123,6 +130,7 @@ class RecordSchemaV1(StrictKeysMixin):
             data = data['metadata']
 
         # Artificially insert our schema because invenio-deposit wants it.
+        # TODO: Replace cd2hrepo... by configuration variable
         data['$schema'] = (
             'https://cd2hrepo.galter.northwestern.edu/'
             'schemas/records/record-v0.1.0.json'

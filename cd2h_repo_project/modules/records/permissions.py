@@ -13,8 +13,7 @@ from cd2h_repo_project.modules.records.api import FileObject, Record
 from cd2h_repo_project.utils import get_identity
 
 # Need instances #
-# These are granular badge-like permissions that can be assigned
-# via the cli or the admin
+# These are granular badge-like permissions that can be assigned via the cli
 cd2h_edit_metadata = ActionNeed('cd2h-edit-metadata')
 """Permission to edit ANY record's metadata."""
 
@@ -115,6 +114,25 @@ def files_permission_factory(obj, action=None):
                 return CurrentUserFilesPermission.create(record, action)
 
     return Permission(ActionNeed('admin-access'))
+
+
+class RecordPermissions(object):
+    """Encompass all RecordPermissions.
+
+    # TODO: We eventually want to have:
+    actions = ['view_metadata', 'edit_metadata', 'view_files', 'edit_files']
+    targets = ['all', 'logged_users', '<any specific users>', '<organization>']
+    """
+
+    @classmethod
+    def get_values(cls):
+        """Return permission string values.
+
+        WARNING: This list must be compatible with `permissions` values from
+                 modules/records/static/json/records/deposit_form.json
+                 modules/records/jsonschemas/records/record-v0.1.0.json
+        """
+        return ['all_view', 'restricted_view', 'private_view']
 
 
 class EditMetadataPermission(object):
