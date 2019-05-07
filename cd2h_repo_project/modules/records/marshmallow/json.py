@@ -82,6 +82,19 @@ class MetadataSchemaV1(Schema):
     )
     terms = fields.Nested(TermSchemaV1, many=True)
 
+    @pre_load
+    def coalesce_terms(self, data):
+        """Preprocess '*_terms' into `terms`."""
+        terms = data.get('terms', [])
+
+        if 'mesh_terms' in data:
+            terms.extend(data['mesh_terms'])
+        if 'fast_terms' in data:
+            terms.extend(data['fast_terms'])
+
+        data['terms'] = terms
+
+        return data
 
 class RecordSchemaV1(StrictKeysMixin):
     """Record schema.

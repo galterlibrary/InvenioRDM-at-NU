@@ -64,26 +64,57 @@
     "required": true
   },
   {
-    "key": "terms",
-    "fa_cls": "fa-tag",
-    "title": "MeSH Terms",
-    "type": "uiselectmultiple",
-    "options": {
-      "multiple": true,
-      "asyncCallback": "autocompleteSuggest",
-      "url": "/api/mesh/_suggest",
-      "urlParameters": {
-        "q": "value",
-        "limit": "5"
+    "type": "fieldset",
+    "title": "Subjects",
+    "fieldhint": "optional",
+    "items": [
+      {
+        "key": "mesh_terms",
+        "fa_cls": "fa-tag",
+        "title": "Medical",
+        "type": "uiselectmultiple",
+        "options": {
+          "multiple": true,
+          "asyncCallback": "autocompleteSuggest",
+          "url": "/api/terms/mesh/_suggest",
+          "urlParameters": {
+            "q": "value",
+            "limit": "7"
+          },
+          "map": {
+            "resultSource": "terms",
+            "valueProperty": "value",
+            "nameProperty": "name"
+          },
+          "refreshDelay": 200
+        },
+        "placeholder": "Select Medical Subject Heading (MeSH) terms",
+        "description": "Optional. Medical Subject Heading (MeSH) terms."
       },
-      "map": {
-        "resultSource": "terms",
-        "valueProperty": "value",
-        "nameProperty": "name"
-      },
-      "refreshDelay": 200
-    },
-    "placeholder": "Select Medical Subject Heading (MeSH) terms",
-    "description": "Optional."
+      {
+        "key": "fast_terms",
+        "fa_cls": "fa-tag",
+        "title": "Topical",
+        "type": "uiselectmultiple",
+        "options": {
+          "multiple": true,
+          "asyncCallback": "autocompleteSuggest",
+          "url": "/api/terms/fast/_suggest",
+          "urlParameters": {
+            "q": "value",
+            "limit": "7"
+          },
+          "map": {
+            "resultSource": "terms",
+            "valueProperty": "value",
+            "nameProperty": "name"
+          },
+          "refreshDelay": 200
+        },
+        "placeholder": "Select Library of Congress topical terms",
+        "description": "Optional. Library of Congress topical terms."
+      }
+    ],
+    "required": false
   }
 ]

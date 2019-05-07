@@ -1,0 +1,27 @@
+{
+  "mappings": {
+    "term-v1.0.0": {
+      "date_detection": false,
+      "numeric_detection": false,
+      "properties": {
+        "source": {
+          "type": "keyword"
+        },
+        "value": {
+          "type": "keyword"
+        },
+        "suggest": {
+          "type": "completion",
+          "analyzer" : "standard",
+          "contexts": [
+            {
+              "name": "source_filter",
+              "type": "category",
+              "path": "source"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

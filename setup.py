@@ -44,7 +44,7 @@ setup(
         ],
         'flask.commands': [
             'locations = cd2h_repo_project.modules.records.cli:locations',
-            'mesh = cd2h_repo_project.modules.mesh.cli:mesh',
+            'terms = cd2h_repo_project.modules.terms.cli:terms',
         ],
         'invenio_base.blueprints': [
             'cd2h_repo_project = cd2h_repo_project.views:blueprint',
@@ -56,7 +56,7 @@ setup(
             'cd2hrepo_doi = cd2h_repo_project.modules.doi.views:blueprint',
         ],
         'invenio_base.api_blueprints': [
-            'menrva_mesh = cd2h_repo_project.modules.mesh.views:blueprint',
+            'menrva_terms = cd2h_repo_project.modules.terms.views:blueprint',
         ],
         'invenio_assets.bundles': [
             'cd2hrepo_theme_css = cd2h_repo_project.modules.theme.bundles:css',
@@ -72,7 +72,7 @@ setup(
         ],
         'invenio_search.mappings': [
             'records = cd2h_repo_project.modules.records.mappings',
-            'terms = cd2h_repo_project.modules.mesh.mappings'
+            'terms = cd2h_repo_project.modules.terms.mappings'
         ],
         # Loaded when create_ui/create_app is used as application factory
         'invenio_base.apps': [
