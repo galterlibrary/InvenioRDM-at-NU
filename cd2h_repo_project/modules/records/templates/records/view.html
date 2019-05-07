@@ -54,8 +54,6 @@
   {% endfor %}
 {%- endmacro %}
 
-{% set title = record.title %}
-
 {%- block head_meta %}
   {{ super() }}
   {# HighWire meta tag compatible with Altmetric and Google Scholar... #}
@@ -63,9 +61,17 @@
   {% if record.doi %}<meta name="citation_doi" content="{{record.doi}}" />{% endif %}
 {%- endblock %}
 
-{%- block main_title %}
-<span><i class="fa fa-fw fa-file-text-o"></i></span>{{ title }}
-{%- endblock %}
+{% set title = record.title %}
+{%- block title %}
+  {%- if title %}
+  <div class="page-header">
+    <div class="pull-right">
+      {%- include "records/access_badge.html" %}
+    </div>
+    <h1><span><i class="fa fa-fw fa-file-text-o"></i></span>{{ title }}</h1>
+  </div>
+  {%- endif %}
+{%- endblock title %}
 
 {% block content %}
 <div class="row">
