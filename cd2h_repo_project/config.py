@@ -21,10 +21,10 @@ from datetime import timedelta
 
 from invenio_indexer.api import RecordIndexer
 from invenio_records_rest.facets import terms_filter
-from invenio_records_rest.utils import allow_all, check_elasticsearch
+from invenio_records_rest.utils import allow_all, check_elasticsearch, deny_all
 
 from cd2h_repo_project.modules.records.permissions import (
-    edit_metadata_permission_factory
+    edit_metadata_permission_factory, view_permission_factory
 )
 from cd2h_repo_project.modules.records.search import RecordsSearch
 
@@ -274,11 +274,13 @@ RECORDS_REST_ENDPOINTS = {
         'default_media_type': 'application/json',
         'max_result_window': 10000,
         'error_handlers': {},
-        # TODO: Redefine these permissions to cover our auth needs
-        'create_permission_factory_imp': allow_all,
-        'read_permission_factory_imp': check_elasticsearch,
-        'update_permission_factory_imp': allow_all,
-        'delete_permission_factory_imp': allow_all,
+        # Records can only be created through the deposit API
+        'create_permission_factory_imp': deny_all,
+        'read_permission_factory_imp': view_permission_factory,
+        # Records can only be updated through the deposit API
+        'update_permission_factory_imp': deny_all,
+        # We don't allow deletion for now
+        'delete_permission_factory_imp': deny_all,
     },
 }
 """REST API for Records."""
@@ -362,6 +364,13 @@ RECORDS_REST_DEFAULT_SORT = {
 }
 """Default sort option per index with/without query string."""
 
+# Invenio-Records-UI
+# ~~~~~~~~~~~~~~~~~~
+RECORDS_UI_DEFAULT_PERMISSION_FACTORY = (
+    'cd2h_repo_project.modules.records.permissions.view_permission_factory'
+)
+"""Default permission factory for viewing Records."""
+
 RECORDS_UI_ENDPOINTS = {
     'recid': {
         'pid_type': 'recid',
@@ -376,7 +385,7 @@ RECORDS_UI_ENDPOINTS = {
         'record_class': 'cd2h_repo_project.modules.records.api:Record',
     },
 }
-"""Records UI for Records."""
+"""UI endpoints for Records."""
 
 PIDSTORE_RECID_FIELD = 'id'
 
@@ -444,13 +453,12 @@ DEPOSIT_REST_ENDPOINTS = {
         'links_factory_imp': (
             'cd2h_repo_project.modules.records.links:deposit_links_api_factory'
         ),
-        # TODO: Verify creation permission
+        # TODO: Only logged-in user can create
         'create_permission_factory_imp': allow_all,
-        # TODO: Define reading permission
-        'read_permission_factory_imp': check_elasticsearch,
+        'read_permission_factory_imp': view_permission_factory,
         'update_permission_factory_imp': edit_metadata_permission_factory,
-        # TODO: Define deleting permission
-        'delete_permission_factory_imp': allow_all,
+        # Deposits can't be deleted for now
+        'delete_permission_factory_imp': deny_all,
         'max_result_window': 10000,
     },
 }

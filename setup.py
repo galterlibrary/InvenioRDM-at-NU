@@ -85,6 +85,7 @@ setup(
         ],
         'invenio_access.actions': [
           'cd2h-edit-metadata = cd2h_repo_project.modules.records.permissions:cd2h_edit_metadata',
+          'menrva-view = cd2h_repo_project.modules.records.permissions:menrva_view',
         ],
         'invenio_pidstore.minters': [
             'cd2h_recid = cd2h_repo_project.modules.records.minters:mint_pids_for_record',
