@@ -1,9 +1,7 @@
-"""Test the configured record jsonschema is as expected."""
+"""Test saved record i.e. record jsonschema is configured as expected."""
 
 import pytest
 from jsonschema.exceptions import ValidationError
-
-from cd2h_repo_project.modules.records.api import Deposit
 
 # TODO: If tests too slow, restrict to jsonschema `validate`
 
@@ -50,3 +48,18 @@ def test_invalid_source_terms_should_error(create_record):
 
     with pytest.raises(ValidationError):
         deposit = create_record({'terms': terms}, published=False)
+
+
+def test_valid_permissions(create_record):
+    permissions = 'all_view'
+
+    deposit = create_record({'permissions': permissions}, published=False)
+
+    assert deposit['permissions'] == permissions
+
+
+def test_invalid_permissions_should_error(create_record):
+    permissions = 'all_read'
+
+    with pytest.raises(ValidationError):
+        deposit = create_record({'permissions': permissions}, published=False)

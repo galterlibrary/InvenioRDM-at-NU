@@ -4,7 +4,8 @@ import pytest
 
 from cd2h_repo_project.modules.records.marshmallow.json import LICENSES
 from cd2h_repo_project.modules.records.views import (
-    extract_files, license_value_to_name, to_available_options
+    extract_files, license_value_to_name, permissions_to_access_name,
+    permissions_to_label_css, to_available_options
 )
 
 
@@ -101,3 +102,22 @@ def test_to_available_options_orders_by_order(sort_options):
     assert available_options['options'][0]['title'] == 'field B in desc.'
     assert available_options['options'][1]['title'] == 'field A in asc.'
     assert available_options['options'][2]['title'] == 'field A in desc.'
+
+
+@pytest.mark.parametrize("permissions, expected", [
+        ("all_view", "success"),
+        ("restricted_edit", "warning"),  # purposefully 'edit'
+        ("private_edit", "danger")
+    ])
+def test_permissions_to_label_css(permissions, expected):
+    assert permissions_to_label_css(permissions) == expected
+
+
+@pytest.mark.parametrize("permissions, expected", [
+        ("all_view", "Open Access"),
+        ("all_edit", "Open Access"),
+        ("restricted_edit", "Restricted Access"),
+        ("private_view", "Private Access")
+    ])
+def test_permissions_to_access_name(permissions, expected):
+    assert permissions_to_access_name(permissions) == expected

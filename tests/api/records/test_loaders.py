@@ -55,10 +55,16 @@ class TestMetadataSchemaV1(object):
 
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
-        missing_keys = ['title', 'description', 'author', 'license']
-        assert set(unmarshalled_record.errors.keys()) == set(missing_keys)
+        required_keys = [
+            'title', 'description', 'author', 'license', 'permissions'
+        ]
+        assert set(unmarshalled_record.errors.keys()) == set(required_keys)
+        assert (
+            unmarshalled_record.errors['title'] ==
+            ['Missing data for required field.']
+        )
 
-    def test_empty_required_key_return_errors(self, create_serialized_record):
+    def test_empty_required_key_returns_errors(self, create_serialized_record):
         serialized_record = create_serialized_record({'title': None})
 
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
@@ -160,3 +166,25 @@ class TestMetadataSchemaV1(object):
         assert 'mesh_terms' not in deserialized_metadata
         assert 'fast_terms' not in deserialized_metadata
         assert deserialized_metadata['terms'] == terms
+
+    def test_permissions_loaded(self, create_serialized_record):
+        serialized_record = create_serialized_record({
+            'permissions': 'restricted_view'
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert deserialized_metadata['permissions'] == 'restricted_view'
+
+    def test_invalid_permissions_returns_errors(
+            self, create_serialized_record):
+        serialized_record = create_serialized_record({
+            'permissions': 'foo_view'
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert 'permissions' in unmarshalled_metadata.errors

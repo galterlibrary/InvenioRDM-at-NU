@@ -125,3 +125,28 @@ def to_available_options(sort_options):
             )
         ]
     }
+
+
+@blueprint.app_template_filter('permissions_to_label_css')
+def permissions_to_label_css(permissions):
+    """Return Bootstrap label class qualifier corresponding to permissions.
+
+    Return <this> in class="label label-<this>".
+    """
+    if permissions.startswith('all_'):
+        return 'success'
+    elif permissions.startswith('restricted_'):
+        return 'warning'
+    else:
+        return 'danger'
+
+
+@blueprint.app_template_filter('permissions_to_access_name')
+def permissions_to_access_name(permissions):
+    """Return 'Open/Restricted/Private Access' corresponding to permissions."""
+    if permissions.startswith('all_'):
+        return 'Open Access'
+    elif permissions.startswith('restricted_'):
+        return 'Restricted Access'
+    else:
+        return 'Private Access'

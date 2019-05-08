@@ -45,13 +45,17 @@ def locations(db):
 
 @pytest.fixture
 def create_serialized_record():
-    """Factory pattern for a serialized Record."""
+    """Factory pattern for a serialized Record.
+
+    Provides a default value for each required field.
+    """
     def _create_serialized_record(data={}):
         data_to_use = {
             'title': 'A title',
             'author': 'An author',
             'description': 'A description',
             'license': 'mit-license',
+            'permissions': 'all_view',
         }
         data_to_use.update(data)
         return data_to_use
