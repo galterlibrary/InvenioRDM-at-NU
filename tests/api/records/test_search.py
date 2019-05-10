@@ -9,6 +9,7 @@ from invenio_search import current_search
 from werkzeug.datastructures import MultiDict
 
 from cd2h_repo_project.modules.records.api import RecordType
+from cd2h_repo_project.modules.records.permissions import RecordPermissions
 from cd2h_repo_project.modules.records.search import RecordsSearch
 from utils import login_request_and_session
 
@@ -232,6 +233,58 @@ class TestRecordsSearch(object):
         assert hit1['metadata']['title'] == "old record"
         hit2 = response.json['hits']['hits'][1]
         assert hit2['metadata']['title'] == "More recent record"
+
+    def test_search_returns_restricted_access_results_to_authenticated_user(
+            self, client, create_record, create_user, es_clear):
+        record = create_record(
+            {
+                "title": "old record",
+                "permissions": RecordPermissions.RESTRICTED_VIEW
+            }
+        )
+
+        response = client.get("/records/?q=old+record")
+
+        assert response.status_code == 200
+        assert len(response.json['hits']['hits']) == 0
+
+        # WARNING: If user is logged in before create_record,
+        #          then create_record assigns that user as the owner
+        user = create_user()
+        login_request_and_session(user, client)
+
+        response = client.get("/records/?q=old+record")
+
+        assert_single_hit(response, record)
+
+    def test_search_returns_private_access_results_to_owner(
+            self, client, create_record, create_user, es_clear):
+
+        # TODO: Improve User factory to auto-generate unique emails
+        user1 = create_user({'email': 'user1@example.com'})
+        user2 = create_user({'email': 'user2@example.com'})
+        record = create_record(
+            {
+                "title": "old record",
+                "permissions": RecordPermissions.PRIVATE_VIEW,
+                "_deposit": {"owners": [user1.id]}
+            }
+        )
+
+        # WARNING: If user is logged in before create_record,
+        #          then create_record assigns that user as the owner
+        login_request_and_session(user2, client)
+
+        response = client.get("/records/?q=old+record")
+
+        assert response.status_code == 200
+        assert len(response.json['hits']['hits']) == 0
+
+        login_request_and_session(user1, client)
+
+        response = client.get("/records/?q=old+record")
+
+        assert_single_hit(response, record)
 
 
 class TestDepositsSearch(object):
