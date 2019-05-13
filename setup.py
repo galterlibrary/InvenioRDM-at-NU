@@ -84,8 +84,9 @@ setup(
             'cd2hrepo_doi = cd2h_repo_project.modules.doi.ext:DigitalObjectIdentifier',
         ],
         'invenio_access.actions': [
-          'cd2h-edit-metadata = cd2h_repo_project.modules.records.permissions:cd2h_edit_metadata',
           'menrva-view = cd2h_repo_project.modules.records.permissions:menrva_view',
+          'menrva-edit = cd2h_repo_project.modules.records.permissions:menrva_edit',
+          'menrva-edit-published-record = cd2h_repo_project.modules.records.permissions:menrva_edit_published_record',
         ],
         'invenio_pidstore.minters': [
             'cd2h_recid = cd2h_repo_project.modules.records.minters:mint_pids_for_record',
