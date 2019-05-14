@@ -122,6 +122,8 @@ def test_files_permission_factory_for_bucket_obj_returns_CurrentUserFilesPermiss
         (2, True, 'menrva-edit-published-record', 1, False, False),
         # user w/ published_record permission (librarian) - published draft
         (2, True, 'menrva-edit-published-record', 1, True, True),
+        # super-user - non-published draft
+        (3, True, 'superuser-access', 1, False, True),
     ]
 )
 def test_edit_metadata_permission_factory(
