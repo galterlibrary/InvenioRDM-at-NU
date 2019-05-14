@@ -12,30 +12,43 @@ from invenio_access import Permission
 from invenio_search import RecordsSearch as _RecordsSearch
 from invenio_search.api import DefaultFilter
 
+from cd2h_repo_project.modules.records.permissions import RecordPermissions
+
 
 def records_filter():
-    """Query ElasticSearch for a filtered list of Records.
+    """Query ElasticSearch for a *filtered* list of Records.
 
-    Permit the user to see all if:
-
-    * The user is an admin.
-
-    * It's called outside of a request.
-
-    Otherwise, it filters out any Record that has a draft status.
+    NOTE: Any of these queries is run in a filtered context. So ES can
+          optimize them.
     """
-    if (not has_request_context() or
-            Permission(ActionNeed('admin-access')).can()):
+    if not has_request_context():
         return Q()
+    elif Permission(ActionNeed('admin-access')).can():
+        return Q()
+    elif not current_user.is_authenticated:
+        return (
+            Q('term', type='published') &
+            Q('term', permissions=RecordPermissions.ALL_VIEW)
+        )
     else:
-        return Q('match', type='published')
+        return (
+            Q('term', type='published') &
+            (
+                Q('term', permissions=RecordPermissions.ALL_VIEW) |
+                Q('term', permissions=RecordPermissions.RESTRICTED_VIEW) |
+                (
+                    Q('term', permissions=RecordPermissions.PRIVATE_VIEW) &
+                    Q('term', _deposit__owners=getattr(current_user, 'id', 0))
+                )
+            )
+        )
 
 
 class RecordsSearch(_RecordsSearch):
-    """Default Record search class."""
+    """Main Record search class."""
 
     class Meta:
-        """Configuration for Deposit search."""
+        """Configuration for Records search."""
 
         index = 'records'
         doc_types = None

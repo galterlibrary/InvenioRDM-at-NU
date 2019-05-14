@@ -9,8 +9,9 @@ from invenio_access import Permission
 from invenio_files_rest.models import Bucket
 
 from cd2h_repo_project.modules.records.permissions import (
-    CurrentUserFilesPermission, edit_metadata_permission_factory,
-    files_permission_factory, is_owner
+    CurrentUserFilesPermission, RecordPermissions,
+    edit_metadata_permission_factory, files_permission_factory, is_owner,
+    view_permission_factory
 )
 
 
@@ -84,9 +85,6 @@ def test_files_permission_factory_for_bucket_obj_returns_CurrentUserFilesPermiss
     assert request.current_file_record
 
 
-# Test Update Permission
-
-
 @pytest.mark.parametrize(
     'user_id,owner_id,logged_in,provides,allowed',
     [
@@ -106,5 +104,39 @@ def test_edit_metadata_permission_factory(
         login_user(user)
 
     permission = edit_metadata_permission_factory(record)
+
+    assert permission.can() == allowed
+
+
+@pytest.mark.parametrize(
+    'user_id, logged_in, provides, owner_id, permissions, allowed',
+    [
+        # anonymous user - open access record
+        (1, False, None, 1, RecordPermissions.ALL_VIEW, True),
+        # anonymous user - restricted access record
+        (1, False, None, 1, RecordPermissions.RESTRICTED_VIEW, False),
+        # anonymous user - private access record
+        (1, False, None, 1, RecordPermissions.PRIVATE_VIEW, False),
+        # authenticated user non-owner - restricted access record
+        (2, True, None, 1, RecordPermissions.RESTRICTED_VIEW, True),
+        # authenticated user non-owner - private access record
+        (2, True, None, 1, RecordPermissions.PRIVATE_VIEW, False),
+        # authenticated user owner - private access record
+        (1, True, None, 1, RecordPermissions.PRIVATE_VIEW, True),
+        # librarian - private access record
+        (2, True, 'menrva-view', 1, RecordPermissions.PRIVATE_VIEW, True),
+        # super-user - private access record
+        (2, True, 'superuser-access', 1, RecordPermissions.PRIVATE_VIEW, True),
+    ]
+)
+def test_view_permission_factory(
+        user_id, logged_in, provides, owner_id, permissions, allowed,
+        create_user, request_ctx):
+    user = create_user({'id': user_id, 'provides': [provides]})
+    if logged_in:
+        login_user(user)
+    record = {'_deposit': {'owners': [owner_id]}, 'permissions': permissions}
+
+    permission = view_permission_factory(record)
 
     assert permission.can() == allowed

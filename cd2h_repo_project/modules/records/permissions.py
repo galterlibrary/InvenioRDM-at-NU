@@ -16,6 +16,8 @@ from cd2h_repo_project.utils import get_identity
 # These are granular badge-like permissions that can be assigned via the cli
 cd2h_edit_metadata = ActionNeed('cd2h-edit-metadata')
 """Permission to edit ANY record's metadata."""
+menrva_view = ActionNeed('menrva-view')
+"""Permission to view ANY record."""
 
 
 class CurrentUserFilesPermission(object):
@@ -124,6 +126,10 @@ class RecordPermissions(object):
     targets = ['all', 'logged_users', '<any specific users>', '<organization>']
     """
 
+    ALL_VIEW = 'all_view'
+    RESTRICTED_VIEW = 'restricted_view'
+    PRIVATE_VIEW = 'private_view'
+
     @classmethod
     def get_values(cls):
         """Return permission string values.
@@ -132,7 +138,36 @@ class RecordPermissions(object):
                  modules/records/static/json/records/deposit_form.json
                  modules/records/jsonschemas/records/record-v0.1.0.json
         """
-        return ['all_view', 'restricted_view', 'private_view']
+        return [cls.ALL_VIEW, cls.RESTRICTED_VIEW, cls.PRIVATE_VIEW]
+
+
+class ViewPermission(object):
+    """Gate to allow or not view of a record.
+
+    NOTE: This is a wider and simpler permission net; it is used for viewing
+          metadata and files. It should be used for UI and API.
+    TODO: Separate permissions to view metadata and files.
+    """
+
+    def __init__(self, user, record):
+        """Constructor."""
+        self.user = user
+        self.record = record
+
+    def can(self):
+        """Return boolean if permission valid."""
+        return (
+            is_open_access(self.record) or
+            has_restricted_access(self.user, self.record) or
+            is_owner(self.user, self.record) or
+            Permission(menrva_view).allows(get_identity(self.user))
+            # NOTE: by default any Permission has a super-user Need
+        )
+
+
+def view_permission_factory(record):
+    """Returns ViewPermission object."""
+    return ViewPermission(current_user, record)
 
 
 class EditMetadataPermission(object):
@@ -140,6 +175,9 @@ class EditMetadataPermission(object):
 
     We reuse Zenodo's pattern, while trying to simplify it and make it more
     explicit.
+
+    NOTE: This is currently used for metadata and files i.e. editing a deposit.
+    TODO: Use this just for metadata.
     """
 
     def __init__(self, user, record):
@@ -169,6 +207,23 @@ def is_owner(user, record):
     """Check if user is an owner of the record."""
     user_id = int(user.get_id()) if user and user.is_authenticated else None
     return user_id in record.get('_deposit', {}).get('owners', [])
+
+
+def has_restricted_access(user, record):
+    """Returns True if record is restricted and user is authenticated."""
+    return (
+        record.get('permissions', '').startswith('restricted_') and
+        user and
+        user.is_authenticated
+    )
+
+
+# Record permission checks
+
+
+def is_open_access(record):
+    """Returns True if permissions subject(s) is anyone (all)."""
+    return record.get('permissions', '').startswith('all_')
 
 
 # TODO: Enable when working on out-of-browser API interface

@@ -111,7 +111,7 @@ def create_user(db):
 
         with db.session.begin_nested():
             # Note that db.session.begin_nested() is a shorthand way of
-            # committing before and after the following
+            # flushing before and after the following
             needs = current_app.extensions['invenio-access'].actions
             for str_need in provided_str_needs:
                 need = needs.get(str_need, None)

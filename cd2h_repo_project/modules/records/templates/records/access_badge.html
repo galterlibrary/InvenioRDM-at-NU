@@ -1,1 +1,2 @@
-<span class="label label-{{ record.permissions | permissions_to_label_css }}">{{ record.permissions | permissions_to_access_name }}</span>
+{% set permissions = record.get('permissions', 'all_view') %}
+<span class="label label-{{ permissions | permissions_to_label_css }}">{{ permissions | permissions_to_access_name }}</span>
