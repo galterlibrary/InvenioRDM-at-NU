@@ -455,7 +455,7 @@ DEPOSIT_REST_ENDPOINTS = {
         ),
         # TODO: Only logged-in user can create
         'create_permission_factory_imp': allow_all,
-        'read_permission_factory_imp': view_permission_factory,
+        'read_permission_factory_imp': edit_metadata_permission_factory,
         'update_permission_factory_imp': edit_metadata_permission_factory,
         # Deposits can't be deleted for now
         'delete_permission_factory_imp': deny_all,

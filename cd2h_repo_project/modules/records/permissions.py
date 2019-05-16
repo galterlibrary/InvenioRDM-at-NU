@@ -14,10 +14,12 @@ from cd2h_repo_project.utils import get_identity
 
 # Need instances #
 # These are granular badge-like permissions that can be assigned via the cli
-cd2h_edit_metadata = ActionNeed('cd2h-edit-metadata')
-"""Permission to edit ANY record's metadata."""
 menrva_view = ActionNeed('menrva-view')
-"""Permission to view ANY record."""
+"""Permission to view ANY published record."""
+menrva_edit_published_record = ActionNeed('menrva-edit-published-record')
+"""Permission to edit published record ONLY."""
+menrva_edit = ActionNeed('menrva-edit')
+"""Permission to edit ANY record's metadata."""
 
 
 class CurrentUserFilesPermission(object):
@@ -145,7 +147,7 @@ class ViewPermission(object):
     """Gate to allow or not view of a record.
 
     NOTE: This is a wider and simpler permission net; it is used for viewing
-          metadata and files. It should be used for UI and API.
+          metadata and files. It should be set in config.py for UI and API.
     TODO: Separate permissions to view metadata and files.
     """
 
@@ -170,8 +172,13 @@ def view_permission_factory(record):
     return ViewPermission(current_user, record)
 
 
+def view_draft_permission_factory(record):
+    """Returns ViewPermission object."""
+    return ViewPermission(current_user, record)
+
+
 class EditMetadataPermission(object):
-    """Gate to allow or not update of a record metadata.
+    """Gate to allow or not update of a record metadata via its draft.
 
     We reuse Zenodo's pattern, while trying to simplify it and make it more
     explicit.
@@ -180,24 +187,34 @@ class EditMetadataPermission(object):
     TODO: Use this just for metadata.
     """
 
-    def __init__(self, user, record):
-        """Constructor."""
+    def __init__(self, user, draft):
+        """Constructor.
+
+        :param user: typically the current_user.
+        :param draft: a Deposit. Even when editing a published draft, its
+                       deposit is what Invenio sends.
+        """
         self.user = user
-        self.record = record
+        self.draft = draft
 
     def can(self):
         """Return boolean if permission valid."""
         identity = get_identity(self.user)
+
         return (
-            is_owner(self.user, self.record) or
-            Permission(cd2h_edit_metadata).allows(identity)
+            is_owner(self.user, self.draft) or
+            (
+                Permission(menrva_edit_published_record).allows(identity) and
+                has_published(self.draft)
+            ) or
+            Permission(menrva_edit).allows(identity)
             # NOTE: by default any Permission has a super-user Need
         )
 
 
-def edit_metadata_permission_factory(record):
+def edit_metadata_permission_factory(draft):
     """Returns EditMetadataPermission object."""
-    return EditMetadataPermission(current_user, record)
+    return EditMetadataPermission(current_user, draft)
 
 
 # User - Record permissions checks
@@ -225,6 +242,14 @@ def is_open_access(record):
     """Returns True if permissions subject(s) is anyone (all)."""
     return record.get('permissions', '').startswith('all_')
 
+
+def has_published(deposit):
+    """Returns True if the deposit has any published record.
+
+    For efficiency, we don't hit the database.
+    """
+    pid = deposit.get('_deposit', {}).get('pid', {})
+    return bool(pid.get('value')) and bool(pid.get('type'))
 
 # TODO: Enable when working on out-of-browser API interface
 # def check_oauth2_write_scope(can_method):

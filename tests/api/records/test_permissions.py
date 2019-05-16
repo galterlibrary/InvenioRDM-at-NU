@@ -86,26 +86,43 @@ def test_files_permission_factory_for_bucket_obj_returns_CurrentUserFilesPermiss
 
 
 @pytest.mark.parametrize(
-    'user_id,owner_id,logged_in,provides,allowed',
+    'user_id, logged_in, provides, owner_id, has_published, allowed',
     [
-        (1, 1, False, None, False),  # anonymous user
-        (2, 1, True, None, False),  # regular user but non-owner
-        (1, 1, True, None, True),  # owner
-        (3, 1, True, 'cd2h-edit-metadata', True),  # librarian for instance
-        (3, 1, True, 'superuser-access', True),  # super-user
+        # anonymous user - non-published draft
+        # non-published for speed but same as published
+        (1, False, None, 1, False, False),
+        # authenticated user non-owner - non-published draft
+        (2, True, None, 1, False, False),
+        # authenticated user owner - non-published draft
+        (1, True, None, 1, False, True),
+        # user w/ published_record permission (librarian) - non-published draft
+        (2, True, 'menrva-edit-published-record', 1, False, False),
+        # user w/ published_record permission (librarian) - published draft
+        (2, True, 'menrva-edit-published-record', 1, True, True),
+        # super-user - non-published draft
+        (3, True, 'superuser-access', 1, False, True),
     ]
 )
 def test_edit_metadata_permission_factory(
-        user_id, owner_id, logged_in, provides, allowed, create_user,
-        request_ctx):
-    record = {'_deposit': {'owners': [owner_id]}}
+        user_id, logged_in, provides, owner_id, has_published, allowed,
+        create_user, create_record, request_ctx):
     user = create_user({'id': user_id, 'provides': [provides]})
+    # NOTE: edit_metadata_permission is always applied to a Deposit (draft)
+    #       This Deposit may or may not have an associated Record (published)
+    deposit = create_record(
+        {'_deposit': {'owners': [owner_id]}},
+        published=False
+    )
+
+    if has_published:
+        deposit.publish()
+
     if logged_in:
         login_user(user)
 
-    permission = edit_metadata_permission_factory(record)
+    permission = edit_metadata_permission_factory(deposit)
 
-    assert permission.can() == allowed
+    assert permission.can() is allowed
 
 
 @pytest.mark.parametrize(
