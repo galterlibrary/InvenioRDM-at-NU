@@ -159,6 +159,31 @@ class TestRecordsSearch(object):
 
         assert 'file_type' in response.json['aggregations']
 
+    def test_search_nested_post_filter_filters_records(
+            self, client, create_record, es_clear):
+        record1 = create_record(
+            {
+                'terms': [
+                    {'source': 'MeSH', 'value': 'Diabetes Complications'},
+                ]
+            }
+        )
+        record2 = create_record(
+            {
+                'terms': [
+                    {'source': 'FAST', 'value': 'Diabetes--Complications'},
+                ]
+            }
+        )
+
+        response = client.get("/records/?subjects=MeSH")
+
+        assert_single_hit(response, record1)
+
+        response = client.get("/records/?subject=Diabetes--Complications")
+
+        assert_single_hit(response, record2)
+
     def test_search_is_selective_about_sort_field(self, app, config):
         sort_fields = [
             v['fields'] for (k, v) in

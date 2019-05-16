@@ -15,6 +15,24 @@ from invenio_search.api import DefaultFilter
 from cd2h_repo_project.modules.records.permissions import RecordPermissions
 
 
+def nested_filter(path, field):
+    """Create a nested filter.
+
+    :param field: Field name.
+    :returns: Function that returns the Nested query.
+    """
+    def inner(values):
+        return Q(
+            'nested',
+            **{
+                'path': path,
+                'query': Q('terms', **{field: values})
+            }
+        )
+
+    return inner
+
+
 def records_filter():
     """Query ElasticSearch for a *filtered* list of Records.
 

@@ -26,7 +26,9 @@ from invenio_records_rest.utils import allow_all, check_elasticsearch, deny_all
 from cd2h_repo_project.modules.records.permissions import (
     edit_metadata_permission_factory, view_permission_factory
 )
-from cd2h_repo_project.modules.records.search import RecordsSearch
+from cd2h_repo_project.modules.records.search import (
+    RecordsSearch, nested_filter
+)
 
 # When run in a container (production-like-environments), the container
 # infrastructure takes care of loading environment variables, but when
@@ -289,19 +291,51 @@ RECORDS_REST_FACETS = {
     # This is the name of the index in ElasticSearch and not the pid type
     'records': {
         'aggs': {
-            'file_type': {
+            'file_type': {  # Titleized on the frontend to head the section
                 # Dynamically creates a bucket for each unique `_files.type`
-                'terms': {'field': "_files.type"},
+                'terms': {'field': '_files.type'},
             },
             'license': {
                 'terms': {'field': 'license'}
-            }
+            },
+            'subjects': {
+                # Needed bc 'terms' are *nested* objects
+                # MenRvaJSONSerializer has been created to output
+                # expected frontend format from this type of faceting
+                'nested': {
+                    'path': 'terms'
+                },
+                'aggs': {
+                    'source': {
+                        'terms': {'field': 'terms.source'},
+                        'aggs': {
+                            # Number records per source
+                            'record_count': {
+                                'reverse_nested': {}
+                            },
+                            # 'subject' rather than 'value' is used here
+                            # bc these are not namespaced in the query string
+                            'subject': {
+                                'terms': {'field': 'terms.value'},
+                                'aggs': {
+                                    # Number records per value
+                                    'record_count': {
+                                        'reverse_nested': {}
+                                    }
+                                }
+                            },
+                        }
+                    },
+                }
+            },
             # TODO: Add other facets here
         },
         # Filters the results further AFTER aggregation
         'post_filters': {
             'file_type': terms_filter('_files.type'),
             'license': terms_filter('license'),
+            'subjects': nested_filter('terms', 'terms.source'),
+            'subject': nested_filter('terms', 'terms.value'),
             # TODO: Add other post_filters here
         }
     }
