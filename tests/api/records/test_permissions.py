@@ -85,29 +85,6 @@ def test_files_permission_factory_for_bucket_obj_returns_CurrentUserFilesPermiss
     assert request.current_file_record
 
 
-# @pytest.mark.parametrize(
-#     'user_id, owner_id, logged_in, provides, allowed',
-#     [
-#         (1, 1, False, None, False),  # anonymous user
-#         (2, 1, True, None, False),  # regular user but non-owner
-#         (1, 1, True, None, True),  # owner
-#         (3, 1, True, 'cd2h-edit-metadata', True),  # librarian for instance
-#         (3, 1, True, 'superuser-access', True),  # super-user
-#     ]
-# )
-# def test_edit_metadata_permission_factory(
-#         user_id, owner_id, logged_in, provides, allowed, create_user,
-#         request_ctx):
-#     record = {'_deposit': {'owners': [owner_id]}}
-#     user = create_user({'id': user_id, 'provides': [provides]})
-#     if logged_in:
-#         login_user(user)
-
-#     permission = edit_metadata_permission_factory(record)
-
-#     assert permission.can() == allowed
-
-
 @pytest.mark.parametrize(
     'user_id, logged_in, provides, owner_id, has_published, allowed',
     [

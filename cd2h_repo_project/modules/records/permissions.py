@@ -178,7 +178,7 @@ def view_draft_permission_factory(record):
 
 
 class EditMetadataPermission(object):
-    """Gate to allow or not update of a record metadata.
+    """Gate to allow or not update of a record metadata via its draft.
 
     We reuse Zenodo's pattern, while trying to simplify it and make it more
     explicit.
@@ -187,34 +187,34 @@ class EditMetadataPermission(object):
     TODO: Use this just for metadata.
     """
 
-    def __init__(self, user, record):
+    def __init__(self, user, draft):
         """Constructor.
 
         :param user: typically the current_user.
-        :param record: a Deposit. Even when editing a published record, its
+        :param draft: a Deposit. Even when editing a published draft, its
                        deposit is what Invenio sends.
         """
         self.user = user
-        self.record = record
+        self.draft = draft
 
     def can(self):
         """Return boolean if permission valid."""
         identity = get_identity(self.user)
 
         return (
-            is_owner(self.user, self.record) or
+            is_owner(self.user, self.draft) or
             (
                 Permission(menrva_edit_published_record).allows(identity) and
-                has_published(self.record)
+                has_published(self.draft)
             ) or
             Permission(menrva_edit).allows(identity)
             # NOTE: by default any Permission has a super-user Need
         )
 
 
-def edit_metadata_permission_factory(record):
+def edit_metadata_permission_factory(draft):
     """Returns EditMetadataPermission object."""
-    return EditMetadataPermission(current_user, record)
+    return EditMetadataPermission(current_user, draft)
 
 
 # User - Record permissions checks
