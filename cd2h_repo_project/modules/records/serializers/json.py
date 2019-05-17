@@ -24,7 +24,7 @@ class MenRvaJSONSerializer(JSONSerializer):
         if not aggregation or 'subjects' not in aggregation:
             return aggregation
 
-        aggregation = deepcopy(aggregation)
+        transformed_aggregation = deepcopy(aggregation)
 
         def buckets(container):
             """Generate output buckets from container with 'buckets' key."""
@@ -56,8 +56,8 @@ class MenRvaJSONSerializer(JSONSerializer):
 
             return out_buckets
 
-        source = aggregation['subjects'].get('source', {})
-        aggregation['subjects'] = {
+        source = transformed_aggregation['subjects'].get('source', {})
+        transformed_aggregation['subjects'] = {
             "buckets": buckets(source),
             "doc_count_error_upper_bound": (
                 source.get('doc_count_error_upper_bound', 0)
@@ -65,7 +65,7 @@ class MenRvaJSONSerializer(JSONSerializer):
             "sum_other_doc_count": source.get('sum_other_doc_count', 0)
         }
 
-        return aggregation
+        return transformed_aggregation
 
     def serialize_search(self, pid_fetcher, search_result, links=None,
                          item_links_factory=None, **kwargs):

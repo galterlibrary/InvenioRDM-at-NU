@@ -146,10 +146,12 @@ class TestMenRvaJSONSerializer(object):
                             }
                         },
                         {
+                            # Number of *'terms'-documents* (hits) with MeSH
                             "doc_count": 5,
                             "key": "MeSH",
+                            # Number of *records* (hits) with MeSH
                             "record_count": {
-                                "doc_count": 3
+                                "doc_count": 4
                             },
                             "subject": {
                                 "buckets": [
@@ -216,7 +218,7 @@ class TestMenRvaJSONSerializer(object):
                     }
                 },
                 {
-                    "doc_count": 3,
+                    "doc_count": 4,
                     "key": "MeSH",
                     "subject": {
                         "buckets": [
