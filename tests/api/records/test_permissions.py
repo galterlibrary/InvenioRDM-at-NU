@@ -120,7 +120,8 @@ def test_edit_metadata_permission_factory(
     if logged_in:
         login_user(user)
 
-    permission = edit_metadata_permission_factory(deposit)
+    # Invenio calls edit_metadata_permission_factory with `record` keyword
+    permission = edit_metadata_permission_factory(record=deposit)
 
     assert permission.can() is allowed
 

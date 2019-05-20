@@ -212,9 +212,13 @@ class EditMetadataPermission(object):
         )
 
 
-def edit_metadata_permission_factory(draft):
-    """Returns EditMetadataPermission object."""
-    return EditMetadataPermission(current_user, draft)
+def edit_metadata_permission_factory(record):
+    """Returns EditMetadataPermission object.
+
+    Invenio (invenio_records_rest/views.py) passes the draft via a keyword
+    argument: `record=record`, so the parameter must be named `record`.
+    """
+    return EditMetadataPermission(current_user, record)
 
 
 # User - Record permissions checks
