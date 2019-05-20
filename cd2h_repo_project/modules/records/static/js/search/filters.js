@@ -24,6 +24,18 @@ function to_license_name() {
   };
 }
 
+function to_subjects_name() {
+  /* Convert subjects (terms) source slug to human readable name */
+  return function(slug) {
+    var slug_to_name = {
+      "MeSH": "Medical",
+      "FAST": "Topical"
+    };
+    return slug_to_name[String(slug)];
+  };
+}
+
 angular.module('invenioSearch')
   .filter('ununderscore', ununderscore)
-  .filter('to_license_name', to_license_name);
+  .filter('to_license_name', to_license_name)
+  .filter('to_subjects_name', to_subjects_name);

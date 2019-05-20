@@ -92,7 +92,7 @@
           }
         },
         "terms": {
-          "type": "object",
+          "type": "nested",
           "properties": {
             "source": {
               "type": "keyword"

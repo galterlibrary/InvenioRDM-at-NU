@@ -8,6 +8,9 @@ from invenio_pidstore.models import PersistentIdentifier
 from cd2h_repo_project.modules.doi.serializers import datacite_v41
 from cd2h_repo_project.modules.records.minters import mint_pids_for_record
 from cd2h_repo_project.modules.records.serializers import json_v1
+from cd2h_repo_project.modules.records.serializers.json import (
+    MenRvaJSONSerializer
+)
 
 
 class TestJsonV1(object):
@@ -101,3 +104,142 @@ class TestDataCiteV4(object):
             '<resourceType resourceTypeGeneral="Dataset">Dataset'
             '</resourceType>' in serialized_record
         )
+
+
+class TestMenRvaJSONSerializer(object):
+    """Test MenRvaJSONSerializer."""
+
+    def test_restructure_subjects_aggregation(self):
+        aggregation_result = {
+            # Arbitrary content - just making sure nothing is changed
+            'license': {'buckets': [1]},
+            # Structure given by ElasticSearch that we want to change
+            'subjects': {
+                "doc_count": 7,
+                "source": {
+                    "buckets": [
+                        {
+                            "doc_count": 2,
+                            "key": "FAST",
+                            "record_count": {
+                                "doc_count": 2
+                            },
+                            "subject": {
+                                "buckets": [
+                                    {
+                                        "doc_count": 1,
+                                        "key": "Diabantite",
+                                        "record_count": {
+                                            "doc_count": 1
+                                        }
+                                    },
+                                    {
+                                        "doc_count": 1,
+                                        "key": "Diabetes",
+                                        "record_count": {
+                                            "doc_count": 1
+                                        }
+                                    }
+                                ],
+                                "doc_count_error_upper_bound": 0,
+                                "sum_other_doc_count": 0
+                            }
+                        },
+                        {
+                            # Number of *'terms'-documents* (hits) with MeSH
+                            "doc_count": 5,
+                            "key": "MeSH",
+                            # Number of *records* (hits) with MeSH
+                            "record_count": {
+                                "doc_count": 4
+                            },
+                            "subject": {
+                                "buckets": [
+                                    {
+                                        "doc_count": 3,
+                                        "key": "Diabetes Complications",
+                                        "record_count": {
+                                            "doc_count": 3
+                                        }
+                                    },
+                                    {
+                                        "doc_count": 1,
+                                        "key": "Diabetes Mellitus",
+                                        "record_count": {
+                                            "doc_count": 1
+                                        }
+                                    },
+                                    {
+                                        "doc_count": 1,
+                                        "key": "Insulin, Regular, Human",
+                                        "record_count": {
+                                            "doc_count": 1
+                                        }
+                                    }
+                                ],
+                                "doc_count_error_upper_bound": 0,
+                                "sum_other_doc_count": 0
+                            }
+                        }
+                    ],
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 0
+                }
+            }
+        }
+
+        transformed_search_result = (
+            MenRvaJSONSerializer().transform_aggregation(aggregation_result)
+        )
+
+        assert aggregation_result['license'] == {'buckets': [1]}
+        assert (
+            transformed_search_result['license'] ==
+            aggregation_result['license']
+        )
+        assert transformed_search_result['subjects'] == {
+            "buckets": [
+                {
+                    "doc_count": 2,
+                    "key": "FAST",
+                    "subject": {
+                        "buckets": [
+                            {
+                                "doc_count": 1,
+                                "key": "Diabantite"
+                            },
+                            {
+                                "doc_count": 1,
+                                "key": "Diabetes"
+                            }
+                        ],
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0
+                    }
+                },
+                {
+                    "doc_count": 4,
+                    "key": "MeSH",
+                    "subject": {
+                        "buckets": [
+                            {
+                                "doc_count": 3,
+                                "key": "Diabetes Complications"
+                            },
+                            {
+                                "doc_count": 1,
+                                "key": "Diabetes Mellitus"
+                            },
+                            {
+                                "doc_count": 1,
+                                "key": "Insulin, Regular, Human"
+                            }
+                        ],
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0
+                    },
+                }
+            ],
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0
+        }
