@@ -52,7 +52,7 @@ def create_serialized_record():
     def _create_serialized_record(data={}):
         data_to_use = {
             'title': 'A title',
-            'author': 'An author',
+            'authors': [{'first_name': 'An', 'last_name': 'author'}],
             'description': 'A description',
             'license': 'mit-license',
             'permissions': 'all_view',

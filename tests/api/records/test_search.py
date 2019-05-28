@@ -28,7 +28,7 @@ def assert_single_hit(response, expected_record):
     # only a record that has been published has an id, so we don't check for it
     for key in ['created', 'updated', 'metadata', 'links']:
         assert key in search_hit
-    for key in ['title', 'author', 'description', 'type']:
+    for key in ['title', 'authors', 'description', 'type']:
         assert search_hit['metadata'][key] == expected_record[key]
 
 
@@ -99,7 +99,9 @@ class TestRecordsSearch(object):
             self, client, create_record, es_clear):
         # NOTE: This test is enough to validate that the author field uses
         #       text indexing
-        record1 = create_record({'author': 'John Smith'})
+        record1 = create_record(
+            {'authors': [{'first_name': 'John', 'last_name': 'Smith'}]}
+        )
         record2 = create_record()
 
         response = client.get("/records/?q=john")
