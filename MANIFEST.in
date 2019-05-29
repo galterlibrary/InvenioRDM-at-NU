@@ -41,6 +41,7 @@ recursive-include cd2h_repo_project *.svg
 recursive-include cd2h_repo_project *.jpeg
 recursive-include cd2h_repo_project *.png
 recursive-include cd2h_repo_project/modules/ *.bin
+recursive-include cd2h_repo_project/modules/ *.zip
 recursive-include docs *.bat
 recursive-include docs *.py
 recursive-include docs *.rst
