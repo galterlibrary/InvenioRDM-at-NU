@@ -7,7 +7,7 @@
 
 """Blueprint definitions."""
 
-from __future__ import absolute_import, print_function
+from collections import defaultdict
 
 from flask import Blueprint, current_app, redirect, render_template, url_for
 from flask_menu import register_menu

@@ -4,8 +4,8 @@ import pytest
 
 from cd2h_repo_project.modules.records.marshmallow.json import LICENSES
 from cd2h_repo_project.modules.records.views import (
-    extract_files, license_value_to_name, permissions_to_access_name,
-    permissions_to_label_css, to_available_options
+    authors_to_ui, extract_files, license_value_to_name,
+    permissions_to_access_name, permissions_to_label_css, to_available_options
 )
 
 
