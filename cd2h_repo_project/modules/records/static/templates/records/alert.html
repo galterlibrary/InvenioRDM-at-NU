@@ -1,4 +1,9 @@
-<div ng-show="recordsVM.invenioRecordsAlert" class="alert alert-{{recordsVM.invenioRecordsAlert.type}}">
-  <strong>{{ recordsVM.invenioRecordsAlert.data.status }}</strong>
-  {{ recordsVM.invenioRecordsAlert.data.message || recordsVM.invenioRecordsArgs.templateParams[recordsVM.invenioRecordsAlert.action[0][0]].message }}
+<div ng-show="recordsVM.invenioRecordsAlert" class="alert alert-{{recordsVM.invenioRecordsAlert.type}} alert-dismissible fixed">
+  <div class="container">
+    <strong>
+      {{ recordsVM.invenioRecordsAlert.data.status }}
+      {{ recordsVM.invenioRecordsAlert.data.message || recordsVM.invenioRecordsArgs.templateParams[recordsVM.invenioRecordsAlert.action[0][0]].message }}
+    </strong>
+    <button type="button" class="close" ng-click="recordsVM.invenioRecordsAlert = null" aria-hidden="true">&times;</button>
+  </div>
 </div>

@@ -4,7 +4,21 @@ body {
   font-family: Calibri,Helvetica,Arial,sans-serif;
   font-size: 16px;
   margin: 0 0 300px 0;
-  padding:0 !important
+  padding: 0 !important;
+
+  .alert.fixed {
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    border-radius: 0px;
+  }
+
+  .alert-dismissible .close {
+    right: 0 !important;
+  }
 }
 
 
@@ -14,3 +28,4 @@ body {
   justify-content: center;
   margin-top: 35px;
 }
+
