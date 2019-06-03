@@ -1,8 +1,11 @@
 """JSON Schemas."""
+from collections import defaultdict
 from datetime import date
 
 from flask import current_app
 from marshmallow import Schema, fields
+
+from .utilities import to_full_name
 
 
 class DataCiteResourceTypeSchemaV4(Schema):
@@ -35,23 +38,26 @@ class DataCiteTitleSchemaV4(Schema):
 
 
 class DataCiteCreatorSchemaV4(Schema):
-    """Creator schema."""
+    """Creator schema.
+
+    Each of these fields are inside the `creator` node.
+    """
 
     # Note: Marshmallow doesn't try to automatically extract a field
     #       corresponding to a fields.Method.
     creatorName = fields.Method('get_creator_name')
-    # TODO optional:
-    # givenName
-    # familyName
+    # TODO (optional): sub creatorName: nameType
+    givenName = fields.Str(attribute='first_name')
+    familyName = fields.Str(attribute='last_name')
+    # TODO (optional):
+    # nameIdentifier
+    #   nameIdentifierScheme
+    #   schemeURI
+    # affiliation
 
     def get_creator_name(self, author):
         """Extract creator name."""
-        name_parts = author.strip().split()
-        if len(name_parts) >= 2:
-            return "{last_name}, {first_name}".format(
-                last_name=name_parts[-1], first_name=name_parts[0])
-        else:
-            return ''
+        return to_full_name(author)
 
 
 class DataCiteSchemaV4(Schema):
@@ -68,9 +74,10 @@ class DataCiteSchemaV4(Schema):
         'get_identifier',
         attribute='metadata.doi',
         dump_only=True)
+    # NOTE: This auto-magically serializes the `creators` and `creator` nodes.
     creators = fields.List(
         fields.Nested(DataCiteCreatorSchemaV4),
-        attribute='metadata.author',
+        attribute='metadata.authors',
         dump_only=True)
     titles = fields.List(
         fields.Nested(DataCiteTitleSchemaV4),

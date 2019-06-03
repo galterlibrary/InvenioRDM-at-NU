@@ -60,8 +60,9 @@ def test_record_page_returns_200(client, create_record):
 
     assert response.status_code == 200
     html_text = response.get_data(as_text=True)
+    print(html_text)  # Kept for nicer test experience
     assert "A title" in html_text
-    assert "An author" in html_text
+    assert "Author, An" in html_text
     assert "A description" in html_text
     assert "MIT License" in html_text
 

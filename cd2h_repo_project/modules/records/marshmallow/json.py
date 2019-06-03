@@ -38,6 +38,7 @@ def get_id(obj, context):
 
 
 class AuthorSchemaV1(StrictKeysMixin):
+    """Author schema."""
 
     first_name = SanitizedUnicode(required=True)
     middle_name = SanitizedUnicode()

@@ -14,9 +14,12 @@ from flask_menu import register_menu
 from invenio_db import db
 from invenio_records_ui.signals import record_viewed
 
-from .links import deposit_links_ui_factory
-from .marshmallow.json import LICENSES
-from .permissions import EditMetadataPermission
+from cd2h_repo_project.modules.doi.utilities import to_full_name
+from cd2h_repo_project.modules.records.links import deposit_links_ui_factory
+from cd2h_repo_project.modules.records.marshmallow.json import LICENSES
+from cd2h_repo_project.modules.records.permissions import (
+    EditMetadataPermission
+)
 
 blueprint = Blueprint(
     'cd2hrepo_records',
@@ -150,3 +153,9 @@ def permissions_to_access_name(permissions):
         return 'Restricted Access'
     else:
         return 'Private Access'
+
+
+@blueprint.app_template_filter('to_full_name')
+def to_full_name_filter(author):
+    """Return well-formatted full author name."""
+    return to_full_name(author)
