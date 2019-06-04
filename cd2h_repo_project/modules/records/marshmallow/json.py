@@ -50,9 +50,8 @@ class AuthorSchemaV1(StrictKeysMixin):
     @post_load
     def load_full_name(self, data):
         """Load full_name if not passed."""
-        print("data", data)
-        print("type(data)", type(data))
         data['full_name'] = data.get('full_name', to_full_name(data))
+
 
 class TermSchemaV1(StrictKeysMixin):
     """Term schema."""
