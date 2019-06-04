@@ -16,6 +16,7 @@ def to_full_name(author):
 
     Source of truth for author name formatting.
     """
+    print("author", author)
     full_name = "{last_name}, {first_name} {middle_name}".format(
         **defaultdict(str, {k: v.title() for k, v in author.items()})
     )

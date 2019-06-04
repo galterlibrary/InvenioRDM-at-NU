@@ -72,7 +72,8 @@ class TestMetadataSchemaV1(object):
             {
                 'first_name': 'Jane',
                 'middle_name': 'Janet',
-                'last_name': 'Doe'
+                'last_name': 'Doe',
+                'full_name': 'Doe, Jane J.'
             }
         ]
         serialized_record = create_serialized_record({
@@ -84,7 +85,18 @@ class TestMetadataSchemaV1(object):
 
         assert not unmarshalled_metadata.errors
         assert 'authors' in deserialized_metadata
-        assert deserialized_metadata['authors'] == authors
+        assert deserialized_metadata['authors'][0] == {
+            'first_name': 'John',
+            'middle_name': 'Jacob',
+            'last_name': 'Smith',
+            'full_name': 'Smith, John Jacob'
+        }
+        assert deserialized_metadata['authors'][1] == {
+            'first_name': 'Jane',
+            'middle_name': 'Janet',
+            'last_name': 'Doe',
+            'full_name': 'Doe, Jane J.'
+        }
 
     def test_empty_required_key_returns_errors(self, create_serialized_record):
         serialized_record = create_serialized_record({'title': None})
