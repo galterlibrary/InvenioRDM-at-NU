@@ -556,7 +556,7 @@ DEPOSIT_UI_RESPONSE_MESSAGES = {
     'self': {
         'message': (
             "Your Draft was saved successfully! Click 'Publish Record' to "
-            "catalogue it."
+            "catalog it."
         )
     },
     'delete': {  # NOT USED
@@ -566,7 +566,7 @@ DEPOSIT_UI_RESPONSE_MESSAGES = {
         'message': "Your changes were discarded."
     },
     'publish': {
-        'message': "Your research was catalogued successfully!"
+        'message': "Your Record was published successfully!"
     }
 }
 
