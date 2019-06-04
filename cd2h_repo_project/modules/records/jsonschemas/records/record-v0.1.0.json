@@ -20,9 +20,35 @@
       "description": "Record description, summary or abstract.",
       "type": "string"
     },
-    "author": {
-      "description": "Record author. (TODO: Multiple authors)",
-      "type": "string"
+    "authors": {
+      "description": "Record author(s) in order of importance.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "description": "First name of person.",
+            "type": "string"
+          },
+          "middle_name": {
+            "description": "Middle name of person.",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "Last name of person.",
+            "type": "string"
+          },
+          "pid": {
+            "description": "Identifier for author (future proofing).",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": ["first_name", "last_name"]
+      }
     },
     "license": {
       "description": "License for content usage.",

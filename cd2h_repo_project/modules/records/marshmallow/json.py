@@ -37,21 +37,13 @@ def get_id(obj, context):
     return pid.pid_value if pid else missing
 
 
-class PersonIdsSchemaV1(StrictKeysMixin):
-    """Ids schema."""
+class AuthorSchemaV1(StrictKeysMixin):
+    """Author schema."""
 
-    source = fields.Str()
-    value = fields.Str()
-
-
-class ContributorSchemaV1(StrictKeysMixin):
-    """Contributor schema."""
-
-    ids = fields.Nested(PersonIdsSchemaV1, many=True)
-    name = fields.Str(required=True)
-    role = fields.Str()
-    affiliations = fields.List(fields.Str())
-    email = fields.Str()
+    first_name = SanitizedUnicode(required=True)
+    middle_name = SanitizedUnicode()
+    last_name = SanitizedUnicode(required=True)
+    # TODO: ORCID, or even better, nesting of Author PIDs
 
 
 class TermSchemaV1(StrictKeysMixin):
@@ -69,7 +61,7 @@ class MetadataSchemaV1(Schema):
     description = SanitizedUnicode(
         required=True, validate=validate.Length(min=3)
     )
-    author = SanitizedUnicode(required=True, validate=validate.Length(min=3))
+    authors = fields.Nested(AuthorSchemaV1, required=True, many=True)
     license = fields.Str(
         required=True,
         validate=validate.OneOf(

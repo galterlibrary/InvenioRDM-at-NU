@@ -93,10 +93,15 @@
     <div class="col-md-8">
 
       <div>
-        <p>
-          <span><i class="fa fa-user"></i></span>
-          <span class="text-muted">{{ record.author }}</span>
-        </p>
+        <ul class="list-inline authors">
+        {%- for author in record.authors -%}
+          <li>
+            <!-- TODO: ORCID or other icon -->
+            <i class="fa fa-user" aria-hidden="true"></i>
+            <span class="text-muted">{{ author | to_full_name }}</span>
+          </li>
+        {%- endfor -%}
+        </ul>
       </div>
 
       <div><p><em>{{record.description}}</em></p></div>

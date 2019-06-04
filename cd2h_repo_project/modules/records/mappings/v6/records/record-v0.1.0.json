@@ -28,8 +28,19 @@
         "description": {
           "type": "text"
         },
-        "author": {
-          "type": "text"
+        "authors": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "text"
+            },
+            "middle_name": {
+              "type": "text"
+            },
+            "last_name": {
+              "type": "text"
+            }
+          }
         },
         "license": {
           "type": "keyword"

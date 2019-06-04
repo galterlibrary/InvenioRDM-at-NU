@@ -7,9 +7,42 @@
     "required": true
   },
   {
-    "key": "author",
+    "key": "authors",
     "fa_cls": "fa-user",
     "title": "Author(s)",
+    "type": "array",
+    "sortOptions": {
+      "axis": "y",
+      "cursor": "move",
+      "disabled": false,
+      "handle": "div.sort-handle"
+    },
+    "add": "Add another author",
+    "inline": true,
+    "minItems": 1,
+    "items": [
+      {
+        "type": "text",
+        "key": "authors[].first_name",
+        "placeholder": "First Name",
+        "description": "",
+        "notitle": true
+      },
+      {
+        "type": "text",
+        "key": "authors[].middle_name",
+        "placeholder": "Middle Name",
+        "description": "",
+        "notitle": true
+      },
+      {
+        "type": "text",
+        "key": "authors[].last_name",
+        "placeholder": "Last Name",
+        "description": "",
+        "notitle": true
+      }
+    ],
     "description": "Required.",
     "required": true
   },
@@ -22,8 +55,8 @@
     "required": true
   },
   {
-    "type": "fieldset",
     "title": "Subjects",
+    "type": "fieldset",
     "fieldhint": "optional",
     "items": [
       {
@@ -76,8 +109,8 @@
     "required": false
   },
   {
-    "type": "fieldset",
     "title": "Access",
+    "type": "fieldset",
     "items": [
       {
         "key": "license",

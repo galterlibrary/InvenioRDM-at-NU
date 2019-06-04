@@ -1,5 +1,7 @@
+"""Test record form i.e. marshmallow schema is configured as expected."""
+
 from cd2h_repo_project.modules.records.marshmallow.json import (
-    MetadataSchemaV1, RecordSchemaV1
+    AuthorSchemaV1, MetadataSchemaV1, RecordSchemaV1
 )
 
 
@@ -24,10 +26,6 @@ class TestRecordSchemaV1(object):
         assert not unmarshalled_record.errors
         loaded_record = unmarshalled_record.data
         assert 'metadata' not in loaded_record
-        assert loaded_record['title'] == 'A title'
-        assert loaded_record['description'] == 'A description'
-        assert loaded_record['author'] == 'An author'
-        assert loaded_record['license'] == 'mit-license'
 
     def test_load_for_invalid_json_returns_errors(self):
         serialized_record = {'foo': 'bar'}
@@ -56,7 +54,7 @@ class TestMetadataSchemaV1(object):
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
         required_keys = [
-            'title', 'description', 'author', 'license', 'permissions'
+            'title', 'description', 'authors', 'license', 'permissions'
         ]
         assert set(unmarshalled_record.errors.keys()) == set(required_keys)
         assert (
@@ -64,16 +62,36 @@ class TestMetadataSchemaV1(object):
             ['Missing data for required field.']
         )
 
+    def test_authors_loaded(self, create_serialized_record):
+        authors = [
+            {
+                'first_name': 'John',
+                'middle_name': 'Jacob',
+                'last_name': 'Smith'
+            },
+            {
+                'first_name': 'Jane',
+                'middle_name': 'Janet',
+                'last_name': 'Doe'
+            }
+        ]
+        serialized_record = create_serialized_record({
+            'authors': authors
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'authors' in deserialized_metadata
+        assert deserialized_metadata['authors'] == authors
+
     def test_empty_required_key_returns_errors(self, create_serialized_record):
         serialized_record = create_serialized_record({'title': None})
 
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
         assert 'title' in unmarshalled_record.errors
-        # Partial validation is allowed
-        loaded_record = unmarshalled_record.data
-        assert loaded_record['description'] == 'A description'
-        assert loaded_record['author'] == 'An author'
 
     def test_description_too_short_returns_error(
             self, create_serialized_record):
@@ -188,3 +206,16 @@ class TestMetadataSchemaV1(object):
         deserialized_metadata = unmarshalled_metadata.data
 
         assert 'permissions' in unmarshalled_metadata.errors
+
+
+class TestAuthorSchemaV1(object):
+    def test_first_and_last_name_required(self):
+        author = {
+            'first_name': 'Jonathan',
+        }
+
+        unmarshalled_author = AuthorSchemaV1().load(author)
+
+        assert 'first_name' in unmarshalled_author.data
+        assert 'middle_name' not in unmarshalled_author.errors
+        assert 'last_name' in unmarshalled_author.errors

@@ -14,4 +14,46 @@
       cursor: pointer;
     }
   }
+
+}
+
+.schema-form-array {
+  ol.authors-list {
+    margin-bottom: -25px;
+    margin-left: 0;
+    padding-left: 0;
+    list-style: none;
+
+    li.deposit-inline {
+      padding-top: 5px;
+
+      .sort-handle {
+          cursor: move;
+      }
+
+      .close {
+        padding-left: 8px;
+      }
+    }
+  }
+
+  .authors-list .schema-form-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    :last-child div > .col-sm-12 {
+      padding-right: 0;
+    }
+
+    sf-decorator {
+      flex: auto;
+
+      & > div {
+        margin-right: 0;
+        margin-top: -5px;
+      }
+    }
+  }
+
 }
