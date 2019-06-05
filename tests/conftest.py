@@ -44,15 +44,15 @@ def locations(db):
 
 
 @pytest.fixture
-def create_serialized_record():
-    """Factory pattern for a serialized Record.
+def create_loaded_record():
+    """Factory pattern for a loaded Record.
 
-    The returned serialized record is the equivalent of the output of the
+    The returned dict record is the equivalent of the output of the
     marshmallow loader.
 
     It provides a default value for each required field.
     """
-    def _create_serialized_record(data={}):
+    def _create_loaded_record(data={}):
         data_to_use = {
             'title': 'A title',
             'authors': [
@@ -63,17 +63,22 @@ def create_serialized_record():
                 }
             ],
             'description': 'A description',
+            'resource_type': {
+                'general': 'other',
+                'specific': 'other',
+                'full_hierarchy': ['other', 'other'],
+            },
             'license': 'mit-license',
             'permissions': 'all_view',
         }
         data_to_use.update(data)
         return data_to_use
 
-    return _create_serialized_record
+    return _create_loaded_record
 
 
 @pytest.fixture
-def create_record(db, es_clear, locations, create_serialized_record):
+def create_record(db, es_clear, locations, create_loaded_record):
     """Factory pattern to create a Record."""
     def _create_record(data={}, published=True):
         data['$schema'] = (
@@ -82,7 +87,7 @@ def create_record(db, es_clear, locations, create_serialized_record):
         )
         _deposit = data.pop('_deposit', {})
 
-        data_to_use = create_serialized_record(data)
+        data_to_use = create_loaded_record(data)
 
         record = Deposit.create(data_to_use)
 

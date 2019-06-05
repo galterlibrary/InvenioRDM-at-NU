@@ -28,7 +28,7 @@ def assert_single_hit(response, expected_record):
     # only a record that has been published has an id, so we don't check for it
     for key in ['created', 'updated', 'metadata', 'links']:
         assert key in search_hit
-    for key in ['title', 'authors', 'description', 'type']:
+    for key in ['title', 'authors', 'description', 'resource_type', 'type']:
         assert search_hit['metadata'][key] == expected_record[key]
 
 
@@ -318,6 +318,123 @@ class TestRecordsSearch(object):
         response = client.get("/records/?q=old+record")
 
         assert_single_hit(response, record)
+
+    def test_search_by_general_resource_type_returns_record(
+            self, client, create_record, es_clear):
+        record1 = create_record(
+            {
+                'resource_type': {
+                    'general': 'articles',
+                    'specific': 'journal article',
+                    'full_hierarchy': [
+                        'text',
+                        'periodical',
+                        'journal',
+                        'contribution to journal'
+                    ]
+                }
+            }
+        )
+        record2 = create_record()
+
+        response = client.get("/records/?q=articles")
+
+        assert_single_hit(response, record1)
+
+    def test_search_by_specific_resource_type_returns_record(
+            self, client, create_record, es_clear):
+        record1 = create_record(
+            {
+                'resource_type': {
+                    'general': 'articles',
+                    'specific': 'journal article',
+                    'full_hierarchy': [
+                        'text',
+                        'periodical',
+                        'journal',
+                        'contribution to journal'
+                    ]
+                }
+            }
+        )
+        record2 = create_record()
+
+        response = client.get("/records/?q=journal+article")
+
+        assert_single_hit(response, record1)
+
+    def test_search_by_hierarchy_resource_type_returns_record(
+            self, client, create_record, es_clear):
+        record1 = create_record(
+            {
+                'resource_type': {
+                    'general': 'articles',
+                    'specific': 'journal article',
+                    'full_hierarchy': [
+                        'text',
+                        'periodical',
+                        'journal',
+                        'contribution to journal'
+                    ]
+                }
+            }
+        )
+        record2 = create_record()
+
+        response = client.get("/records/?q=periodical")
+
+        assert_single_hit(response, record1)
+
+    def test_search_aggregates_by_resource_type(
+            self, client, create_record, es_clear):
+        record1 = create_record(
+            {
+                'resource_type': {
+                    'general': 'learning objects',
+                    'specific': 'examination questions',
+                    'full_hierarchy': [
+                        'learning object', 'examination questions'
+                    ]
+                }
+            }
+        )
+        record2 = create_record(
+            {
+                'resource_type': {
+                    'general': 'dataset',
+                    'specific': 'dataset',
+                    'full_hierarchy': ['dataset', 'dataset']
+                }
+            }
+        )
+
+        response = client.get("/records/?resource_type=learning+objects")
+
+        aggregations = response.json['aggregations']
+        assert len(aggregations['resource_type']['buckets'])
+
+        def dataset_cond(bucket):
+            return (
+                bucket['key'] == 'dataset' and
+                bucket['rt_specific']['buckets'][0]['key'] == 'dataset'
+            )
+
+        assert any(
+            dataset_cond(b) for b in aggregations['resource_type']['buckets']
+        )
+
+        def learning_objects_cond(bucket):
+            return (
+                bucket['key'] == 'learning objects' and
+                bucket['rt_specific']['buckets'][0]['key'] ==
+                'examination questions'
+            )
+
+        assert any(
+            learning_objects_cond(b)
+            for b in aggregations['resource_type']['buckets']
+        )
+        assert_single_hit(response, record1)
 
 
 class TestDepositsSearch(object):

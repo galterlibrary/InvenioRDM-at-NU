@@ -1,9 +1,45 @@
 """JSON Schemas."""
+import csv
 from collections import defaultdict
 from datetime import date
+from os.path import dirname, join, realpath
 
 from flask import current_app
 from marshmallow import Schema, fields
+
+from cd2h_repo_project.modules.records.resource_type import ResourceType
+
+
+class DataCiteResourceTypeMap(object):
+    """DataCite Resource Type Mapping.
+
+    TODO: If we extract this module out, make this class a configuration
+          setting.
+    """
+
+    def __init__(self):
+        """Constructor."""
+        self.filename = join(
+            dirname(dirname(realpath(__file__))),
+            'records', 'data', 'resource_type_hierarchy.csv'
+        )
+        with open(self.filename) as f:
+            reader = csv.DictReader(f)
+            self.map = {
+                (
+                    row['Resource Type Group'].lower(),
+                    row['Resource Type Name'].lower()
+                ):
+                row['DataCite ResourceTypeGeneral'].strip()
+                for row in reader
+            }
+
+    def get(self, key, default=None):
+        """Return the mapped value.
+
+        `key` is (<general resource type>, <specific resource type>).
+        """
+        return self.map.get(key, default)
 
 
 class DataCiteResourceTypeSchemaV4(Schema):
@@ -13,20 +49,15 @@ class DataCiteResourceTypeSchemaV4(Schema):
     resourceType = fields.Method('get_specific_resource_type')
 
     def get_general_resource_type(self, resource_type):
-        """Extract general_resource_type.
-
-        TODO: Settle on general resource types and use those.
-        We just provide a default for now.
-        """
-        return resource_type.get('general', 'Dataset')
+        """Return DataCite's controlled vocabulary General Resource Type."""
+        resource_type_obj = ResourceType.get(
+            resource_type['general'], resource_type['specific']
+        )
+        return resource_type_obj.map(DataCiteResourceTypeMap())
 
     def get_specific_resource_type(self, resource_type):
-        """Extract specific resource type.
-
-        TODO: Settle on specific resource types (if any) and use those.
-        We just provide a default for now.
-        """
-        return resource_type.get('specific', 'Dataset')
+        """Return title-ized Specific Resource Type."""
+        return resource_type['specific'].title()
 
 
 class DataCiteTitleSchemaV4(Schema):
@@ -79,7 +110,7 @@ class DataCiteSchemaV4(Schema):
     publicationYear = fields.Method('get_year', dump_only=True)
     resourceType = fields.Nested(
         DataCiteResourceTypeSchemaV4,
-        attribute='metadata',  # TODO: 'metadata.resource_type' when added
+        attribute='metadata.resource_type',
         dump_only=True)
 
     def get_identifier(self, obj):

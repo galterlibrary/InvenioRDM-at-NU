@@ -88,3 +88,29 @@ def test_invalid_authors_should_error(create_record):
                 {'authors': invalid_authors},
                 published=False
             )
+
+
+def test_valid_resource_type(create_record):
+    resource_type = {
+        'general': 'books',
+        'specific': 'book',
+        'full_hierarchy': ['text', 'book']
+    }
+
+    deposit = create_record({'resource_type': resource_type}, published=False)
+
+    assert deposit['resource_type'] == resource_type
+
+
+@pytest.mark.parametrize('invalid_resource_type', [
+    {'specific': 'book', 'full_hierarchy': ['text', 'book']},
+    {'general': 'books', 'full_hierarchy': ['text', 'book']},
+    {'general': 'books', 'specific': 'book'},
+])
+def test_invalid_resource_type_should_error(
+        invalid_resource_type, create_record):
+    with pytest.raises(ValidationError):
+        deposit = create_record(
+            {'resource_type': invalid_resource_type},
+            published=False
+        )

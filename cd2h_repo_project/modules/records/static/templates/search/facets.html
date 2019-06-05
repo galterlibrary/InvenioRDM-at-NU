@@ -18,6 +18,7 @@
           <span ng-switch="aggr.key">
             <span ng-switch-when="license">{{ item.key | to_license_name }} ({{ item.doc_count }})</span>
             <span ng-switch-when="subjects">{{ item.key | to_subjects_name }} ({{ item.doc_count }})</span>
+            <span ng-switch-when="resource_type" class="titlecase">{{ item.key }} ({{ item.doc_count }})</span>
             <span ng-switch-default>{{ item.key }} ({{ item.doc_count }})</span>
           </span>
 

@@ -112,6 +112,9 @@
           <dt>Digital Object Identifier (DOI)</dt>
           <dd>{{ record | to_doi_field | safe }}</dd>
 
+          <dt>Resource Type</dt>
+          <dd>{{ record.resource_type.general.title() }} / {{ record.resource_type.specific.title() }}</dd>
+
           <dt><span><i class="fa fa-certificate"></i></span> License</dt>
           <dd>{{ record.license | license_value_to_name }}</dd>
 

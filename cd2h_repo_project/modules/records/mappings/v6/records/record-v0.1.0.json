@@ -54,6 +54,30 @@
         "authors_full_names": {
           "type": "text"
         },
+        "resource_type": {
+          "type": "object",
+          "properties": {
+            "general": {
+              "type": "text",
+              "fields": {
+                "raw": {
+                  "type": "keyword"
+                }
+              }
+            },
+            "specific": {
+              "type": "text",
+              "fields": {
+                "raw": {
+                  "type": "keyword"
+                }
+              }
+            },
+            "full_hierarchy": {
+              "type": "text"
+            }
+          }
+        },
         "license": {
           "type": "keyword"
         },

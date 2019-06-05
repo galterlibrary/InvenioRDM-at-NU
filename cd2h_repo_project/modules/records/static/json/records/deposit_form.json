@@ -55,6 +55,558 @@
     "required": true
   },
   {
+    "title": "Resource type",
+    "type": "fieldset",
+    "items": [
+      {
+        "type": "radios-inline",
+        "key": "resource_type.general",
+        "description": "",
+        "notitle": true,
+        "htmlClass": "resource-type-field",
+        "titleMap": [
+          {
+            "value": "dataset",
+            "name": "Dataset<br>",
+            "fa_cls": "fa-table"
+          },
+          {
+            "value": "articles",
+            "name": "Articles<br>",
+            "fa_cls": "fa-vcard"
+          },
+          {
+            "value": "conference objects",
+            "name": "Conference Objects",
+            "fa_cls": "fa-comments"
+          },
+          {
+            "value": "images",
+            "name": "Images<br>",
+            "fa_cls": "fa-picture-o"
+          },
+          {
+            "value": "multimedia",
+            "name": "Multimedia<br>",
+            "fa_cls": "fa-cubes"
+          },
+          {
+            "value": "periodicals",
+            "name": "Periodicals<br>",
+            "fa_cls": "fa-newspaper-o"
+          },
+          {
+            "value": "books",
+            "name": "Books<br>",
+            "fa_cls": "fa-book"
+          },
+          {
+            "value": "study documentation",
+            "name": "Study Documentation",
+            "fa_cls": "fa-info-circle"
+          },
+          {
+            "value": "theses and dissertations",
+            "name": "Theses and Dissertations",
+            "fa_cls": "fa-graduation-cap"
+          },
+          {
+            "value": "text resources",
+            "name": "Text Resources<br>",
+            "fa_cls": "fa-file-text"
+          },
+          {
+            "value": "learning objects",
+            "name": "Learning Objects",
+            "fa_cls": "fa-university"
+          },
+          {
+            "value": "archival items",
+            "name": "Archival Items<br>",
+            "fa_cls": "fa-archive"
+          },
+          {
+            "value": "other",
+            "name": "Other<br>",
+            "fa_cls": "fa-asterisk"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'articles'",
+        "titleMap": [
+          {
+            "value": "book review",
+            "name": "Book Review"
+          },
+          {
+            "value": "data paper",
+            "name": "Data Paper"
+          },
+          {
+            "value": "editorial",
+            "name": "Editorial"
+          },
+          {
+            "value": "journal article",
+            "name": "Journal Article"
+          },
+          {
+            "value": "letter to the editor",
+            "name": "Letter to the editor"
+          },
+          {
+            "value": "newspaper article",
+            "name": "Newspaper Article"
+          },
+          {
+            "value": "research paper",
+            "name": "Research Paper"
+          },
+          {
+            "value": "retraction",
+            "name": "Retraction"
+          },
+          {
+            "value": "review article",
+            "name": "Review Article"
+          },
+          {
+            "value": "software paper",
+            "name": "Software Paper"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'conference objects'",
+        "titleMap": [
+          {
+            "value": "conference paper",
+            "name": "Conference Paper"
+          },
+          {
+            "value": "conference presentation",
+            "name": "Conference Presentation"
+          },
+          {
+            "value": "conference proceeding",
+            "name": "Conference Proceeding"
+          },
+          {
+            "value": "congress",
+            "name": "Congress"
+          },
+          {
+            "value": "meeting abstract",
+            "name": "Meeting Abstract"
+          },
+          {
+            "value": "poster",
+            "name": "Poster"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'images'",
+        "titleMap": [
+          {
+            "value": "architectural drawing",
+            "name": "Architectural Drawing"
+          },
+          {
+            "value": "chart",
+            "name": "Chart"
+          },
+          {
+            "value": "drawing",
+            "name": "Drawing"
+          },
+          {
+            "value": "map",
+            "name": "Map"
+          },
+          {
+            "value": "photograph",
+            "name": "Photograph"
+          },
+          {
+            "value": "pictorial work",
+            "name": "Pictorial Work"
+          },
+          {
+            "value": "portrait",
+            "name": "Portrait"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'multimedia'",
+        "titleMap": [
+          {
+            "value": "animation",
+            "name": "Animation"
+          },
+          {
+            "value": "audio recording",
+            "name": "Audio Recording"
+          },
+          {
+            "value": "database",
+            "name": "Database"
+          },
+          {
+            "value": "postcard",
+            "name": "Postcard"
+          },
+          {
+            "value": "social media",
+            "name": "Social media"
+          },
+          {
+            "value": "software or program code",
+            "name": "Software or Program Code"
+          },
+          {
+            "value": "video",
+            "name": "Video"
+          },
+          {
+            "value": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'periodicals'",
+        "titleMap": [
+          {
+            "value": "journal",
+            "name": "Journal"
+          },
+          {
+            "value": "magazine",
+            "name": "Magazine"
+          },
+          {
+            "value": "newsletter",
+            "name": "Newsletter"
+          },
+          {
+            "value": "newspaper",
+            "name": "Newspaper"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'books'",
+        "titleMap": [
+          {
+            "value": "account book",
+            "name": "Account Book"
+          },
+          {
+            "value": "almanac",
+            "name": "Almanac"
+          },
+          {
+            "value": "atlas",
+            "name": "Atlas"
+          },
+          {
+            "value": "biography",
+            "name": "Biography"
+          },
+          {
+            "value": "book",
+            "name": "Book"
+          },
+          {
+            "value": "catalog",
+            "name": "Catalog"
+          },
+          {
+            "value": "diary",
+            "name": "Diary"
+          },
+          {
+            "value": "handbook",
+            "name": "Handbook"
+          },
+          {
+            "value": "part of book",
+            "name": "Part of Book"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'study documentation'",
+        "titleMap": [
+          {
+            "value": "case reports",
+            "name": "Case Reports"
+          },
+          {
+            "value": "clinical study",
+            "name": "Clinical Study"
+          },
+          {
+            "value": "clinical trial",
+            "name": "Clinical Trial"
+          },
+          {
+            "value": "comparative study",
+            "name": "Comparative Study"
+          },
+          {
+            "value": "data management plan",
+            "name": "Data Management Plan"
+          },
+          {
+            "value": "evaluation study",
+            "name": "Evaluation Study"
+          },
+          {
+            "value": "research proposal",
+            "name": "Research Proposal"
+          },
+          {
+            "value": "statistics",
+            "name": "Statistics"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'theses and dissertations'",
+        "titleMap": [
+          {
+            "value": "academic dissertations",
+            "name": "Academic Dissertations"
+          },
+          {
+            "value": "thesis bachelor",
+            "name": "Thesis, Bachelor"
+          },
+          {
+            "value": "thesis masters",
+            "name": "Thesis, Masters"
+          },
+          {
+            "value": "thesis doctoral",
+            "name": "Thesis, Doctoral"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'text resources'",
+        "titleMap": [
+          {
+            "value": "abstract",
+            "name": "Abstract"
+          },
+          {
+            "value": "advertisement",
+            "name": "Advertisement"
+          },
+          {
+            "value": "bibliography",
+            "name": "Bibliography"
+          },
+          {
+            "value": "biobibliography",
+            "name": "Biobibliography"
+          },
+          {
+            "value": "comment",
+            "name": "Comment"
+          },
+          {
+            "value": "correspondence",
+            "name": "Correspondence"
+          },
+          {
+            "value": "fictional work",
+            "name": "Fictional Work"
+          },
+          {
+            "value": "form",
+            "name": "Form"
+          },
+          {
+            "value": "guideline",
+            "name": "Guideline"
+          },
+          {
+            "value": "letter",
+            "name": "Letter"
+          },
+          {
+            "value": "manuscript",
+            "name": "Manuscript"
+          },
+          {
+            "value": "patent",
+            "name": "Patent"
+          },
+          {
+            "value": "patient education handout",
+            "name": "Patient Education Handout"
+          },
+          {
+            "value": "personal narrative",
+            "name": "Personal Narrative"
+          },
+          {
+            "value": "poetry",
+            "name": "Poetry"
+          },
+          {
+            "value": "preprint",
+            "name": "Preprint"
+          },
+          {
+            "value": "program",
+            "name": "Program"
+          },
+          {
+            "value": "resource guide",
+            "name": "Resource Guide"
+          },
+          {
+            "value": "software documentation",
+            "name": "Software documentation"
+          },
+          {
+            "value": "speech",
+            "name": "Speech"
+          },
+          {
+            "value": "technical documentation",
+            "name": "Technical Documentation"
+          },
+          {
+            "value": "working paper",
+            "name": "Working Paper"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'learning objects'",
+        "titleMap": [
+          {
+            "value": "examination questions",
+            "name": "Examination Questions"
+          },
+          {
+            "value": "lecture",
+            "name": "Lecture"
+          },
+          {
+            "value": "lecture notes",
+            "name": "Lecture Notes"
+          },
+          {
+            "value": "lesson",
+            "name": "Lesson"
+          },
+          {
+            "value": "presentation",
+            "name": "Presentation"
+          },
+          {
+            "value": "problems and exercises",
+            "name": "Problems and Exercises"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'archival items'",
+        "titleMap": [
+          {
+            "value": "collection",
+            "name": "Collection"
+          },
+          {
+            "value": "ephemera",
+            "name": "Ephemera"
+          },
+          {
+            "value": "exhibitions",
+            "name": "Exhibitions"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "key": "resource_type.specific",
+        "title": "Specific type",
+        "condition": "model.resource_type.general == 'other'",
+        "titleMap": [
+          {
+            "value": "annual report",
+            "name": "Annual Report"
+          },
+          {
+            "value": "capstone project",
+            "name": "Capstone Project"
+          },
+          {
+            "value": "interview",
+            "name": "Interview"
+          },
+          {
+            "value": "laboratory manual",
+            "name": "Laboratory Manual"
+          },
+          {
+            "value": "table",
+            "name": "Table"
+          },
+          {
+            "value": "technical report",
+            "name": "Technical Report"
+          },
+          {
+            "value": "other",
+            "name": "Other"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "title": "Subjects",
     "type": "fieldset",
     "fieldhint": "optional",

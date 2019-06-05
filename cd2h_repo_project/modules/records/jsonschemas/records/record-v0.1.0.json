@@ -54,6 +54,31 @@
         "required": ["first_name", "last_name", "full_name"]
       }
     },
+    "resource_type": {
+      "description": "Resource type e.g., book, dataset...",
+      "type": "object",
+      "properties": {
+        "general": {
+          "description": "Resource type category.",
+          "type": "string"
+        },
+        "specific": {
+          "description": "Resource type name.",
+          "type": "string"
+        },
+        "full_hierarchy": {
+          "description": "menRva full hierarchy.",
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": ["general", "specific", "full_hierarchy"]
+    },
     "license": {
       "description": "License for content usage.",
       "type": "string"

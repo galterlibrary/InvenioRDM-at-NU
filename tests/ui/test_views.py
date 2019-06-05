@@ -64,6 +64,7 @@ def test_record_page_returns_200(client, create_record):
     assert "A title" in html_text
     assert "Author, An" in html_text
     assert "A description" in html_text
+    assert "Other / Other" in html_text
     assert "MIT License" in html_text
 
 
