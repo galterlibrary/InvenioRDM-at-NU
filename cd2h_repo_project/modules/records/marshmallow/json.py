@@ -13,6 +13,7 @@ from marshmallow import Schema, fields, missing, post_load, pre_load, validate
 
 from cd2h_repo_project.modules.records.api import RecordType
 from cd2h_repo_project.modules.records.permissions import RecordPermissions
+from cd2h_repo_project.modules.records.utilities import to_full_name
 
 License = namedtuple('License', ['name', 'value'])
 # WARNING: Any change to this list should be reflected in:
@@ -43,7 +44,13 @@ class AuthorSchemaV1(StrictKeysMixin):
     first_name = SanitizedUnicode(required=True)
     middle_name = SanitizedUnicode()
     last_name = SanitizedUnicode(required=True)
+    full_name = SanitizedUnicode()
     # TODO: ORCID, or even better, nesting of Author PIDs
+
+    @post_load
+    def load_full_name(self, data):
+        """Load full_name if not passed."""
+        data['full_name'] = data.get('full_name', to_full_name(data))
 
 
 class TermSchemaV1(StrictKeysMixin):

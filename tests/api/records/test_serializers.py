@@ -182,3 +182,59 @@ class TestMenRvaJSONSerializer(object):
             "doc_count_error_upper_bound": 0,
             "sum_other_doc_count": 0
         }
+
+    def test_restructure_authors_aggregation(self):
+        aggregation_result = {
+            "authors": {
+                "doc_count": 2,
+                "full_name": {
+                    "buckets": [
+                        {
+                            "doc_count": 1,
+                            "key": "Smith, John"
+                        },
+                        {
+                            "doc_count": 1,
+                            "key": "Doe, Jane"
+                        }
+                    ],
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 0
+                }
+            },
+            "file_type": {
+                "buckets": [],
+                "doc_count_error_upper_bound": 0,
+                "sum_other_doc_count": 0
+            }
+        }
+
+        transformed_search_result = (
+            MenRvaJSONSerializer().transform_aggregation(aggregation_result)
+        )
+
+        # Check aggregation_result was not modified (in-place)
+        assert aggregation_result["file_type"] == {
+            "buckets": [],
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0
+        }
+        assert (
+            aggregation_result['file_type'] == aggregation_result["file_type"]
+        )
+
+        # Check authors section was restructured
+        assert transformed_search_result['authors'] == {
+            "buckets": [
+                {
+                    "doc_count": 1,
+                    "key": "Smith, John"
+                },
+                {
+                    "doc_count": 1,
+                    "key": "Doe, Jane"
+                }
+            ],
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0
+        }

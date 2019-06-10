@@ -288,15 +288,28 @@ RECORDS_REST_ENDPOINTS = {
 """REST API for Records."""
 
 RECORDS_REST_FACETS = {
-    # This is the name of the index in ElasticSearch and not the pid type
+    # This is the name of the index/alias in ElasticSearch and not the pid type
     'records': {
         'aggs': {
-            'file_type': {  # Titleized on the frontend to head the section
-                # Dynamically creates a bucket for each unique `_files.type`
-                'terms': {'field': '_files.type'},
+            'authors': {  # Title-ized on the front-end to head the section
+                # Needed bc 'authors' are *nested* objects
+                # MenRvaJSONSerializer has been created to output
+                # expected front-end format from this type of faceting
+                'nested': {
+                    'path': 'authors'
+                },
+                'aggs': {
+                    'full_name': {
+                        'terms': {'field': 'authors.full_name.raw'}
+                    }
+                }
             },
             'license': {
                 'terms': {'field': 'license'}
+            },
+            'file_type': {
+                # Dynamically creates a bucket for each unique `_files.type`
+                'terms': {'field': '_files.type'},
             },
             'subjects': {
                 # Needed bc 'terms' are *nested* objects
@@ -332,8 +345,9 @@ RECORDS_REST_FACETS = {
         },
         # Filters the results further AFTER aggregation
         'post_filters': {
-            'file_type': terms_filter('_files.type'),
+            'authors': nested_filter('authors', 'authors.full_name.raw'),
             'license': terms_filter('license'),
+            'file_type': terms_filter('_files.type'),
             'subjects': nested_filter('terms', 'terms.source'),
             'subject': nested_filter('terms', 'terms.value'),
             # TODO: Add other post_filters here

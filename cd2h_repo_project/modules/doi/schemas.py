@@ -5,8 +5,6 @@ from datetime import date
 from flask import current_app
 from marshmallow import Schema, fields
 
-from .utilities import to_full_name
-
 
 class DataCiteResourceTypeSchemaV4(Schema):
     """ResourceType schema."""
@@ -43,9 +41,7 @@ class DataCiteCreatorSchemaV4(Schema):
     Each of these fields are inside the `creator` node.
     """
 
-    # Note: Marshmallow doesn't try to automatically extract a field
-    #       corresponding to a fields.Method.
-    creatorName = fields.Method('get_creator_name')
+    creatorName = fields.Str(attribute='full_name')
     # TODO (optional): sub creatorName: nameType
     givenName = fields.Str(attribute='first_name')
     familyName = fields.Str(attribute='last_name')
@@ -54,10 +50,6 @@ class DataCiteCreatorSchemaV4(Schema):
     #   nameIdentifierScheme
     #   schemeURI
     # affiliation
-
-    def get_creator_name(self, author):
-        """Extract creator name."""
-        return to_full_name(author)
 
 
 class DataCiteSchemaV4(Schema):

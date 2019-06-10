@@ -29,7 +29,7 @@
           "type": "text"
         },
         "authors": {
-          "type": "object",
+          "type": "nested",
           "properties": {
             "first_name": {
               "type": "text"
@@ -39,8 +39,20 @@
             },
             "last_name": {
               "type": "text"
+            },
+            "full_name": {
+              "type": "text",
+              "fields": {
+                "raw": {
+                  "type": "keyword"
+                }
+              },
+              "copy_to": ["authors_full_names"]
             }
           }
+        },
+        "authors_full_names": {
+          "type": "text"
         },
         "license": {
           "type": "keyword"

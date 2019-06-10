@@ -29,11 +29,12 @@ def serialized_record(create_record):
                     'first_name': 'A',
                     'middle_name': 'first',
                     'last_name': 'Author',
+                    'full_name': 'Author, A First',
                 },
                 {
                     'first_name': 'An',
-                    'middle_name': 'other',
                     'last_name': 'Author',
+                    'full_name': 'Author, An',
                 },
             ]
         },
@@ -76,7 +77,7 @@ class TestDataCiteV4(object):
         )
         assert (
             creators[1].find('default:creatorName', namespaces).text ==
-            'Author, An Other'
+            'Author, An'
         )
         assert (
             creators[1].find('default:givenName', namespaces).text == 'An'

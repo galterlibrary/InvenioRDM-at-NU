@@ -95,12 +95,18 @@ class TestRecordsSearch(object):
 
         assert_single_hit(response, published_record)
 
-    def test_search_for_query_part_of_author_returns_record(
+    def test_search_by_partial_author_returns_record(
             self, client, create_record, es_clear):
-        # NOTE: This test is enough to validate that the author field uses
-        #       text indexing
         record1 = create_record(
-            {'authors': [{'first_name': 'John', 'last_name': 'Smith'}]}
+            {
+                'authors': [
+                    {
+                        'first_name': 'John',
+                        'last_name': 'Smith',
+                        'full_name': 'Smith, John'
+                    }
+                ]
+            }
         )
         record2 = create_record()
 

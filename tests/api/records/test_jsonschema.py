@@ -67,7 +67,7 @@ def test_invalid_permissions_should_error(create_record):
 
 def test_valid_authors(create_record):
     authors = [
-        {'first_name': 'John', 'last_name': 'Doe'}
+        {'first_name': 'John', 'last_name': 'Doe', 'full_name': 'Doe, John'}
     ]
 
     deposit = create_record({'authors': authors}, published=False)
@@ -76,9 +76,15 @@ def test_valid_authors(create_record):
 
 
 def test_invalid_authors_should_error(create_record):
-    authors = [
-        {'foo': 'bar'}
+    invalid_authors_list = [
+        [{'last_name': 'Doe', 'full_name': 'Doe, John'}],
+        [{'first_name': 'John', 'full_name': 'Doe, John'}],
+        [{'first_name': 'John', 'last_name': 'Doe'}],
     ]
 
-    with pytest.raises(ValidationError):
-        deposit = create_record({'authors': authors}, published=False)
+    for invalid_authors in invalid_authors_list:
+        with pytest.raises(ValidationError):
+            deposit = create_record(
+                {'authors': invalid_authors},
+                published=False
+            )

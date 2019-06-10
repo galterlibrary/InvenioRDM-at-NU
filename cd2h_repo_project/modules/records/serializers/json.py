@@ -20,7 +20,13 @@ class MenRvaJSONSerializer(JSONSerializer):
     """
 
     def transform_aggregation(self, aggregation):
-        """Conform 'subjects' aggregation to frontend format."""
+        """Conform aggregation to front-end format."""
+        new_aggregation = self.transform_subjects_aggregation(aggregation)
+        new_aggregation = self.transform_authors_aggregation(new_aggregation)
+        return new_aggregation
+
+    def transform_subjects_aggregation(self, aggregation):
+        """Conform 'subjects' aggregation to front-end format."""
         if not aggregation or 'subjects' not in aggregation:
             return aggregation
 
@@ -67,12 +73,34 @@ class MenRvaJSONSerializer(JSONSerializer):
 
         return transformed_aggregation
 
+    def transform_authors_aggregation(self, aggregation):
+        """Conform 'authors' aggregation to front-end format."""
+        if not aggregation or 'authors' not in aggregation:
+            return aggregation
+
+        transformed_aggregation = deepcopy(aggregation)
+        authors_aggregation = transformed_aggregation['authors']
+
+        key = next(
+            (
+                key for key in authors_aggregation
+                if type(authors_aggregation[key]) is dict and
+                authors_aggregation[key].get('buckets')
+            ),
+            None
+        )
+
+        if key:
+            transformed_aggregation['authors'] = authors_aggregation[key]
+
+        return transformed_aggregation
+
     def serialize_search(self, pid_fetcher, search_result, links=None,
                          item_links_factory=None, **kwargs):
         """Serialize a search result.
 
         Overrides parent's serialize_search. This is done to format
-        the 'subjects' aggregation per what the frontend expects.
+        the nested aggregations per what the front-end expects.
 
         :param pid_fetcher: Persistent identifier fetcher.
         :param search_result: Elasticsearch search result.

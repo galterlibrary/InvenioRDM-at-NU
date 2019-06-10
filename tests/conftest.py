@@ -47,12 +47,21 @@ def locations(db):
 def create_serialized_record():
     """Factory pattern for a serialized Record.
 
-    Provides a default value for each required field.
+    The returned serialized record is the equivalent of the output of the
+    marshmallow loader.
+
+    It provides a default value for each required field.
     """
     def _create_serialized_record(data={}):
         data_to_use = {
             'title': 'A title',
-            'authors': [{'first_name': 'An', 'last_name': 'author'}],
+            'authors': [
+                {
+                    'first_name': 'An',
+                    'last_name': 'author',
+                    'full_name': 'Author, An'
+                }
+            ],
             'description': 'A description',
             'license': 'mit-license',
             'permissions': 'all_view',
