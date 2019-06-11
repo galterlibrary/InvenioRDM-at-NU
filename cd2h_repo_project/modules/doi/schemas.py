@@ -93,10 +93,7 @@ class DataCiteSchemaV4(Schema):
     schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf
     """
 
-    identifier = fields.Method(
-        'get_identifier',
-        attribute='metadata.doi',
-        dump_only=True)
+    identifier = fields.Method('get_identifier', dump_only=True)
     # NOTE: This auto-magically serializes the `creators` and `creator` nodes.
     creators = fields.List(
         fields.Nested(DataCiteCreatorSchemaV4),
@@ -113,10 +110,11 @@ class DataCiteSchemaV4(Schema):
         attribute='metadata.resource_type',
         dump_only=True)
 
-    def get_identifier(self, obj):
+    def get_identifier(self, data):
         """Get record main identifier."""
         return {
-            'identifier': obj['metadata'].get('doi', ''),
+            # If no DOI, 'DUMMY' value is used and will be ignored by DataCite
+            'identifier': data.get('metadata', {}).get('doi') or 'DUMMY',
             'identifierType': 'DOI'
         }
 

@@ -5,6 +5,7 @@ from os.path import splitext
 
 from elasticsearch.exceptions import RequestError
 from flask import current_app
+from invenio_db import db
 from invenio_deposit.api import Deposit as _Deposit
 from invenio_deposit.api import has_status, preserve
 from invenio_deposit.providers import DepositProvider
@@ -224,6 +225,7 @@ class Deposit(_Deposit):
 
         published_record.commit()
         self.commit()
+        db.session.commit()  # Above only flushes, this persists to the DB
 
         # TODO: Remove? because invenio-deposit takes care of it via signal
         try:
