@@ -40,7 +40,7 @@
     <label class="col-sm-2 control-label" for="{{ form.subject.id }}">Subject</label>
     <div class="col-sm-9">
       <input id="{{ form.subject.id }}" name="{{ form.subject.name }}" class="form-control"
-             required="required" type="text" placeholder="e.g. Question about cataloging"
+             required="required" type="text" placeholder="e.g. Question about ..."
              value="{{ form.subject.data | default('', true) }}">
       {{ errors(form.subject) }}
     </div>
