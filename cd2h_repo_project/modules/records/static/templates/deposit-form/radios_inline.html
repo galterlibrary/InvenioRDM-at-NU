@@ -5,7 +5,7 @@
         <label ng-model="$$value$$" ng-model-options="form.ngModelOptions" schema-validate="form"
                class="control-label {{ form.labelHtmlClass }}" ng-class="{'field-required': form.required}" ng-show="showTitle()">{{ form.title }}</label>
         <ul class="list-inline">
-            <li class="col-sm-2" ng-repeat="item in form.titleMap">
+            <li class="col-sm-3" ng-repeat="item in form.titleMap">
                 <label>
                     <i class="fa {{ item.fa_cls }} fa-2x fa-fw"></i>
                     <br/>

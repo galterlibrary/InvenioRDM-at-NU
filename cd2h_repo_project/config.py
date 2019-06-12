@@ -304,6 +304,14 @@ RECORDS_REST_FACETS = {
                     }
                 }
             },
+            'resource_type': {
+                'terms': {'field': 'resource_type.general.raw'},
+                'aggs': {
+                    'rt_specific': {
+                        'terms': {'field': 'resource_type.specific.raw'}
+                    }
+                }
+            },
             'license': {
                 'terms': {'field': 'license'}
             },
@@ -350,6 +358,8 @@ RECORDS_REST_FACETS = {
             'file_type': terms_filter('_files.type'),
             'subjects': nested_filter('terms', 'terms.source'),
             'subject': nested_filter('terms', 'terms.value'),
+            'resource_type': terms_filter('resource_type.general.raw'),
+            'rt_specific': terms_filter('resource_type.specific.raw'),
             # TODO: Add other post_filters here
         }
     }

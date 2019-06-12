@@ -1,8 +1,58 @@
 """Test record form i.e. marshmallow schema is configured as expected."""
 
+from copy import deepcopy
+
+import pytest
+
 from cd2h_repo_project.modules.records.marshmallow.json import (
-    AuthorSchemaV1, MetadataSchemaV1, RecordSchemaV1
+    AuthorSchemaV1, MetadataSchemaV1, RecordSchemaV1, ResourceTypeSchemaV1
 )
+
+
+@pytest.fixture
+def create_input_metadatav1():
+    """Factory pattern for the input to the marshmallow.json.MetadataSchemaV1.
+    """
+    def _create_input_metadatav1(data={}):
+        data_to_use = {
+            'title': 'A title',
+            'authors': [
+                {
+                    'first_name': 'An',
+                    'last_name': 'author'
+                }
+            ],
+            'description': 'A description',
+            'resource_type': {
+                'general': 'other',
+                'specific': 'other'
+            },
+            'license': 'mit-license',
+            'permissions': 'all_view',
+        }
+        data_to_use.update(data)
+        return data_to_use
+
+    return _create_input_metadatav1
+
+
+@pytest.fixture
+def create_input_record(create_input_metadatav1):
+    """Factory pattern for an API input Record.
+
+    The returned dict is the input to the marshmallow loader used by the API.
+    """
+    def _create_input_record(data=None):
+        data = deepcopy(data) if data else {}
+        data_to_use = {
+            'metadata': create_input_metadatav1(data.get('metadata', {}))
+        }
+        if 'metadata' in data:
+            del data['metadata']
+        data_to_use.update(data)
+        return data_to_use
+
+    return _create_input_record
 
 
 class TestRecordSchemaV1(object):
@@ -16,21 +66,19 @@ class TestRecordSchemaV1(object):
         }
 
     def test_load_for_valid_json_removes_metadata_envelope(
-            self, create_serialized_record):
-        enveloped_record = {
-            'metadata': create_serialized_record()
-        }
+            self, create_input_record):
+        input_record = create_input_record()
 
-        unmarshalled_record = RecordSchemaV1().load(enveloped_record)
+        unmarshalled_record = RecordSchemaV1().load(input_record)
 
         assert not unmarshalled_record.errors
         loaded_record = unmarshalled_record.data
         assert 'metadata' not in loaded_record
 
     def test_load_for_invalid_json_returns_errors(self):
-        serialized_record = {'foo': 'bar'}
+        input_record = {'foo': 'bar'}
 
-        unmarshalled_record = RecordSchemaV1().load(serialized_record)
+        unmarshalled_record = RecordSchemaV1().load(input_record)
 
         assert 'foo' in unmarshalled_record.errors
         assert not unmarshalled_record.data
@@ -38,8 +86,8 @@ class TestRecordSchemaV1(object):
 
 class TestMetadataSchemaV1(object):
 
-    def test_extra_key_is_ignored(self, create_serialized_record):
-        serialized_record = create_serialized_record({'foo': 'bar'})
+    def test_extra_key_is_ignored(self, create_input_metadatav1):
+        serialized_record = create_input_metadatav1({'foo': 'bar'})
 
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
         loaded_record = unmarshalled_record.data
@@ -54,7 +102,8 @@ class TestMetadataSchemaV1(object):
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
         required_keys = [
-            'title', 'description', 'authors', 'license', 'permissions'
+            'title', 'description', 'authors', 'resource_type', 'license',
+            'permissions'
         ]
         assert set(unmarshalled_record.errors.keys()) == set(required_keys)
         assert (
@@ -62,7 +111,7 @@ class TestMetadataSchemaV1(object):
             ['Missing data for required field.']
         )
 
-    def test_authors_loaded(self, create_serialized_record):
+    def test_authors_loaded(self, create_input_metadatav1):
         authors = [
             {
                 'first_name': 'John',
@@ -76,7 +125,7 @@ class TestMetadataSchemaV1(object):
                 'full_name': 'Doe, Jane J.'
             }
         ]
-        serialized_record = create_serialized_record({
+        serialized_record = create_input_metadatav1({
             'authors': authors
         })
 
@@ -98,24 +147,38 @@ class TestMetadataSchemaV1(object):
             'full_name': 'Doe, Jane J.'
         }
 
-    def test_empty_required_key_returns_errors(self, create_serialized_record):
-        serialized_record = create_serialized_record({'title': None})
+    def test_resource_type_loaded(self, create_input_metadatav1):
+        serialized_record = create_input_metadatav1({
+            'resource_type': {
+                'general': 'other',
+                'specific': 'other'
+            }
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'resource_type' in deserialized_metadata
+
+    def test_empty_required_key_returns_errors(self, create_input_metadatav1):
+        serialized_record = create_input_metadatav1({'title': None})
 
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
         assert 'title' in unmarshalled_record.errors
 
     def test_description_too_short_returns_error(
-            self, create_serialized_record):
-        serialized_record = create_serialized_record({'description': 'A '})
+            self, create_input_metadatav1):
+        serialized_record = create_input_metadatav1({'description': 'A '})
 
         unmarshalled_record = MetadataSchemaV1().load(serialized_record)
 
         assert 'description' in unmarshalled_record.errors
 
-    def test_one_term_loaded(self, create_serialized_record):
+    def test_one_term_loaded(self, create_input_metadatav1):
         terms = [{'source': 'MeSH', 'value': 'Cognitive Neuroscience'}]
-        serialized_record = create_serialized_record({
+        serialized_record = create_input_metadatav1({
             'terms': terms
         })
 
@@ -126,12 +189,12 @@ class TestMetadataSchemaV1(object):
         assert 'terms' in deserialized_metadata
         assert deserialized_metadata['terms'] == terms
 
-    def test_multiple_terms_loaded(self, create_serialized_record):
+    def test_multiple_terms_loaded(self, create_input_metadatav1):
         terms = [
             {'source': 'MeSH', 'value': 'Cognitive Neuroscience'},
             {'source': 'MeSH', 'value': 'Acanthamoeba'}
         ]
-        serialized_record = create_serialized_record({
+        serialized_record = create_input_metadatav1({
             'terms': terms
         })
 
@@ -142,9 +205,9 @@ class TestMetadataSchemaV1(object):
         assert 'terms' in deserialized_metadata
         assert deserialized_metadata['terms'] == terms
 
-    def test_no_terms_loaded(self, create_serialized_record):
+    def test_no_terms_loaded(self, create_input_metadatav1):
         terms = []
-        serialized_record = create_serialized_record({
+        serialized_record = create_input_metadatav1({
             'terms': terms
         })
 
@@ -155,7 +218,7 @@ class TestMetadataSchemaV1(object):
         assert 'terms' in deserialized_metadata
         assert deserialized_metadata['terms'] == terms
 
-        serialized_record2 = create_serialized_record()
+        serialized_record2 = create_input_metadatav1()
 
         unmarshalled_metadata = MetadataSchemaV1().load(serialized_record2)
         deserialized_metadata = unmarshalled_metadata.data
@@ -165,9 +228,9 @@ class TestMetadataSchemaV1(object):
         assert deserialized_metadata['terms'] == terms
 
     def test_incorrect_format_terms_returns_error(
-            self, create_serialized_record):
+            self, create_input_metadatav1):
         terms = ["bar"]
-        serialized_record = create_serialized_record({
+        serialized_record = create_input_metadatav1({
             'terms': terms
         })
 
@@ -177,13 +240,13 @@ class TestMetadataSchemaV1(object):
         assert 'terms' in unmarshalled_metadata.errors
         assert deserialized_metadata['terms'] == [{}]
 
-    def test_coalesce_terms_loaded(self, create_serialized_record):
+    def test_coalesce_terms_loaded(self, create_input_metadatav1):
         terms = [
             {'source': 'MeSH', 'value': 'Cognitive Neuroscience'},
             {'source': 'FAST', 'value': 'Glucagonoma'}
         ]
 
-        serialized_record = create_serialized_record({
+        serialized_record = create_input_metadatav1({
             'mesh_terms': [terms[0]],
             'fast_terms': [terms[1]],
         })
@@ -197,8 +260,8 @@ class TestMetadataSchemaV1(object):
         assert 'fast_terms' not in deserialized_metadata
         assert deserialized_metadata['terms'] == terms
 
-    def test_permissions_loaded(self, create_serialized_record):
-        serialized_record = create_serialized_record({
+    def test_permissions_loaded(self, create_input_metadatav1):
+        serialized_record = create_input_metadatav1({
             'permissions': 'restricted_view'
         })
 
@@ -209,8 +272,8 @@ class TestMetadataSchemaV1(object):
         assert deserialized_metadata['permissions'] == 'restricted_view'
 
     def test_invalid_permissions_returns_errors(
-            self, create_serialized_record):
-        serialized_record = create_serialized_record({
+            self, create_input_metadatav1):
+        serialized_record = create_input_metadatav1({
             'permissions': 'foo_view'
         })
 
@@ -231,3 +294,52 @@ class TestAuthorSchemaV1(object):
         assert 'first_name' in unmarshalled_author.data
         assert 'middle_name' not in unmarshalled_author.errors
         assert 'last_name' in unmarshalled_author.errors
+
+
+class TestResourceTypeSchemaV1(object):
+    def test_general_dataset_fills_specific_dataset(self):
+        resource_type = {
+            'general': 'dataset'
+        }
+
+        unmarshalled_resource_type = ResourceTypeSchemaV1().load(resource_type)
+
+        assert not unmarshalled_resource_type.errors
+        assert 'general' in unmarshalled_resource_type.data
+        assert unmarshalled_resource_type.data['specific'] == 'dataset'
+
+    def test_valid_general_specific_combination_loads(self):
+        resource_type = {
+            'general': 'text resources',
+            'specific': 'letter'
+        }
+
+        unmarshalled_resource_type = ResourceTypeSchemaV1().load(resource_type)
+        loaded_resource_type = unmarshalled_resource_type.data
+
+        assert not unmarshalled_resource_type.errors
+        assert loaded_resource_type['general'] == 'text resources'
+        assert loaded_resource_type['specific'] == 'letter'
+
+    def test_invalid_general_specific_combination_errors(self):
+        resource_type = {
+            'general': 'articles',
+            'specific': 'other'
+        }
+
+        unmarshalled_resource_type = ResourceTypeSchemaV1().load(resource_type)
+
+        assert (
+            unmarshalled_resource_type.errors['_schema'][0] ==
+            'Invalid resource type.'
+        )
+
+    def test_general_specific_combination_maps_to_hierarchy(self):
+        resource_type = {
+            'general': 'text resources',
+            'specific': 'letter'
+        }
+
+        unmarshalled_resource_type = ResourceTypeSchemaV1().load(resource_type)
+        loaded_resource_type = unmarshalled_resource_type.data
+        assert loaded_resource_type['full_hierarchy'] == ['text', 'letter']

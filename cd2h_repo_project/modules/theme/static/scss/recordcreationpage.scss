@@ -15,6 +15,13 @@
     }
   }
 
+  label {
+    cursor: pointer;
+
+    input[type="radio"] {
+      cursor: pointer;
+    }
+  }
 }
 
 .schema-form-array {

@@ -21,7 +21,7 @@ from cd2h_repo_project.modules.records.minters import mint_pids_for_record
 
 # TODO: Figure a way to get a module-level fixture from create_record
 @pytest.fixture
-def serialized_record(create_record):
+def datacite_record(create_record):
     record = create_record(
         {
             'authors': [
@@ -36,7 +36,12 @@ def serialized_record(create_record):
                     'last_name': 'Author',
                     'full_name': 'Author, An',
                 },
-            ]
+            ],
+            'resource_type': {
+                'general': 'multimedia',
+                'specific': 'software or program code',
+                'full_hierarchy': ['software', 'software or program code'],
+            },
         },
         published=False
     )
@@ -50,16 +55,16 @@ def serialized_record(create_record):
 class TestDataCiteV4(object):
     """Test DataCiteV4 serialization"""
 
-    def test_serializes_empty_identifier(self, serialized_record):
+    def test_serializes_empty_identifier(self, datacite_record):
         # Expect empty identifier so that DataCite generates it
         assert (
             '<identifier identifierType="DOI"></identifier>' in
-            serialized_record
+            datacite_record
         )
 
-    def test_serializes_creators(self, serialized_record):
+    def test_serializes_creators(self, datacite_record):
         namespaces = {'default': 'http://datacite.org/schema/kernel-4'}
-        tree = ET.fromstring(serialized_record)
+        tree = ET.fromstring(datacite_record)
         creators = tree.findall(
             './default:creators/default:creator', namespaces
         )
@@ -86,28 +91,29 @@ class TestDataCiteV4(object):
             creators[1].find('default:familyName', namespaces).text == 'Author'
         )
 
-    def test_serializes_titles(self, serialized_record):
-        assert "<titles>\n" in serialized_record
-        assert "<title>A title</title>" in serialized_record
-        assert "</titles>\n" in serialized_record
+    def test_serializes_titles(self, datacite_record):
+        assert "<titles>\n" in datacite_record
+        assert "<title>A title</title>" in datacite_record
+        assert "</titles>\n" in datacite_record
 
-    def test_serializes_publisher(self, serialized_record):
+    def test_serializes_publisher(self, datacite_record):
         assert (
             "<publisher>{}</publisher>".format(
                 html.escape(current_app.config['DOI_PUBLISHER'])
             )
-            in serialized_record
+            in datacite_record
         )
 
-    def test_serializes_publicationYear(self, serialized_record):
+    def test_serializes_publicationYear(self, datacite_record):
         assert (
             "<publicationYear>{}</publicationYear>".format(date.today().year)
-            in serialized_record
+            in datacite_record
         )
 
-    def test_serializes_resourceType(self, serialized_record):
-        # TODO: Adjust if when we provide resource type as an input field
-        assert (
-            '<resourceType resourceTypeGeneral="Dataset">Dataset'
-            '</resourceType>' in serialized_record
-        )
+    def test_serializes_resourceType(self, datacite_record):
+        namespaces = {'default': 'http://datacite.org/schema/kernel-4'}
+        tree = ET.fromstring(datacite_record)
+        resource_type = tree.find('./default:resourceType', namespaces)
+
+        assert resource_type.attrib['resourceTypeGeneral'] == 'Software'
+        assert resource_type.text == 'Software Or Program Code'
