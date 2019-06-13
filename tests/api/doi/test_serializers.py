@@ -49,26 +49,26 @@ def datacite_record(create_record):
     pid = PersistentIdentifier.get('doi', record['id'])
     datacite_record = datacite_v41.serialize(pid, record)
     print(datacite_record)  # Kept for nicer test/debugging experience
-    return datacite_record
+    return ET.fromstring(datacite_record)
 
 
 class TestDataCiteV4(object):
     """Test DataCiteV4 serialization"""
 
+    NAMESPACES = {'default': 'http://datacite.org/schema/kernel-4'}
+
     def test_serializes_empty_identifier(self, datacite_record):
-        # Expect empty identifier so that DataCite generates it
-        assert (
-            '<identifier identifierType="DOI"></identifier>' in
-            datacite_record
+        identifier = datacite_record.find(
+            './default:identifier', self.NAMESPACES
         )
+        assert identifier.attrib['identifierType'] == 'DOI'
+        assert identifier.text == 'DUMMY'
 
     def test_serializes_creators(self, datacite_record):
-        namespaces = {'default': 'http://datacite.org/schema/kernel-4'}
-        tree = ET.fromstring(datacite_record)
-        creators = tree.findall(
+        namespaces = self.NAMESPACES
+        creators = datacite_record.findall(
             './default:creators/default:creator', namespaces
         )
-
         assert len(creators) == 2
         assert (
             creators[0].find('default:creatorName', namespaces).text ==
@@ -92,28 +92,27 @@ class TestDataCiteV4(object):
         )
 
     def test_serializes_titles(self, datacite_record):
-        assert "<titles>\n" in datacite_record
-        assert "<title>A title</title>" in datacite_record
-        assert "</titles>\n" in datacite_record
+        titles = datacite_record.findall(
+            './default:titles/default:title', self.NAMESPACES
+        )
+        assert len(titles) == 1
+        assert titles[0].text == 'A title'
 
     def test_serializes_publisher(self, datacite_record):
-        assert (
-            "<publisher>{}</publisher>".format(
-                html.escape(current_app.config['DOI_PUBLISHER'])
-            )
-            in datacite_record
+        publisher = datacite_record.find(
+            './default:publisher', self.NAMESPACES
         )
+        assert publisher.text == current_app.config['DOI_PUBLISHER']
 
     def test_serializes_publicationYear(self, datacite_record):
-        assert (
-            "<publicationYear>{}</publicationYear>".format(date.today().year)
-            in datacite_record
+        publication_year = datacite_record.find(
+            './default:publicationYear', self.NAMESPACES
         )
+        assert publication_year.text == str(date.today().year)
 
     def test_serializes_resourceType(self, datacite_record):
-        namespaces = {'default': 'http://datacite.org/schema/kernel-4'}
-        tree = ET.fromstring(datacite_record)
-        resource_type = tree.find('./default:resourceType', namespaces)
-
+        resource_type = datacite_record.find(
+            './default:resourceType', self.NAMESPACES
+        )
         assert resource_type.attrib['resourceTypeGeneral'] == 'Software'
         assert resource_type.text == 'Software Or Program Code'
