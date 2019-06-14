@@ -5,6 +5,7 @@
 #
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
+set -e
 
 export E2E=yes
 # Print the image to console!
