@@ -53,7 +53,7 @@ def url_for_record_ui_recid_external(pid_value):
 
 def deposit_links_api_factory(pid, **kwargs):
     """
-    Return, from the API applicaton, the useful URLs related to this record.
+    Return, from the API application, the useful URLs related to this record.
 
     Adapted from https://github.com/zenodo/zenodo
 
@@ -63,8 +63,9 @@ def deposit_links_api_factory(pid, **kwargs):
              (invenio_records_rest/_compat.py). **kwargs indicates this is a
              "new style" link factory.
 
-    :param pid: PersistentIdentifier of the record.
-    :param kwargs: Keyword arguments, key 'record' and value Record is required
+    :param pid: PersistentIdentifier of the deposit.
+    :param kwargs: Keyword arguments, typically contains 'record'. 'record' is
+                   not passed when generating header links.
     """
     record = kwargs.get('record')
     links = _deposit_links_factory(pid)
@@ -78,6 +79,11 @@ def deposit_links_api_factory(pid, **kwargs):
             scheme=current_app.config['PREFERRED_URL_SCHEME'],
             host=current_app.config['SERVER_HOSTNAME'],
             bucket_id=bucket_id,
+        )
+
+    if record:
+        links['record_html'] = url_for_record_ui_recid_external(
+            pid.pid_value
         )
 
     return links
@@ -95,7 +101,7 @@ def deposit_links_ui_factory(pid, **kwargs):
              (invenio_records_rest/_compat.py). **kwargs indicates this is a
              "new style" link factory.
 
-    :param pid: PersistentIdentifier of the record.
+    :param pid: PersistentIdentifier of the deposit.
     :param kwargs: Keyword arguments, key 'record' and value Record is required
     """
     record = kwargs.get('record')

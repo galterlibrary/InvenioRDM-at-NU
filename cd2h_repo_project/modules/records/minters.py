@@ -41,7 +41,7 @@ def mint_pids_for_deposit(deposit_uuid, data):
     recid_field = current_app.config['PIDSTORE_RECID_FIELD']
     data[recid_field] = int(recid_pid.pid_value)
 
-    depid = PersistentIdentifier.create(
+    depid_pid = PersistentIdentifier.create(
         'depid',
         str(recid_pid.pid_value),
         object_type='rec',
@@ -50,11 +50,11 @@ def mint_pids_for_deposit(deposit_uuid, data):
     )
 
     data['_deposit'] = {
-        'id': depid.pid_value,
+        'id': depid_pid.pid_value,
         'status': 'draft',  # because expected by invenio-deposit
     }
 
-    return depid
+    return depid_pid
 
 
 def mint_pids_for_record(record_uuid, data):

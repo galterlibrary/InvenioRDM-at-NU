@@ -98,7 +98,7 @@ def test_record_page_shows_edit_action_if_permitted(
 
     assert len(edit_links) == 1
     pid_value = owned_record['_deposit']['id']
-    assert edit_links[0].get('href') == '/records/{}/edit'.format(pid_value)
+    assert edit_links[0].get('href') == '/deposit/{}'.format(pid_value)
 
     response = client.get('/records/{}'.format(not_owned_record['id']))
     html_tree = html.fromstring(response.get_data(as_text=True))
@@ -165,7 +165,7 @@ def test_edit_record_page_requires_edit_permission(
     record = create_record({'_deposit': {'owners': [user.id]}})
     login_request_and_session(user, client)
 
-    response = client.get('/records/{}/edit'.format(record['_deposit']['id']))
+    response = client.get('/deposit/{}'.format(record['_deposit']['id']))
 
     assert response.status_code == 200
 
@@ -174,7 +174,7 @@ def test_edit_record_page_requires_edit_permission(
     )
     login_request_and_session(another_user, client)
 
-    response = client.get('/records/{}/edit'.format(record['_deposit']['id']))
+    response = client.get('/deposit/{}'.format(record['_deposit']['id']))
 
     assert response.status_code == 403
 
