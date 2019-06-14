@@ -116,3 +116,4 @@ class TestDataCiteV4(object):
         )
         assert resource_type.attrib['resourceTypeGeneral'] == 'Software'
         assert resource_type.text == 'Software Or Program Code'
+        assert False
