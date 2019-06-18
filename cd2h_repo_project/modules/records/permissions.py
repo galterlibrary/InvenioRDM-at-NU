@@ -142,6 +142,15 @@ class RecordPermissions(object):
         """
         return [cls.ALL_VIEW, cls.RESTRICTED_VIEW, cls.PRIVATE_VIEW]
 
+    @classmethod
+    def is_private(cls, record):
+        """Returns if record is private or not.
+
+        Abstracts away permissions implementation and defaults to private if
+        no permissions.
+        """
+        return record.get('permissions', 'private_').startswith('private_')
+
 
 class ViewPermission(object):
     """Gate to allow or not view of a record.

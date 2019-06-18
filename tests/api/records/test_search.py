@@ -257,15 +257,15 @@ class TestRecordsSearch(object):
 
     def test_search_orders_by_bestmatch_desc_if_query_but_no_sort(
             self, client, create_record, es_clear):
-        record1 = create_record({"title": "old record"})
-        record2 = create_record({"title": "More recent record"})
+        record1 = create_record({"title": "record old record old record"})
+        record2 = create_record({"title": "record"})
 
         response = client.get("/records/?q=old+record")
 
         hit1 = response.json['hits']['hits'][0]
-        assert hit1['metadata']['title'] == "old record"
+        assert hit1['metadata']['title'] == "record old record old record"
         hit2 = response.json['hits']['hits'][1]
-        assert hit2['metadata']['title'] == "More recent record"
+        assert hit2['metadata']['title'] == "record"
 
     def test_search_returns_restricted_access_results_to_authenticated_user(
             self, client, create_record, create_user, es_clear):

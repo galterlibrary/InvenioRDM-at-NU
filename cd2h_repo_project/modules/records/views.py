@@ -17,7 +17,7 @@ from invenio_records_ui.signals import record_viewed
 from cd2h_repo_project.modules.records.links import deposit_links_ui_factory
 from cd2h_repo_project.modules.records.marshmallow.json import LICENSES
 from cd2h_repo_project.modules.records.permissions import (
-    EditMetadataPermission
+    EditMetadataPermission, RecordPermissions
 )
 
 blueprint = Blueprint(
@@ -152,3 +152,9 @@ def permissions_to_access_name(permissions):
         return 'Restricted Access'
     else:
         return 'Private Access'
+
+
+@blueprint.app_template_filter('is_private')
+def is_private(record):
+    """Return True/False corresponding to private or not."""
+    return RecordPermissions.is_private(record)

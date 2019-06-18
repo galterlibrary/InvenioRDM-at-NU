@@ -34,7 +34,7 @@ def to_doi_field(record):
         doi_url = doi_url_for(doi_value)
         return '<a href="{0}">{0}</a>'.format(doi_url)
     elif datetime.utcnow() < record.model.created + timedelta(hours=24):
-        return 'Minting the DOI...'
+        return 'Minting the DOI... (refresh to update)'
     else:
         return (
             'There was an issue minting the DOI. '
