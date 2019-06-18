@@ -544,7 +544,7 @@ DEPOSIT_RECORDS_UI_ENDPOINTS = {
 DEPOSIT_UI_INDEX_URL = '/personal-records'
 """The UI endpoint for the index page."""
 
-DEPOSIT_UI_INDEX_TEMPLATE = 'records/index.html'
+DEPOSIT_UI_INDEX_TEMPLATE = 'records/personal_records_search.html'
 """Template for list of deposits page."""
 
 DEPOSIT_UI_NEW_URL = '/records/new'
@@ -562,7 +562,7 @@ DEPOSIT_UI_JSTEMPLATE_ALERT = 'templates/records/alert.html'
 DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/records/files_list.html'
 """Template for <invenio-files-list>."""
 
-DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/records/own_results.html'
+DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/search/personal_results.html'
 """Template for <invenio-search-results> of personal records."""
 
 DEPOSIT_UI_RESPONSE_MESSAGES = {
