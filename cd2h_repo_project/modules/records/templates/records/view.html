@@ -88,6 +88,9 @@
         <i class="fa fa-pencil-square-o"></i> Edit
       </a>
       {% endif %}
+      <a id="cite-action" class="btn btn-default btn-block" data-toggle="modal" data-target="#citationModal">
+        <i class="fa fa-quote-left"></i> Cite
+      </a>
     </div>
 
     <div class="col-md-8">
@@ -142,6 +145,45 @@
       </div>
 
     </div>
+
+    {# Modals #}
+    <div id="citationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title"><b>Cite "{{ record.title }}"</b></h3>
+          </div>
+
+          <div class="modal-body">
+            <ul>
+              {% for cite in [
+                {'title': 'American Psychological Association (APA)', 'style': 'apa'},
+                {'title': 'Chicago', 'style': 'chicago-fullnote-bibliography'},
+                {'title': 'Harvard', 'style': 'harvard7de'},
+                {'title': 'Modern Language Association (MLA)', 'style': 'modern-language-association-8th-edition'},
+                {'title': 'Vancouver', 'style': 'vancouver'}] %}
+              <li>
+                <h4><b>{{ cite.title }}</b></h4>
+                <p>
+                  {{ record | citation(pid, cite.style) }}
+                </p>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+{#           <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+ #}
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
   </div>
 </div>

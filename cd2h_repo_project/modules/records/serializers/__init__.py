@@ -29,6 +29,7 @@ json_v1_response = record_responsify(json_v1, 'application/json')
 json_v1_search = search_responsify(json_v1, 'application/json')
 
 __all__ = (
+    'citeproc_v1',
     'json_v1',
     'json_v1_response',
     'json_v1_search',

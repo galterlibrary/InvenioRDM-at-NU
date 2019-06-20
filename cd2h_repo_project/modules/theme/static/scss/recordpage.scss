@@ -14,3 +14,40 @@
     color: #737373;
   }
 }
+
+.modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#citationModal {
+  .modal-body {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    ul {
+      list-style: none;
+      padding-left: 0px;
+      padding-right: 0px;
+
+      li {
+        margin-bottom: 20px;
+      }
+    }
+
+  }
+}
