@@ -1,0 +1,96 @@
+Group,Name,Hierarchy,DataCite,DataCite Notes,CSL
+Dataset,Dataset,dataset,Dataset,,dataset
+Multimedia,Animation,"image, moving image",Audiovisual,"per DataCite definition, visual representations giving an impression of motion",motion_picture
+Multimedia,Audio Recording,sound,Sound,,
+Multimedia,Database,"software, research software",Software,,
+Multimedia,Postcard,"image, still image",Image,,
+Multimedia,Social media,interactive resource,InteractiveResource,,
+Multimedia,Software or Program Code,software,Software,,article
+Multimedia,Video,"image, moving image",Audiovisual,"per DataCite definition, visual representations giving an impression of motion",motion_picture
+Multimedia,Website,interactive resource,InteractiveResource,,
+Images,Architectural Drawing,"image, still image",Image,,graphic
+Images,Chart,"image, still image",Image,,figure
+Images,Drawing,"image, still image",Image,,graphic
+Images,Map,"image, cartographic material",Image,,graphic
+Images,Photograph,"image, still image",Image,,graphic
+Images,Pictorial Work,"image, still image",Image,,graphic
+Images,Portrait,"image, still image",Image,,graphic
+Learning Objects,Examination Questions,learning object,InteractiveResource,"per definition of Interactive Resource, requires interation to be understood or experienced",
+Learning Objects,Lecture,learning object,InteractiveResource,"per definition of Interactive Resource, requires interation to be understood or experienced",
+Learning Objects,Lecture Notes,learning object,InteractiveResource,"per definition of Interactive Resource, requires interation to be understood or experienced",article
+Learning Objects,Lesson,learning object,InteractiveResource,"per definition of Interactive Resource, requires interation to be understood or experienced",speech
+Learning Objects,Presentation,learning object,InteractiveResource,"per definition of Interactive Resource, requires interation to be understood or experienced",
+Learning Objects,Problems and Exercises,learning object,InteractiveResource,"per definition of Interactive Resource, requires interation to be understood or experienced",
+Text Resources,Abstract,text,Text,,
+Text Resources,Advertisement,text,Text,,
+Text Resources,Bibliography,text,Text,,
+Text Resources,Biobibliography,text,Text,,
+Text Resources,Comment,text,Text,,
+Text Resources,Correspondence,text,Text,,
+Text Resources,Fictional Work,text,Text,,
+Text Resources,Form,text,Text,,
+Text Resources,Guideline,text,Text,,
+Text Resources,Letter,text,Text,,
+Text Resources,Manuscript,text,Text,,
+Text Resources,Patent,text,Text,,patent
+Text Resources,Patient Education Handout,text,Text,,
+Text Resources,Personal Narrative,text,Text,,
+Text Resources,Poetry,text,Text,,
+Text Resources,Preprint,text,Text,,article
+Text Resources,Program,text,Text,,
+Text Resources,Resource Guide,"text, guideline",Text,,
+Text Resources,Software documentation,"text, technical documentation",Text,,article
+Text Resources,Speech,text,Text,,
+Text Resources,Technical Documentation,text,Text,,
+Text Resources,Working Paper,text,Text,,article
+Books,Account Book,"text, book",Text,,book
+Books,Almanac,"text, book",Text,,book
+Books,Atlas,"text, book",Text,,book
+Books,Biography,"text, book",Text,,book
+Books,Book,text,Text,,book
+Books,Catalog,"text, book",Text,,book
+Books,Diary,"text, book",Text,,book
+Books,Handbook,"text, book",Text,,book
+Books,Part of Book,"text, book",Text,,chapter
+Conference Objects,Conference Paper,"text, conference object, conference proceedings",Text,,paper-conference
+Conference Objects,Conference Presentation,"text, conference object, conference proceedings",InteractiveResource,,speech
+Conference Objects,Conference Proceeding,"text, conference object",Text,,
+Conference Objects,Congress,"text, conference object, conference proceedings",Text,,
+Conference Objects,Meeting Abstract,"text, conference object",Text,,
+Conference Objects,Poster,"text, conference object, conference proceedings",Text,,graphic
+Periodicals,Journal,"text, periodical",Text,,
+Periodicals,Magazine,"text, periodical",Text,,
+Periodicals,Newsletter,"text, periodical",Text,,
+Periodicals,Newspaper,"text, periodical",Text,,
+Articles,Book Review,"text, periodical, journal, contribution to journal, journal article",Text,,
+Articles,Data Paper,"text, periodical, journal, contribtion to journal, journal article",DataPaper,,
+Articles,Editorial,"text, periodical, journal, contribtion to journal",Text,,
+Articles,Journal Article,"text, periodical, journal, contribtion to journal",Text,,article-journal
+Articles,Letter to the editor,"text, periodical, journal, contribution to journal",Text,,
+Articles,Newspaper Article,"text, periodical, newspaper",Text,,
+Articles,Research Paper,"text, study, study documentation",Text,,
+Articles,Retraction,"text, periodical, journal, contribution to journal",Text,,
+Articles,Review Article,"text, periodical, journal, contribution to journal, journal article",Text,,
+Articles,Software Paper,"text, periodical, journal, contribution to journal, journal article",Text,,
+Other,Annual Report,"text, report",Text,,article
+Other,Capstone Project,"text, report",Text,,article
+Other,Interview,"sound, audio recording",Sound,,
+Other,Laboratory Manual,text,Text,,
+Other,Table,"image, still image",Image,,
+Other,Technical Report,"text, report",Text,,article
+Other,Other,(no hierarchy - allow a user-supplied 'other'?),Other,,article
+Archival Items,Collection,archival item,Collection,,report
+Archival Items,Ephemera,archival item,Other,,
+Archival Items,Exhibitions,archival item,Collection,Exhibitions by definition are collections of materials for display,report
+Study Documentation,Case Reports,"text, study, study documentation",Text,,article
+Study Documentation,Clinical Study,"text, study",Text,,
+Study Documentation,Clinical Trial,"text, study",Text,,
+Study Documentation,Comparative Study,"text, study",Text,,
+Study Documentation,Data Management Plan,"text, study, project deliverable",Text,,report
+Study Documentation,Evaluation Study,"text, study",Text,,
+Study Documentation,Research Proposal,"text, study, study documentation",Text,,article
+Study Documentation,Statistics,"text, study, study documentation",Text,,
+Theses and Dissertations,Academic Dissertations,"text, thesis, doctoral thesis",Text,,
+Theses and Dissertations,"Thesis, Bachelor","text, thesis",Text,,thesis
+Theses and Dissertations,"Thesis, Doctoral","text, thesis",Text,,thesis
+Theses and Dissertations,"Thesis, Masters","text, thesis",Text,,thesis

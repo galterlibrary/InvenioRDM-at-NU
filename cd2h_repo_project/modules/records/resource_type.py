@@ -158,24 +158,20 @@ class ResourceType(object):
 
 
 class ResourceTypeHierarchy(object):
-    """Resource Type Hierarchy Mapping."""
+    """Hierarchy Mapping."""
 
     def __init__(self):
         """Constructor."""
         self.filename = join(
-            dirname(realpath(__file__)), 'data', 'resource_type_hierarchy.csv'
+            dirname(realpath(__file__)), 'data', 'resource_type_mapping.csv'
         )
         with open(self.filename) as f:
             reader = csv.DictReader(f)
             self.map = {
-                (
-                    row['Resource Type Group'].lower(),
-                    row['Resource Type Name'].lower()
-                ):
+                (row['Group'].lower(), row['Name'].lower()):
                 [
-                    e.strip().lower() for e in
-                    row['Resource Type Hierarchy'].split(",")
-                ] + [row['Resource Type Name'].lower()]
+                    e.strip().lower() for e in row['Hierarchy'].split(",")
+                ] + [row['Name'].lower()]
                 for row in reader
             }
 

@@ -21,16 +21,13 @@ class DataCiteResourceTypeMap(object):
         """Constructor."""
         self.filename = join(
             dirname(dirname(realpath(__file__))),
-            'records', 'data', 'resource_type_hierarchy.csv'
+            'records', 'data', 'resource_type_mapping.csv'
         )
         with open(self.filename) as f:
             reader = csv.DictReader(f)
             self.map = {
-                (
-                    row['Resource Type Group'].lower(),
-                    row['Resource Type Name'].lower()
-                ):
-                row['DataCite ResourceTypeGeneral'].strip()
+                (row['Group'].lower(), row['Name'].lower()):
+                row['DataCite'].strip()
                 for row in reader
             }
 
