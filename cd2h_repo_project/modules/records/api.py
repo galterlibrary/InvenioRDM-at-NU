@@ -18,6 +18,7 @@ from invenio_records_files.api import Record as _Record
 from invenio_records_files.models import RecordsBuckets
 from werkzeug.local import LocalProxy
 
+from .minters import mint_pids_for_deposit
 from .signals import menrva_record_published
 
 current_jsonschemas = LocalProxy(
@@ -92,6 +93,15 @@ class Deposit(_Deposit):
         'doi',
         '_files'
     )
+
+    deposit_minter = staticmethod(mint_pids_for_deposit)
+    """Static method used to mint the deposit PID.
+
+    NOTE: In production this is not called, because minting is done in
+          invenio_records_rest/views.py::RecordsListResource.post().
+          In tests, it is convenient and called (and is ultimately its more
+          appropriate location in my opinion).
+    """
 
     @classmethod
     def fetch_deposit(cls, record):

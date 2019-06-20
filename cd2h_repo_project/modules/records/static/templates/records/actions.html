@@ -1,4 +1,6 @@
 <div ng-hide="recordsVM.invenioRecordsAlert.type == 'success' && recordsVM.invenioRecordsArgs.templateParams.responseParams[recordsVM.invenioRecordsAlert.action].hide">
+  <!-- TODO: Investigate if 2 top-level divs can be collapsed into one -->
+  <!-- draft has been saved yet -->
   <div ng-show="recordsVM.invenioRecordsEndpoints.self">
     <ul class="list-inline text-right">
       <li>
@@ -9,7 +11,7 @@
       </li>
       <li>
         <button ng-disabled="depositionForm.$invalid || depositionForm.$dirty || recordsVM.invenioRecordsLoading"
-                class="btn btn-success" ng-click="recordsVM.actionHandler(['publish', 'POST'])"
+                class="btn btn-success" ng-click="recordsVM.actionHandler(['publish', 'POST'], 'record_html')"
                 title="You must save your changes before you can publish">
           Publish Record
         </button>
@@ -17,6 +19,7 @@
     </ul>
   </div>
 
+  <!-- draft has not been saved yet -->
   <div ng-show="!recordsVM.invenioRecordsEndpoints.self">
     <ul class="list-inline text-right">
       <li>

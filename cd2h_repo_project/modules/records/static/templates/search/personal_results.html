@@ -6,7 +6,7 @@
         <i class="fa fa-file-text-o title-icon" title="published" aria-hidden="true"></i>{{ record.metadata.title }}
       </a>
       <a ng-if="record.metadata.type == 'draft'"
-         target="_self" ng-href="/records/{{ record.metadata._deposit.id }}/edit">
+         target="_self" ng-href="/deposit/{{ record.metadata._deposit.id }}">
         <i class="fa fa-pencil-square-o title-icon" title="draft" aria-hidden="true"></i>{{ record.metadata.title }}
       </a>
     </h4>
@@ -22,19 +22,19 @@
       </small>
     </p>
 
-    <p>
-      <ul class="list-inline authors">
-        <li>
-          <i class="fa fa-user" title="published" aria-hidden="true"></i>&nbsp;{{ record.metadata.author }}
-        </li>
-      </ul>
-    </p>
+    <ul class="list-inline authors">
+      <li ng-repeat='author in record.metadata.authors'>
+        <!-- TODO: ORCID or other icon -->
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <span class="text-muted">{{author.last_name}}, {{author.first_name}} {{author.middle_name}}</span>
+      </li>
+    </ul>
 
     <p class="description">
       {{ record.metadata.description }}
     </p>
 
-    <div class="clearfix"></div>
+    <!-- <div class="clearfix"></div> -->
 
     <hr />
   </div>

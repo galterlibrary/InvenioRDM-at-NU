@@ -90,6 +90,7 @@ setup(
         ],
         'invenio_pidstore.minters': [
             'cd2h_recid = cd2h_repo_project.modules.records.minters:mint_pids_for_record',
+            'cd2h_depid = cd2h_repo_project.modules.records.minters:mint_pids_for_deposit'
         ],
     },
     classifiers=[

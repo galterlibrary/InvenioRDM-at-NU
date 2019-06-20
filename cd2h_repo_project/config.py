@@ -248,7 +248,7 @@ APP_DEFAULT_SECURE_HEADERS = {
 RECORDS_REST_ENDPOINTS = {
     'recid': {
         'pid_type': 'recid',
-        'pid_minter': 'recid',
+        'pid_minter': 'recid',  # Not used
         'pid_fetcher': 'recid',
         'default_endpoint_prefix': True,
         'search_class': RecordsSearch,
@@ -474,10 +474,13 @@ _PID = (
     'pid(depid,record_class="cd2h_repo_project.modules.records.api:Deposit")'
 )
 
+# TODO: Grand: Merge DEPOSIT_REST_ENDPOINTS and RECORDS_REST_ENDPOINTS
+#       Maintaining their inter-relationship is too much effort and they are
+#       the same. But this is a lot of effort.
 DEPOSIT_REST_ENDPOINTS = {
     'depid': {
         'pid_type': 'depid',
-        'pid_minter': 'deposit',
+        'pid_minter': 'cd2h_depid',
         'pid_fetcher': 'deposit',
         'record_class': 'cd2h_repo_project.modules.records.api:Deposit',
         'record_loaders': {
@@ -527,7 +530,7 @@ DEPOSIT_RECORDS_UI_ENDPOINTS = {
     # NOTE: only import path strings are accepted
     'depid': {
         'pid_type': 'depid',
-        'route': '/records/<pid_value>/edit',
+        'route': '/deposit/<pid_value>',  # To be consistent with JS route
         'template': 'records/edit.html',
         'record_class': 'cd2h_repo_project.modules.records.api:Deposit',
         'view_imp': 'cd2h_repo_project.modules.records.views.edit_view_method',
@@ -541,7 +544,7 @@ DEPOSIT_RECORDS_UI_ENDPOINTS = {
 DEPOSIT_UI_INDEX_URL = '/personal-records'
 """The UI endpoint for the index page."""
 
-DEPOSIT_UI_INDEX_TEMPLATE = 'records/index.html'
+DEPOSIT_UI_INDEX_TEMPLATE = 'records/personal_records_search.html'
 """Template for list of deposits page."""
 
 DEPOSIT_UI_NEW_URL = '/records/new'
@@ -559,7 +562,7 @@ DEPOSIT_UI_JSTEMPLATE_ALERT = 'templates/records/alert.html'
 DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/records/files_list.html'
 """Template for <invenio-files-list>."""
 
-DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/records/own_results.html'
+DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/search/personal_results.html'
 """Template for <invenio-search-results> of personal records."""
 
 DEPOSIT_UI_RESPONSE_MESSAGES = {
