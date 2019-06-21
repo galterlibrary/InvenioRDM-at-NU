@@ -123,6 +123,7 @@
           <dt><span><i class="fa fa-certificate"></i></span> License</dt>
           <dd>{{ record.license | license_value_to_name }}</dd>
 
+          {% if record.terms %}
           <dt><span><i class="fa fa-tag"></i></span> Subjects</dt>
           <dd>
             <dt>Medical (<abbr title="Medical Subject Headings">MeSH</abbr>)</dt>
@@ -139,6 +140,7 @@
               {% endfor %}
             </dd>
           </dd>
+          {% endif %}
 
         </dl>
       </div>
