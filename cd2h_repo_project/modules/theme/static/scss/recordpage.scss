@@ -46,7 +46,17 @@
 
       li {
         margin-bottom: 20px;
+
+        .clipboard-btn {
+          float: right;
+          margin-top: -10px;
+          margin-right: -10px;
+          border-top-left-radius: 0px;
+          border-bottom-right-radius: 0px;
+          border-color: rgb(227, 227, 227);
+        }
       }
+
     }
 
   }

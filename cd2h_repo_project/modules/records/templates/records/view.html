@@ -79,8 +79,6 @@
     <div class="col-md-4">
       {%- include "records/files_list.html" %}
 
-      <br>
-
       {# Actions #}
       {% if current_user|has_edit_metadata_permission(record) %}
       <a id="edit-action" class="btn btn-default btn-block"
@@ -88,6 +86,7 @@
         <i class="fa fa-pencil-square-o"></i> Edit
       </a>
       {% endif %}
+
       <a id="cite-action" class="btn btn-default btn-block" data-toggle="modal" data-target="#citationModal">
         <i class="fa fa-quote-left"></i> Cite
       </a>
@@ -147,7 +146,7 @@
     </div>
 
     {# Modals #}
-    <div id="citationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div id="citationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="citationModalTitle">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
 
@@ -155,7 +154,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h3 class="modal-title"><b>Cite "{{ record.title }}"</b></h3>
+            <h3 id="citationModalTitle" class="modal-title"><b>Cite "{{ record.title }}"</b></h3>
           </div>
 
           <div class="modal-body">
@@ -168,19 +167,21 @@
                 {'title': 'Vancouver', 'style': 'vancouver'}] %}
               <li>
                 <h4><b>{{ cite.title }}</b></h4>
-                <p>
-                  {{ record | citation(pid, cite.style) }}
-                </p>
+                <div class="well well-sm">
+                  <button
+                   class="btn btn-default clipboard-btn"
+                   data-clipboard-target="#citation-{{ cite.style }}"
+                   data-toggle="tooltip" data-placement="bottom" title="Copied!"
+                   data-trigger="click">
+                    <i class="fa fa-clipboard"></i>
+                  </button>
+                  <span id="citation-{{ cite.style }}">{{ record | citation(pid, cite.style) | trim }}</span>
+                </div>
               </li>
               {% endfor %}
             </ul>
           </div>
 
-{#           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
- #}
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
@@ -188,3 +189,16 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block javascript %}
+  {% assets "cd2hrepo_view_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+  {{ super() }}
+  <script type="text/javascript">
+    const clip = new ClipboardJS('.clipboard-btn');
+    const $tooltip = $('[data-toggle="tooltip"]');
+    $tooltip.tooltip();  // Initializes tooltips
+    $tooltip.on('show.bs.tooltip', () => {
+      $('.tooltip').not(this).remove();
+    });
+  </script>
+{% endblock %}
