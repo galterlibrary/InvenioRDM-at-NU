@@ -8,4 +8,7 @@
 FROM haproxy:1.8
 RUN mkdir -p /usr/local/var/lib/haproxy/
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
-COPY haproxy_cert.pem /usr/local/etc/cert.pem
+# NOTE: You should have retrieved this file from your colleagues and Ansible
+#       should have placed it in this folder.
+#       Replace by haproxy_cert.pem (on the left only) for quick tire quicking.
+COPY private.pem /usr/local/etc/cert.pem

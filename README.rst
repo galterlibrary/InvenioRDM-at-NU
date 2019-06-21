@@ -256,63 +256,57 @@ To make the change immediate on a live machine:
     sysctl -w vm.max_map_count=262144
 
 
-Production (RHEL setup)
-=======================
+Production
+==========
 
-Enable SSH agent forwarding for <staging IP> and <production IP> on
-your own machine:
+1.  Enable SSH agent forwarding for <staging IP> and <production IP> on
+    your own machine:
 
-.. code-block:: console
+    .. code-block:: console
 
-    Host <staging IP>
-        ForwardAgent yes
+        Host <staging IP>
+            ForwardAgent yes
 
-    Host <production IP>
-        ForwardAgent yes
+        Host <production IP>
+            ForwardAgent yes
 
-Add the missing ``hosts`` file in ``deployment/ansible/`` and populate it with
-the appropriate IPs:
+2.  Add the missing ``hosts`` file in ``deployment/ansible/`` and populate it
+    with the appropriate IPs:
 
-.. code-block:: console
+    .. code-block:: console
 
-    stage ansible_host=<staging IP> ansible_user=deploy
-    production ansible_host=<production IP> ansible_user=deploy
+        stage ansible_host=<staging IP> ansible_user=deploy
+        production ansible_host=<production IP> ansible_user=deploy
 
-Add the missing ``daemon.json`` file in ``deployment/ansible/docker``
-and populate it with your DNS IPs
+3.  Add the missing ``daemon.json`` file in ``deployment/ansible/docker``
+    and populate it with your DNS IPs
 
-.. code-block:: console
+    .. code-block:: console
 
-    {
-      "live-restore": true,
-      "group": "dockerroot",
-      "dns": [<your DNS IPs>, "208.67.222.222", "8.8.8.8"]
-    }
+        {
+          "live-restore": true,
+          "group": "dockerroot",
+          "dns": [<your DNS IPs>, "208.67.222.222", "8.8.8.8"]
+        }
 
-Finally, deploy the site via the ``scripts/deploy`` script :
+4.  Get your SSL certificates and private keys (`{stage, production}.cer`,
+    `{stage, production}.key` and `{stage, production}.pem` files) from your
+    colleagues and place them in `deployment/ansible/`.
 
-.. code-block:: console
+5.  Create `stage.env` and `production.env` in `deployment/ansible/` for stage
+    and production specific environment variables. Make sure to at least
+    override `INVENIO_SECRET_KEY` in each.
 
-    $ pipenv run ./scripts/deploy stage master
-    # For another <host> and <branch>
-    $ pipenv run ./scripts/deploy <host> <branch>
+6.  Finally, deploy the site via the ``scripts/deploy`` script:
+
+    .. code-block:: console
+
+        $ pipenv run ./scripts/deploy stage master
+        # For another <host> and <branch>
+        $ pipenv run ./scripts/deploy <host> <branch>
 
 
 Subsequent Deployments (updates)
 --------------------------------
 
-TODO: Automate updates
-
-1.  ssh into production machine
-2.  Run update script:
-
-    .. code-block:: console
-
-        docker exec -it cd2h-repo-project_web-ui_1 /bin/bash
-        ./scripts/update
-
-    This script should:
-
-    * run DB migrations
-    * run indexing updates
-    * install missing requirements
+1.  `pipenv run ./scripts/deploy <host> <branch>`

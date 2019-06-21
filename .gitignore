@@ -66,12 +66,16 @@ target/
 # Vim swapfiles
 .*.sw?
 
-# Configuration files
+# Deployment files
 *.env
 !default.env
 deployment/ansible/hosts
 deployment/ansible/docker/daemon.json
 deployment/ansible/playbook.retry
+docker/nginx/ssl.conf
+*.key
+*.cer
+*.pem
 
 # SublimeText
 *.sublime-*
