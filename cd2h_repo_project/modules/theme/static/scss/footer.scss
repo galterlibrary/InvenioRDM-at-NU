@@ -12,7 +12,7 @@
   word-wrap: break-word;
   position: absolute;
   bottom: 0;
-  height: 300px;
+  height: 335px;
 
   .container .row {
     padding-top: 2.16667%;
@@ -99,15 +99,10 @@
     width: 1px;
   }
 
-  .coar-logo {
-    padding: 0;
-
-    img {
-      filter: drop-shadow(#fff 1px 1px 5px);
-    }
-
-    a {
-      padding: 0;
-    }
+  .logo img {
+    background: white;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
   }
 }
