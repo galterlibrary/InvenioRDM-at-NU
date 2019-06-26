@@ -657,3 +657,8 @@ LDAPCLIENT_USE_SSL = True
 LDAPCLIENT_BIND_BASE = 'ou=people,dc=northwestern,dc=edu'
 LDAPCLIENT_SEARCH_BASE = 'dc=northwestern,dc=edu'
 LDAPCLIENT_SERVER_PORT = 636
+
+# Invenio-admin + Flask-admin
+# ==================
+ADMIN_APPNAME = 'menRva'
+ADMIN_BASE_TEMPLATE = 'cd2hrepo_theme/page_admin.html'
