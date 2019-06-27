@@ -15,6 +15,7 @@ from cd2h_repo_project.modules.records.api import Deposit
 from cd2h_repo_project.modules.records.links import (
     url_for_record_ui_recid_external
 )
+from cd2h_repo_project.modules.records.permissions import RecordPermissions
 from cd2h_repo_project.modules.records.resolvers import record_resolver
 
 
@@ -34,6 +35,34 @@ def register_doi(recid_pid_value):
     This asynchronous task mints a DOI with the external service and
     stores it in the local doi PID. It will retry a `max_retries` number of
     times.
+
+    If a new record is private, then the landing URL is not provided, so that
+    the DOI is in 'draft' mode on DataCite.
+    TODO: If an old public record is made private, remove its DOI from DataCite
+          search. This is not a big need though since the DOI link will still
+          resolve.
+
+    Summary of states:
+
+    'draft':
+        * has a non-resolvable (no landing page) DOI
+        * is not indexed in DataCite search
+        * may not even have metadata
+        * via MDS API: obtained by not assigning a landing page to a record
+
+    'registered':
+        * has a resolvable (landing page) DOI
+        * has metadata
+        * is indexed in DataCite search
+        * via MDS API: obtained by API call on 'findable' record
+
+    'findable':
+        * has a resolvable (landing page) DOI
+        * has metadata
+        * is indexed in DataCite search
+        * via MDS API: obtained by assigning a landing page to a record
+
+    Refer to [DataCite states](https://support.datacite.org/docs/doi-states).
 
     `default_retry_delay` is in seconds.
 
@@ -58,17 +87,20 @@ def register_doi(recid_pid_value):
             url=current_app.config['PIDSTORE_DATACITE_URL']
         )
 
-        # Mint DOI
+        # Update DataCite metadata and let DataCite mint new DOI if unknown DOI
         serialized_record = datacite_v41.serialize(doi_pid, record)
         result = client.metadata_post(serialized_record)
+        minted_doi = extract_doi(result)
 
-        # When minting for the first time, we need to associate the
-        # record's page to its metadata record on Datacite
-        if doi_pid.is_new():
-            minted_doi = extract_doi(result)
+        if not RecordPermissions.is_private(record):
             landing_url = url_for_record_ui_recid_external(recid_pid_value)
             client.doi_post(minted_doi, landing_url)
 
+        # TODO: elif is private now, but previous version was not,
+        #       make record 'registered' on DataCite.
+        #       Dependent on versioning and PID status logic.
+
+        if doi_pid.is_new():
             # Update doi_pid
             doi_pid.pid_value = minted_doi
             doi_pid.register()

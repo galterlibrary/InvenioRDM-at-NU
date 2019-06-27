@@ -111,6 +111,9 @@
 
           <dt>Digital Object Identifier (DOI)</dt>
           <dd>{{ record | to_doi_field | safe }}</dd>
+          {% if record | is_private %}
+          <dd class="metadata-help">If the record was never made public, this link will not resolve.</dd>
+          {% endif %}
 
           <dt>Resource Type</dt>
           <dd>{{ record.resource_type.general.title() }} / {{ record.resource_type.specific.title() }}</dd>

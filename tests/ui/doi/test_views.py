@@ -12,7 +12,7 @@ from cd2h_repo_project.modules.doi.views import to_doi_field
         ('<a href="https://doi.org/10.5072/qwer-tyui">'
          'https://doi.org/10.5072/qwer-tyui</a>')
     ),
-    ('', False, 'Minting the DOI...'),
+    ('', False, 'Minting the DOI... (refresh to update)'),
     (
         '',
         True,

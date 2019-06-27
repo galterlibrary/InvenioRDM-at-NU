@@ -158,3 +158,15 @@ def test_view_permission_factory(
     permission = view_permission_factory(record)
 
     assert permission.can() == allowed
+
+
+@pytest.mark.parametrize(
+    'record, expected',
+    [
+        ({}, True),
+        ({'permissions': 'private_view'}, True),
+        ({'permissions': 'restricted_view'}, False),
+    ]
+)
+def test_is_private(record, expected):
+    assert RecordPermissions.is_private(record) is expected
