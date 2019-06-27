@@ -5,7 +5,7 @@
     under the terms of the MIT License; see LICENSE file for more details.
 
 ===================
- menRva
+ InvenioRDM
 ===================
 
 Invenio-based Digital Library for the CD2H
