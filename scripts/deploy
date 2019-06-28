@@ -18,5 +18,5 @@ fi
 echo "Deploying ${BRANCH} to ${HOST}"
 
 cd deployment/ansible
-ansible-playbook playbook.yml --extra-vars "deploy_host=${HOST} deploy_branch=${BRANCH}" "${OPTIONS}"
+ansible-playbook playbook.yml --extra-vars "deploy_host=${HOST} deploy_branch=${BRANCH}" ${OPTIONS}
 cd -
