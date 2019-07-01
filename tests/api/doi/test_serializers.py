@@ -12,7 +12,6 @@ import xml.etree.ElementTree as ET
 from datetime import date
 
 import pytest
-from flask import current_app
 from invenio_pidstore.models import PersistentIdentifier
 
 from cd2h_repo_project.modules.doi.serializers import datacite_v41
@@ -98,11 +97,11 @@ class TestDataCiteV4(object):
         assert len(titles) == 1
         assert titles[0].text == 'A title'
 
-    def test_serializes_publisher(self, datacite_record):
+    def test_serializes_publisher(self, config, datacite_record):
         publisher = datacite_record.find(
             './default:publisher', self.NAMESPACES
         )
-        assert publisher.text == current_app.config['DOI_PUBLISHER']
+        assert publisher.text == config['DOI_PUBLISHER']
 
     def test_serializes_publicationYear(self, datacite_record):
         publication_year = datacite_record.find(

@@ -248,7 +248,7 @@ class TestMenRvaJSONSerializer(object):
 class TestCSLSerializer(object):
     """Citation serializer tests."""
 
-    def test_apa_citation(self, create_record):
+    def test_apa_citation(self, config, create_record):
         """Integration test with the citation serializer.
 
         This validates we are passing the right input and getting a citation
@@ -285,9 +285,10 @@ class TestCSLSerializer(object):
 
         assert citation_str == (
             "Doe, J., & Smith, J. ({year}). "
-            "A title [Data set]. menRva. Galter Health Sciences Library "
-            "& Learning Center. http://doi.org/10.5072/qwer-tyui".format(
-                year=from_isodate(record.created).year)
+            "A title [Data set]. {publisher}. "
+            "http://doi.org/10.5072/qwer-tyui".format(
+                year=from_isodate(record.created).year,
+                publisher=config['DOI_PUBLISHER'])
         )
 
     @pytest.mark.parametrize('general, specific, expected', [
