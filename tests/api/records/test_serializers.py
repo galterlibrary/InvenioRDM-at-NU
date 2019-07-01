@@ -1,6 +1,11 @@
+from datetime import date
+
+import pytest
+from invenio_formatter.filters.datetime import from_isodate
 from invenio_pidstore.models import PersistentIdentifier
 
-from cd2h_repo_project.modules.records.serializers import json_v1
+from cd2h_repo_project.modules.records.marshmallow import CSLRecordSchemaV1
+from cd2h_repo_project.modules.records.serializers import citeproc_v1, json_v1
 from cd2h_repo_project.modules.records.serializers.json import (
     MenRvaJSONSerializer
 )
@@ -238,3 +243,104 @@ class TestMenRvaJSONSerializer(object):
             "doc_count_error_upper_bound": 0,
             "sum_other_doc_count": 0
         }
+
+
+class TestCSLSerializer(object):
+    """Citation serializer tests."""
+
+    def test_apa_citation(self, config, create_record):
+        """Integration test with the citation serializer.
+
+        This validates we are passing the right input and getting a citation
+        from the underlying library. Formatting of the citation is left to the
+        3rd-party citeproc-py library.
+        """
+        record = create_record({
+            'authors': [
+                {
+                    'first_name': 'Jane',
+                    'middle_name': 'Rachel',
+                    'last_name': 'Doe',
+                    'full_name': 'Doe, Jane Rachel'
+                },
+                {
+                    'first_name': 'John',
+                    'last_name': 'Smith',
+                    'full_name': 'Smith, John'
+                }
+            ],
+            'resource_type': {
+                'general': 'dataset',
+                'specific': 'dataset',
+                'full_hierarchy': ['dataset']
+            }
+        })
+        record['doi'] = '10.5072/qwer-tyui'
+        pid = PersistentIdentifier.get(
+            record['_deposit']['pid']['type'],
+            record['_deposit']['pid']['value'],
+        )
+
+        citation_str = citeproc_v1.serialize(pid, record, style='apa')
+
+        assert citation_str == (
+            "Doe, J., & Smith, J. ({year}). "
+            "A title [Data set]. {publisher}. "
+            "http://doi.org/10.5072/qwer-tyui".format(
+                year=from_isodate(record.created).year,
+                publisher=config['DOI_PUBLISHER'])
+        )
+
+    @pytest.mark.parametrize('general, specific, expected', [
+        ('images', 'photograph', 'graphic'),  # mapped
+        ('multimedia', 'audio recording', 'article')  # not mapped
+    ])
+    def test_get_resource_type(
+            self, general, specific, expected, create_record):
+        record = create_record({
+            'resource_type': {
+                'general': general,
+                'specific': specific,
+                'full_hierarchy': ['foo']
+            }
+        })
+        pid = PersistentIdentifier.get(
+            record['_deposit']['pid']['type'],
+            record['_deposit']['pid']['value'],
+        )
+        preprocessed_record = MenRvaJSONSerializer().preprocess_record(
+            pid, record)
+        schema = CSLRecordSchemaV1()
+
+        result = schema.dump(preprocessed_record).data
+
+        assert result['type'] == expected
+
+    def test_get_publisher(self, config, create_record):
+        record = create_record()
+        pid = PersistentIdentifier.get(
+            record['_deposit']['pid']['type'],
+            record['_deposit']['pid']['value'],
+        )
+        preprocessed_record = MenRvaJSONSerializer().preprocess_record(
+            pid, record)
+        schema = CSLRecordSchemaV1()
+
+        result = schema.dump(preprocessed_record).data
+
+        assert result['publisher'] == config['DOI_PUBLISHER']
+
+    def test_get_issue_date(self, create_record):
+        record = create_record()
+        pid = PersistentIdentifier.get(
+            record['_deposit']['pid']['type'],
+            record['_deposit']['pid']['value'],
+        )
+        preprocessed_record = MenRvaJSONSerializer().preprocess_record(
+            pid, record)
+        schema = CSLRecordSchemaV1()
+
+        result = schema.dump(preprocessed_record).data
+
+        d = date.today()
+        assert result['issued'] == {'date-parts': [[d.year, d.month, d.day]]}

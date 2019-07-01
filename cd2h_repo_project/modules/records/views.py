@@ -19,6 +19,7 @@ from cd2h_repo_project.modules.records.marshmallow.json import LICENSES
 from cd2h_repo_project.modules.records.permissions import (
     EditMetadataPermission, RecordPermissions
 )
+from cd2h_repo_project.modules.records.serializers import citeproc_v1
 
 blueprint = Blueprint(
     'cd2hrepo_records',
@@ -158,3 +159,9 @@ def permissions_to_access_name(permissions):
 def is_private(record):
     """Return True/False corresponding to private or not."""
     return RecordPermissions.is_private(record)
+
+
+@blueprint.app_template_filter('citation')
+def citation(record, pid, style='chicago-fullnote-bibliography'):
+    """Render citation for record according to style and language."""
+    return citeproc_v1.serialize(pid, record, style=style)
