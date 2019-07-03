@@ -260,7 +260,7 @@ Production
 ==========
 
 1.  Enable SSH agent forwarding for <staging IP> and <production IP> on
-    your own machine:
+    your own machine in `~/.ssh/config`:
 
     .. code-block:: console
 
@@ -293,9 +293,9 @@ Production
     `{stage, production}.key` and `{stage, production}.pem` files) from your
     colleagues and place them in `deployment/ansible/`.
 
-5.  Create `stage.env` and `production.env` in `deployment/ansible/` for stage
-    and production specific environment variables. Make sure to at least
-    override `INVENIO_SECRET_KEY` in each.
+5.  Create or get from your colleagues `stage.env` and `production.env` in
+    `deployment/ansible/` for stage and production specific environment
+    variables. Make sure `INVENIO_SECRET_KEY` is provided in each.
 
 6.  Finally, deploy the site via the ``scripts/deploy`` script:
 

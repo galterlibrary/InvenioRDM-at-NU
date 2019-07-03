@@ -10,5 +10,6 @@ RUN mkdir -p /usr/local/var/lib/haproxy/
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 # NOTE: You should have retrieved this file from your colleagues and Ansible
 #       should have placed it in this folder.
-#       Replace by haproxy_cert.pem (on the left only) for quick tire kicking.
+#       Replace `private.pem` by `haproxy_cert.pem` for quick (insecure)
+#       tire kicking.
 COPY private.pem /usr/local/etc/cert.pem
