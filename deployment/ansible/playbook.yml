@@ -1,5 +1,6 @@
 ---
-- hosts: "{{ deploy_hosts | default('stage')}}"
+# WARNING: Assume only 1 (non-group) host passed
+- hosts: "{{ deploy_host | default('stage')}}"
 
   tasks:
     - name: docker is installed
@@ -56,14 +57,38 @@
         line: vm.max_map_count=262144
       become: yes
 
-    - name: custom .env file exists
-      stat:
-        path: /home/deploy/cd2h-repo-project/.env
-      register: status
-    - name: custom .env file exists failed
-      fail:
-        msg: "You need to manually provide the cd2h-repo-project/.env file!"
-      when: status.stat.exists == False
+    # Transfer custom deployment-related files
+    - name: cd2h-repo-project/.env is present
+      copy:
+        src: "{{deploy_host}}.env"
+        dest: /home/deploy/cd2h-repo-project/.env
+        mode: u=rw,g=r,o=r
+      tags:
+        - configuration
+
+    - name: cd2h-repo-project/docker/nginx/private.cer is present
+      copy:
+        src: "{{deploy_host}}.cer"
+        dest: /home/deploy/cd2h-repo-project/docker/nginx/private.cer
+        mode: u=rw,g=r,o=r
+      tags:
+        - configuration
+
+    - name: cd2h-repo-project/docker/nginx/private.key is present
+      copy:
+        src: "{{deploy_host}}.key"
+        dest: /home/deploy/cd2h-repo-project/docker/nginx/private.key
+        mode: u=rw,g=r,o=r
+      tags:
+        - configuration
+
+    - name: cd2h-repo-project/docker/haproxy/private.pem is present
+      copy:
+        src: "{{deploy_host}}.pem"
+        dest: /home/deploy/cd2h-repo-project/docker/haproxy/private.pem
+        mode: u=rw,g=r,o=r
+      tags:
+        - configuration
 
     # Note that this task is long and will always be run right now
     # TODO: Use prebuilt image from registry
