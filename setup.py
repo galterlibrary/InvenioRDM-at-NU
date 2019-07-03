@@ -82,6 +82,7 @@ setup(
         ],
         # Loaded when create_api/create_app is used as application factory
         'invenio_base.api_apps': [
+            'cd2hrepo_records = cd2h_repo_project.modules.records.ext:Records',
             'cd2hrepo_doi = cd2h_repo_project.modules.doi.ext:DigitalObjectIdentifier',
         ],
         'invenio_access.actions': [

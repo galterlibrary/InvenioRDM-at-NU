@@ -9,6 +9,9 @@
 
 from __future__ import absolute_import, print_function
 
+from invenio_indexer.signals import before_record_index
+
+from .index_hooks import before_deposit_index_hook
 
 class Records(object):
     """CD2H Records Model extension."""
@@ -21,3 +24,6 @@ class Records(object):
     def init_app(self, app):
         """Flask application initialization."""
         app.extensions['cd2h-records'] = self
+        before_record_index.connect(
+            before_deposit_index_hook, sender=app, weak=False
+        )

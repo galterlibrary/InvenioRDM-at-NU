@@ -24,21 +24,10 @@
 
 {%- extends "records/search.html" %}
 
-{% set title = "Personal Records" %}
-{% set search_endpoint = config.get('DEPOSIT_SEARCH_API') %}
-{% set search_headers = config.get('DEPOSIT_SEARCH_MIMETYPE', 'application/json') %}
+{% set title = "Search" %}
+{% set search_endpoint = config.get('SEARCH_UI_SEARCH_API') %}
+{% set search_headers = config.get('SEARCH_UI_SEARCH_MIMETYPE', 'application/json') %}
 
-
-{%- block search_bar %}
-<invenio-search-bar
- template="{{ url_for('static', filename=config.SEARCH_UI_JSTEMPLATE_SEARCHBAR) }}"
- placeholder="{{ _('Search your records...') }}">
-</invenio-search-bar>
-{%- endblock search_bar %}
-
-
-{# {%- block search_results %}
-<invenio-search-results
-  template="{{ url_for('static', filename=config.DEPOSIT_UI_JSTEMPLATE_RESULTS) }}">
-</invenio-search-results>
-{%- endblock search_results %} #}
+{%- block page_header %}
+{% include "records/header.html" %}
+{% endblock %}
