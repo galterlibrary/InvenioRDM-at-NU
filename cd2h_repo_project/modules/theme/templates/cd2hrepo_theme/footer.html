@@ -72,12 +72,20 @@
           <li>
             <a href="{{ url_for('contact_us.contact_us') }}">Contact Us</a>
           </li>
+          <li>
+            <a href="https://inveniosoftware.org/">Powered by Invenio</a>
+          </li>
         </ul>
-        <div class="coar-logo col-md-12">
-          <a id='coar-logo' href="https://www.coar-repositories.org"
-             class='col-sm-4 col-md-8'>
+        <div class="logo col-md-12">
+          <a id='cd2h-logo' href="https://ctsa.ncats.nih.gov/cd2h/">
+            <img src="{{ url_for('static', filename='img/logos/CD2H.png') }}"
+                 class='img-responsive' alt='Funding from the National Center for Data to Health'>
+          </a>
+        </div>
+        <div class="logo col-md-12">
+          <a id='coar-logo' href="https://www.coar-repositories.org">
             <img src="{{ url_for('static', filename='img/logos/COAR.png') }}"
-                 class='img-responsive pull-left' alt='Member of COAR'>
+                 class='img-responsive' alt='Member of COAR'>
           </a>
         </div>
       </div>
