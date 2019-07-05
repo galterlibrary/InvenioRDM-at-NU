@@ -660,6 +660,8 @@ LDAPCLIENT_SEARCH_BASE = 'dc=northwestern,dc=edu'
 LDAPCLIENT_SERVER_PORT = 636
 
 # Invenio-admin + Flask-admin
-# ==================
+# ===========================
 ADMIN_APPNAME = 'menRva'
 ADMIN_BASE_TEMPLATE = 'cd2hrepo_theme/page_admin.html'
+ADMIN_PERMISSION_FACTORY = 'cd2h_repo_project.modules.admin.permissions.admin_permission_factory'  # noqa
+"""Permission factory for the admin views."""

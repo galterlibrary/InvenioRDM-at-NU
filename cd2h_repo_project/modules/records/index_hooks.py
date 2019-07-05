@@ -11,8 +11,8 @@
 from invenio_files_rest.models import Bucket
 
 
-def before_deposit_index_hook(sender, json=None, record=None, index=None,
-        **kwargs):
+def before_deposit_index_hook(
+        sender, json=None, record=None, index=None, **kwargs):
     """Hook to transform Deposits before indexing in ES.
 
     :param sender: The entity sending the signal.

@@ -13,6 +13,7 @@ from invenio_indexer.signals import before_record_index
 
 from .index_hooks import before_deposit_index_hook
 
+
 class Records(object):
     """CD2H Records Model extension."""
 

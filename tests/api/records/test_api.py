@@ -22,10 +22,10 @@ def test_deposit_create_creates_recordsbuckets(locations):
 
     record_bucket = RecordsBuckets.query.first()
     record = RecordMetadata.query.first()
-    bucket = Bucket.query.first()
+    buckets = Bucket.query.all()
     assert record_bucket
     assert record_bucket.record == record
-    assert record_bucket.bucket == bucket
+    assert record_bucket.bucket in buckets
 
 
 def test_deposit_create_fills_data(locations):

@@ -20,11 +20,6 @@
         <div class="panel panel-default">
           <ul class="list-group">
 
-            <a href="{{ url_for('user_dashboard.activity_feed') }}"
-               class="list-group-item {% if activity_feed_active %}active{% endif %}">
-              <i class="fa fa-flash fa-fw"></i> Activity Feed
-            </a>
-
             <a href="{{ url_for('invenio_deposit_ui.index') }}"
                class="list-group-item {% if entries_active %}active{% endif %}">
               <i class="fa fa-th-list fa-fw"></i> Your Records
