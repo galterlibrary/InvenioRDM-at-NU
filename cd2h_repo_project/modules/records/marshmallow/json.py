@@ -75,8 +75,13 @@ class AuthorSchemaV1(StrictKeysMixin):
 
     @post_load
     def load_full_name(self, data):
-        """Load full_name if not passed."""
-        data['full_name'] = data.get('full_name', to_full_name(data))
+        """Load full_name from first, middle and last name.
+
+        Even if full_name is passed, it is overridden because full_name should
+        be a constructed internal field. UI doesn't allow manipulation
+        of full_name directly.
+        """
+        data['full_name'] = to_full_name(data)
 
 
 class TermSchemaV1(StrictKeysMixin):

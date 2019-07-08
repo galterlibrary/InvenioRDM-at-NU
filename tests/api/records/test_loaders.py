@@ -45,10 +45,8 @@ def create_input_record(create_input_metadatav1):
     def _create_input_record(data=None):
         data = deepcopy(data) if data else {}
         data_to_use = {
-            'metadata': create_input_metadatav1(data.get('metadata', {}))
+            'metadata': create_input_metadatav1(data.pop('metadata', {}))
         }
-        if 'metadata' in data:
-            del data['metadata']
         data_to_use.update(data)
         return data_to_use
 
@@ -122,7 +120,7 @@ class TestMetadataSchemaV1(object):
                 'first_name': 'Jane',
                 'middle_name': 'Janet',
                 'last_name': 'Doe',
-                'full_name': 'Doe, Jane J.'
+                'full_name': 'Doe, Jane J.'  # Should be overwritten
             }
         ]
         serialized_record = create_input_metadatav1({
@@ -144,7 +142,7 @@ class TestMetadataSchemaV1(object):
             'first_name': 'Jane',
             'middle_name': 'Janet',
             'last_name': 'Doe',
-            'full_name': 'Doe, Jane J.'
+            'full_name': 'Doe, Jane Janet'
         }
 
     def test_resource_type_loaded(self, create_input_metadatav1):
