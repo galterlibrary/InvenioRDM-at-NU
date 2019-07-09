@@ -14,6 +14,7 @@ blueprint = Blueprint(
 # Filters
 # =======
 
+
 @blueprint.app_template_filter('has_admin_access_permission')
 def has_admin_access_permission(user):
     """Return True if current_user can access admin site.

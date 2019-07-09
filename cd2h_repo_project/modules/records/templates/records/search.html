@@ -1,3 +1,27 @@
+{#
+# This file is modified from Invenio.
+# Copyright (C) 2018-Present NU, FSM, GHSL.
+# Copyright (C) 2016 CERN.
+#
+# Invenio is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# Invenio is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Invenio; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+#
+# In applying this license, CERN does not
+# waive the privileges and immunities granted to it by virtue of its status
+# as an Intergovernmental Organization or submit itself to any jurisdiction.
+#}
+
 {%- extends config.BASE_TEMPLATE %}
 
 {%- block css %}
@@ -6,21 +30,13 @@
 {%- endblock css %}
 
 
-{% set title = "Search" %}
-
-
-{%- block page_header %}
-{% include "records/header.html" %}
-{% endblock %}
-
-
 {% block content %}
 <div id="invenio-search">
   <invenio-search
-   search-endpoint="{{ config.SEARCH_UI_SEARCH_API }}"
+   search-endpoint="{{ search_endpoint }}"
    search-extra-params='{% if search_extra_params %}{{search_extra_params|tojson}}{% endif %}'
    search-hidden-params='{% if search_hidden_params %}{{search_hidden_params|tojson}}{% endif %}'
-   search-headers='{"Accept": "{{ config.SEARCH_UI_SEARCH_MIMETYPE|default('application/json')}}"}'
+   search-headers='{"Accept": "{{ search_headers }}"}'
   >
     <div class="container search-page">
       <div class="row">
@@ -28,10 +44,12 @@
         {%- block search_body %}
         <div class="col-xs-12 col-md-9 col-md-push-3">
 
+          {%- block search_bar %}
           <invenio-search-bar
            template="{{ url_for('static', filename=config.SEARCH_UI_JSTEMPLATE_SEARCHBAR) }}"
            placeholder="{{ search_input_placeholder|default(_('Search')) }}">
           </invenio-search-bar>
+          {%- endblock search_bar %}
 
           {%- block search_header %}
           <div class="row">

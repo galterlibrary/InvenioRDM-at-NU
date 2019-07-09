@@ -1,19 +1,55 @@
-<div class="search-result" ng-repeat="record in vm.invenioSearchResults.hits.hits track by $index">
-  <h4 class="title">
-    <a target="_self" ng-href="/records/{{ record.id }}">
-      <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;{{ record.metadata.title }}
-    </a>
-  </h4>
+<div ng-if="vm.invenioSearchResults.hits.total != 0">
+  <div class="search-result" ng-repeat="record in vm.invenioSearchResults.hits.hits track by $index">
 
-  <ul class="list-inline authors">
-    <li ng-repeat='author in record.metadata.authors'>
-      <!-- TODO: ORCID or other icon -->
-      <i class="fa fa-user" aria-hidden="true"></i>
-      <span class="text-muted">{{author.last_name}}, {{author.first_name}} {{author.middle_name}}</span>
-    </li>
-  </ul>
+    <div class="pull-right">
+      <div class="label label-danger" ng-if="record.metadata.type == 'draft'">
+        {{ record.metadata.type }} - {{ record.metadata.permissions | to_access_name }}
+      </div>
+      <div class="label {{ record | to_label_css }}" ng-if="record.metadata.type != 'draft'">
+        {{ record.metadata.permissions | to_access_name}}
+      </div>
+    </div>
 
-  <p class="description">{{ record.metadata.description }}</p>
+    <h4 class="title">
+      <a ng-if="record.metadata.type == 'published'"
+         target="_self" ng-href="/records/{{ record.id }}">
+        <i class="fa fa-file-text-o title-icon" title="published" aria-hidden="true"></i>{{ record.metadata.title }}
+      </a>
+      <a ng-if="record.metadata.type == 'draft'"
+         target="_self" ng-href="/deposit/{{ record.id }}">
+        <i class="fa fa-pencil-square-o title-icon" title="draft" aria-hidden="true"></i>{{ record.metadata.title }}
+      </a>
+    </h4>
 
-  <hr />
+    <ul class="list-inline authors">
+      <li ng-repeat='author in record.metadata.authors'>
+        <!-- TODO: ORCID or other icon -->
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <span class="text-muted">{{author.last_name}}, {{author.first_name}} {{author.middle_name}}</span>
+      </li>
+    </ul>
+
+    <p class="description">
+      {{ record.metadata.description }}
+    </p>
+
+    <!-- <div class="clearfix"></div> -->
+
+    <hr />
+  </div>
+</div>
+
+<div ng-if="vm.invenioSearchResults.hits.total == 0">
+  <div class="list-group">
+    <div class="list-group-item">
+      <div align="center">
+        <h1>No Records</h1>
+        <p>Contribute by creating the first record</p>
+        <a class="btn btn-success" href="/records/new">
+            <i class="glyphicon glyphicon-upload" aria-hidden="true"></i>
+            Catalog your Research
+        </a>
+      </div>
+    </div>
+  </div>
 </div>

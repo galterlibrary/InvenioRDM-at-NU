@@ -500,8 +500,9 @@ DEPOSIT_REST_ENDPOINTS = {
             'cd2h_repo_project.modules.records.search:DepositsSearch'
         ),
         'search_serializers': {
-            'application/json': ('invenio_records_rest.serializers'
-                                 ':json_v1_search'),
+            'application/json': (
+                'cd2h_repo_project.modules.records.serializers:json_v1_search'
+            ),
         },
         # TODO: -> /draft-records/ ?
         'list_route': '/deposits/',
@@ -625,7 +626,7 @@ FIXTURES_ARCHIVE_LOCATION = 'archive/'
 
 # Search
 # ======
-SEARCH_UI_SEARCH_TEMPLATE = 'records/search.html'
+SEARCH_UI_SEARCH_TEMPLATE = 'records/all_records_search.html'
 SEARCH_UI_JSTEMPLATE_SEARCHBAR = 'templates/search/searchbar.html'
 SEARCH_UI_JSTEMPLATE_COUNT = 'templates/search/count.html'
 SEARCH_UI_JSTEMPLATE_SELECT_BOX = 'templates/search/sort_by.html'
@@ -659,6 +660,8 @@ LDAPCLIENT_SEARCH_BASE = 'dc=northwestern,dc=edu'
 LDAPCLIENT_SERVER_PORT = 636
 
 # Invenio-admin + Flask-admin
-# ==================
+# ===========================
 ADMIN_APPNAME = 'menRva'
 ADMIN_BASE_TEMPLATE = 'cd2hrepo_theme/page_admin.html'
+ADMIN_PERMISSION_FACTORY = 'cd2h_repo_project.modules.admin.permissions.admin_permission_factory'  # noqa
+"""Permission factory for the admin views."""

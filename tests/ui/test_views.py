@@ -211,7 +211,6 @@ def test_account_page_menu_contains_desired_links(
     }
 
     assert links == {
-        '/account',
         '/personal-records',
         '/account/settings/profile/',
         '/account/settings/security/',
@@ -322,7 +321,6 @@ def test_user_dropdown_contains_desired_links(client, create_user):
     }
 
     assert links == {
-        '/account',
         '/personal-records',
         '/account/settings/profile/',
         '/logout/'

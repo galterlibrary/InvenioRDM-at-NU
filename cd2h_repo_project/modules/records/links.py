@@ -102,7 +102,7 @@ def deposit_links_ui_factory(pid, **kwargs):
              "new style" link factory.
 
     :param pid: PersistentIdentifier of the deposit.
-    :param kwargs: Keyword arguments, key 'record' and value Record is required
+    :param kwargs: Keyword arguments, {'record': <Record>} is required
     """
     record = kwargs.get('record')
     base_API_url = current_app.config['DEPOSIT_RECORDS_API'].format(
@@ -114,10 +114,6 @@ def deposit_links_ui_factory(pid, **kwargs):
             'invenio_deposit_ui.{}'.format(pid.pid_type),
             pid_value=pid.pid_value
         ),
-        'bucket': (
-            current_app.config['DEPOSIT_FILES_API'] +
-            '/{0}'.format(record.files.bucket.id)
-        ),
         'discard': base_API_url + '/actions/discard',
         'edit': base_API_url + '/actions/edit',
         'publish': base_API_url + '/actions/publish',
@@ -126,5 +122,12 @@ def deposit_links_ui_factory(pid, **kwargs):
         # 'registerconceptdoi': base_API_url + '/actions/registerconceptdoi',
         'files': base_API_url + '/files',
     }
+
+    bucket_id = record.get('_buckets', {}).get('deposit') if record else None
+    if bucket_id:
+        links['bucket'] = (
+            current_app.config['DEPOSIT_FILES_API'] +
+            '/{0}'.format(bucket_id)
+        )
 
     return links
