@@ -130,4 +130,9 @@ def deposit_links_ui_factory(pid, **kwargs):
             '/{0}'.format(bucket_id)
         )
 
+    if record:
+        links['record_html'] = url_for_record_ui_recid_external(
+            pid.pid_value
+        )
+
     return links
