@@ -152,6 +152,26 @@ class RecordPermissions(object):
         return record.get('permissions', 'private_').startswith('private_')
 
 
+class CreatePermission(object):
+    """Gate to allow or not creation of a record (deposit metadata)."""
+
+    def __init__(self, user, record):
+        """Constructor."""
+        self.user = user
+        self.record = record
+
+    @classmethod
+    def create(cls, record):
+        """Factory."""
+        return cls(current_user, record)
+
+    def can(self):
+        """Returns boolean if permission valid."""
+        return (
+            self.user and self.user.is_authenticated
+        )
+
+
 class ViewPermission(object):
     """Gate to allow or not view of a record.
 
