@@ -18,3 +18,6 @@ def test_deposit_links_ui_factory_contains_all_links(app, create_record):
             expected_pid_value, action)
     assert links['files'] == '/api/deposits/{}/files'.format(
         expected_pid_value)
+    assert links['record_html'] == (
+        'http://localhost:5000/records/' + expected_pid_value
+    )
