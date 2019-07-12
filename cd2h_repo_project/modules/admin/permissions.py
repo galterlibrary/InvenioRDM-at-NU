@@ -7,7 +7,7 @@
 
 """Permissions for Invenio-Admin."""
 
-from flask_principal import Permission
+from invenio_access.permissions import Permission
 from invenio_admin.permissions import action_admin_access
 
 
