@@ -1,9 +1,8 @@
 """CD2H Record minters."""
+import uuid
 
 from flask import current_app
-from invenio_pidstore.models import (
-    PersistentIdentifier, PIDStatus, RecordIdentifier
-)
+from invenio_pidstore.models import PersistentIdentifier, PIDStatus
 from invenio_pidstore.providers.base import BaseProvider
 
 from cd2h_repo_project.modules.doi.minters import mint_doi_pid
@@ -13,18 +12,16 @@ class MenrvaRecordPIDProvider(BaseProvider):
     """Logic for MenrvaRecord PersistentIdentifier creation.
 
     Groups together and abstracts the logic around PersistentIdentifier
-    creation for published Menrva records.
+    creation for Menrva deposits/records.
     """
 
-    pid_type = 'recid'
-    """Type of persistent identifier."""
-
     @classmethod
-    def create(cls, **kwargs):
+    def create(cls, pid_type, pid_value=None, **kwargs):
         """Constructor to use."""
+        pid_value = pid_value or uuid.uuid4().hex
         return super(MenrvaRecordPIDProvider, cls).create(
-            # TODO: Settle on pid_value. See #350
-            pid_value=str(RecordIdentifier.next()),
+            pid_type=pid_type,
+            pid_value=pid_value,
             object_type='rec',
             **kwargs
         )
@@ -36,18 +33,19 @@ def mint_pids_for_deposit(deposit_uuid, data):
     Reserves published Record PersistentIdentifier so that Deposit
     PresistentIdentifier can share value.
     """
-    recid_pid = MenrvaRecordPIDProvider.create(status=PIDStatus.RESERVED).pid
-    # TODO: revisit int() if type of pid_value changes
+    recid_pid = MenrvaRecordPIDProvider.create(
+        pid_type='recid',
+        status=PIDStatus.RESERVED
+    ).pid
     recid_field = current_app.config['PIDSTORE_RECID_FIELD']
-    data[recid_field] = int(recid_pid.pid_value)
+    data[recid_field] = recid_pid.pid_value
 
-    depid_pid = PersistentIdentifier.create(
-        'depid',
-        str(recid_pid.pid_value),
-        object_type='rec',
+    depid_pid = MenrvaRecordPIDProvider.create(
+        pid_type='depid',
+        pid_value=recid_pid.pid_value,
         object_uuid=deposit_uuid,
-        status=PIDStatus.REGISTERED,
-    )
+        status=PIDStatus.REGISTERED
+    ).pid
 
     data['_deposit'] = {
         'id': depid_pid.pid_value,
@@ -93,15 +91,16 @@ def mint_recid_pid(record_uuid, data):
         recid_pid.register()
     else:
         # Not already associated recid PersistendIdentifier
+        # Not likely to happen since deposits are created first
         recid_pid = (
             MenrvaRecordPIDProvider
             .create(
+                pid_type='recid',
                 object_uuid=record_uuid,
                 status=PIDStatus.REGISTERED
             )
             .pid
         )
-        # TODO: revisit int() if type of pid_value changes
-        data[recid_field] = int(recid_pid.pid_value)
+        data[recid_field] = recid_pid.pid_value
 
     return recid_pid
