@@ -24,7 +24,8 @@ from invenio_records_rest.facets import terms_filter
 from invenio_records_rest.utils import allow_all, check_elasticsearch, deny_all
 
 from cd2h_repo_project.modules.records.permissions import (
-    edit_metadata_permission_factory, view_permission_factory
+    CreatePermission, edit_metadata_permission_factory,
+    view_permission_factory
 )
 from cd2h_repo_project.modules.records.search import (
     RecordsSearch, nested_filter
@@ -515,8 +516,7 @@ DEPOSIT_REST_ENDPOINTS = {
         'links_factory_imp': (
             'cd2h_repo_project.modules.records.links:deposit_links_api_factory'
         ),
-        # TODO: Only logged-in user can create
-        'create_permission_factory_imp': allow_all,
+        'create_permission_factory_imp': CreatePermission.create,
         'read_permission_factory_imp': edit_metadata_permission_factory,
         'update_permission_factory_imp': edit_metadata_permission_factory,
         # Deposits can't be deleted for now

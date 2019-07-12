@@ -9,7 +9,7 @@ from invenio_access import Permission
 from invenio_files_rest.models import Bucket
 
 from cd2h_repo_project.modules.records.permissions import (
-    CurrentUserFilesPermission, RecordPermissions,
+    CreatePermission, CurrentUserFilesPermission, RecordPermissions,
     edit_metadata_permission_factory, files_permission_factory, is_owner,
     view_permission_factory
 )
@@ -124,6 +124,27 @@ def test_edit_metadata_permission_factory(
     permission = edit_metadata_permission_factory(record=deposit)
 
     assert permission.can() is allowed
+
+
+@pytest.mark.parametrize(
+    'logged_in, allowed',
+    [
+        # anonymous user
+        (False, False),
+        # authenticated user
+        (True, True),
+    ]
+)
+def test_create_permission_factory(
+        logged_in, allowed, create_user, request_ctx):
+    user = create_user()
+    if logged_in:
+        login_user(user)
+    record = {}
+
+    permission = CreatePermission.create(record)
+
+    assert permission.can() == allowed
 
 
 @pytest.mark.parametrize(
