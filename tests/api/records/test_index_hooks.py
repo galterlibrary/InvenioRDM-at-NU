@@ -47,9 +47,9 @@ def test_before_deposit_index_hook_doesnt_create_new_buckets(
         stream, size=len(stream.getvalue()), size_limit=bucket.size_limit
     )
     db.session.commit()
-    number_buckets = len(Bucket.query.all())
+    number_buckets_preindex = len(Bucket.query.all())
     indexer = RecordIndexer()
 
     indexer.index(deposit)
 
-    assert len(Bucket.query.all()) == number_buckets
+    assert len(Bucket.query.all()) == number_buckets_preindex
