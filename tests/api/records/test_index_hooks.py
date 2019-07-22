@@ -33,3 +33,23 @@ def test_before_deposit_index_hook_sets_files(create_record, db, es):
     es_deposit = es.get(index=index, doc_type=doc_type, id=deposit.id)
     assert '_files' in es_deposit['_source']
     assert es_deposit['_source']['_files'][0]['type'] == 'txt'
+
+
+def test_before_deposit_index_hook_doesnt_create_new_buckets(
+        create_record, db, es):
+
+    deposit = create_record(published=False)
+    # Reproduce file upload: add file to bucket associated with deposit
+    bucket = Bucket.get(deposit['_buckets']['deposit'])
+    obj = ObjectVersion.create(bucket, 'foo.txt')
+    stream = BytesIO(b'Hello world!')
+    obj.set_contents(
+        stream, size=len(stream.getvalue()), size_limit=bucket.size_limit
+    )
+    db.session.commit()
+    number_buckets = len(Bucket.query.all())
+    indexer = RecordIndexer()
+
+    indexer.index(deposit)
+
+    assert len(Bucket.query.all()) == number_buckets
