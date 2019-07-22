@@ -39,7 +39,6 @@ def test_before_deposit_index_hook_doesnt_create_new_buckets(
         create_record, db, es):
 
     deposit = create_record(published=False)
-    # Reproduce file upload: add file to bucket associated with deposit
     bucket = Bucket.get(deposit['_buckets']['deposit'])
     obj = ObjectVersion.create(bucket, 'foo.txt')
     stream = BytesIO(b'Hello world!')
