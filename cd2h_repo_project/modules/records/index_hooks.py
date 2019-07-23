@@ -9,6 +9,7 @@
 """Indexing signal hooks."""
 
 from invenio_files_rest.models import Bucket
+from invenio_records_files.api import FilesIterator
 
 
 def before_deposit_index_hook(
@@ -24,8 +25,7 @@ def before_deposit_index_hook(
     if (index.startswith('records-record') and json.get('type') == 'draft'):
         bucket = Bucket.get(json.get('_buckets', {}).get('deposit'))
         if bucket:
-            # TODO: Investigate/improve record.files
-            #       (invenio_records_files/api.py::FilesMixin::files) bc
-            #       len(record.files) returns 0 even when `record.files.dumps`
-            #       returns serialized files
-            json['_files'] = record.files.dumps(bucket=bucket.id)
+            iterator = FilesIterator(
+                record, bucket=bucket, file_cls=record.file_cls
+            )
+            json['_files'] = iterator.dumps()
