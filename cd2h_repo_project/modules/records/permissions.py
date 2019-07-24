@@ -9,7 +9,9 @@ from invenio_deposit.utils import check_oauth2_scope
 from invenio_files_rest.models import Bucket, MultipartObject, ObjectVersion
 from invenio_records_files.models import RecordsBuckets
 
-from cd2h_repo_project.modules.records.api import FileObject, Record
+from cd2h_repo_project.modules.records.api import (
+    FileObject, Record, RecordType
+)
 from cd2h_repo_project.utils import get_identity
 
 # Need instances #
@@ -126,7 +128,7 @@ class CreatePermission(object):
 
 
 class ViewPermission(object):
-    """Gate to allow or not view of a record.
+    """Gate to allow or not view of a published record.
 
     NOTE: This is a wider and simpler permission net; it is used for viewing
           metadata and files. It should be set in config.py for UI and API.
@@ -139,8 +141,13 @@ class ViewPermission(object):
         self.record = record
 
     def can(self):
-        """Return boolean if permission valid."""
-        return (
+        """Return boolean if permission valid.
+
+        Enforce the fact that this is only for published record.
+        Unpublished records (deposits) can only be viewed if they can be
+        edited.
+        """
+        return self.record['type'] == RecordType.published and (
             is_open_access(self.record) or
             has_restricted_access(self.user, self.record) or
             is_owner(self.user, self.record) or
@@ -236,6 +243,7 @@ def has_published(deposit):
     """
     pid = deposit.get('_deposit', {}).get('pid', {})
     return bool(pid.get('value')) and bool(pid.get('type'))
+
 
 # TODO: Enable when working on out-of-browser API interface
 # def check_oauth2_write_scope(can_method):

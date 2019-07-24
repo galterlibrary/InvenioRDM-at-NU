@@ -8,6 +8,7 @@ from flask_security import current_user, login_user
 from invenio_access import Permission
 from invenio_files_rest.models import Bucket
 
+from cd2h_repo_project.modules.records.api import RecordType
 from cd2h_repo_project.modules.records.permissions import (
     CreatePermission, CurrentUserFilesPermission, ReadFilesPermission,
     RecordPermissions, edit_metadata_permission_factory,
@@ -93,17 +94,54 @@ def test_files_permission_factory_for_bucket_obj_returns_ReadFilesPermission(
         (1, False, None, 1, RecordPermissions.RESTRICTED_VIEW, False),
         # anonymous user - private access file
         (1, False, None, 1, RecordPermissions.PRIVATE_VIEW, False),
-
-        # TODO: Other combinations for other scenarios
+        # authenticated user - open access file
+        (1, True, None, 2, RecordPermissions.ALL_VIEW, True),
+        # authenticated user - restricted access file
+        (1, True, None, 2, RecordPermissions.RESTRICTED_VIEW, True),
+        # authenticated user non owner - private access file
+        (1, True, None, 2, RecordPermissions.PRIVATE_VIEW, False),
+        # authenticated user owner - private access file
+        (1, True, None, 1, RecordPermissions.PRIVATE_VIEW, True),
+        # super-user - private access file
+        (3, True, 'superuser-access', 1, RecordPermissions.PRIVATE_VIEW, True),
+        # See below for librarian case
     ])
 def test_read_files_permission(
         user_id, logged_in, provides, owner_id, permissions, allowed,
         create_user, create_record, request_ctx):
-    record = {'_deposit': {'owners': [owner_id]}, 'permissions': permissions}
+    record = {
+        '_deposit': {'owners': [owner_id]},
+        'permissions': permissions,
+        'type': RecordType.published
+    }
 
     if logged_in:
         user = create_user({'id': user_id, 'provides': [provides]})
-        login_user(user)  # makes user become current_user -- to check
+        login_user(user)  # makes user become current_user
+
+    assert ReadFilesPermission(current_user, record).can() is allowed
+
+
+@pytest.mark.parametrize(
+    'permissions, published, allowed',
+    [
+        # unpublished record
+        (RecordPermissions.RESTRICTED_VIEW, False, False),
+        # published record
+        (RecordPermissions.RESTRICTED_VIEW, True, True),
+        # published private record
+        (RecordPermissions.PRIVATE_VIEW, True, True),
+    ])
+def test_read_files_permission_for_librarians(
+        permissions, published, allowed,
+        create_user, create_record, request_ctx):
+    # Covers librarians or anyone with 'menrva-view'
+    user = create_user({'provides': ['menrva-view']})
+    login_user(user)
+    record = {
+        'permissions': permissions,
+        'type': RecordType.published if published else RecordType.draft
+    }
 
     assert ReadFilesPermission(current_user, record).can() is allowed
 
@@ -189,6 +227,7 @@ def test_create_permission_factory(
         (2, True, 'menrva-view', 1, RecordPermissions.PRIVATE_VIEW, True),
         # super-user - private access record
         (2, True, 'superuser-access', 1, RecordPermissions.PRIVATE_VIEW, True),
+        # See below for unpublished record
     ]
 )
 def test_view_permission_factory(
@@ -197,11 +236,23 @@ def test_view_permission_factory(
     user = create_user({'id': user_id, 'provides': [provides]})
     if logged_in:
         login_user(user)
-    record = {'_deposit': {'owners': [owner_id]}, 'permissions': permissions}
+    record = {
+        '_deposit': {'owners': [owner_id]},
+        'permissions': permissions,
+        'type': RecordType.published
+    }
 
     permission = view_permission_factory(record)
 
     assert permission.can() == allowed
+
+
+def test_view_permission_factory_unpublished_record():
+    record = {'type': RecordType.draft}
+
+    permission = view_permission_factory(record)
+
+    assert permission.can() is False
 
 
 @pytest.mark.parametrize(
