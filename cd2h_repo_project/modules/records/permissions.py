@@ -73,53 +73,6 @@ class CurrentUserFilesPermission(object):
             return Permission(ActionNeed('admin-access'))
 
 
-def files_permission_factory(obj, action=None):
-    """
-    Permission for files.
-
-    This dynamically generates the permissions required to access
-    `obj`. `check_permission` is typically used on the returned value to
-    assess if the permissions are met.
-
-    For now, it covers:
-    - Deposit Owner has permission to add a file to the bucket associated with
-      the record (at creation time) i.e. `obj` is a Bucket.
-
-    TODO: Add/modify the file permissions based on our needs over time.
-
-    Adapted from https://github.com/zenodo/zenodo
-    """
-    # Extract bucket id
-    bucket_id = None
-    if isinstance(obj, Bucket):
-        bucket_id = str(obj.id)
-    elif isinstance(obj, ObjectVersion):
-        bucket_id = str(obj.bucket_id)
-    elif isinstance(obj, MultipartObject):
-        bucket_id = str(obj.bucket_id)
-    elif isinstance(obj, FileObject):
-        bucket_id = str(obj.bucket_id)
-
-    # Retrieve record
-    if bucket_id is not None:
-        # WARNING: invenio-records-files implies a one-to-one relationship
-        #          between Record and Bucket, but does not enforce it
-        #          "for better future" the invenio-records-files code says
-        record_bucket = \
-            RecordsBuckets.query.filter_by(bucket_id=bucket_id).one_or_none()
-        if record_bucket is not None:
-            record = Record.get_record(record_bucket.record_id)
-
-            # "Cache" the file's record in the request context
-            if record and request:
-                setattr(request, 'current_file_record', record)
-
-            if record:
-                return CurrentUserFilesPermission.create(record, action)
-
-    return Permission(ActionNeed('admin-access'))
-
-
 class RecordPermissions(object):
     """Encompass all RecordPermissions.
 
@@ -315,3 +268,91 @@ def has_published(deposit):
 #         if action in DepositPermission.protected_actions:
 #             return DepositPermission.create(record=record, action=action)
 #     return DepositPermission.create(record=record, action='update')
+
+
+class ReadFilesPermission(ViewPermission):
+    """Gate to allow reading of files for a record.
+
+    TODO: ViewPermission -> ReadRecordPermission
+    TODO: Differentiate between {ReadRecord,ReadFiles}Permission
+    """
+
+    pass
+
+
+class FilesPermission(object):
+    """Gates to allow or not files actions.
+
+    This dynamically generates the permissions required to access
+    `obj`. `check_permission` is typically used on the returned value to
+    assess if the permissions are met.
+    """
+
+    actions = [
+        'bucket-read',
+        'bucket-read-versions',
+        'bucket-update',
+        'bucket-listmultiparts',
+        'object-read',  # Read/Download a file action
+        'object-read-version',
+        'object-delete',
+        'object-delete-version',
+        'multipart-read',
+        'multipart-delete',
+    ]
+
+    @classmethod
+    def create(cls, obj, action):
+        """Create an <Action>FilesPermission for record associated with `obj`.
+
+        For now it defaults to ReadFilesPermission for all actions.
+
+        Adapted from https://github.com/zenodo/zenodo
+        """
+        # Extract bucket id
+        bucket_id = None
+        if isinstance(obj, Bucket):
+            bucket_id = str(obj.id)
+        elif isinstance(obj, ObjectVersion):
+            bucket_id = str(obj.bucket_id)
+        elif isinstance(obj, MultipartObject):
+            bucket_id = str(obj.bucket_id)
+        elif isinstance(obj, FileObject):
+            bucket_id = str(obj.bucket_id)
+
+        # Retrieve record
+        if not bucket_id:
+            # Don't think this conditional should be hit
+            return Permission(ActionNeed('admin-access'))
+
+        # WARNING: invenio-records-files implies a one-to-one relationship
+        #          between Record and Bucket, but does not enforce it
+        #          "for better future" the invenio-records-files code says
+        record_bucket = \
+            RecordsBuckets.query.filter_by(bucket_id=bucket_id).one_or_none()
+        if not record_bucket:
+            return Permission(ActionNeed('admin-access'))
+
+        record_metadata = record_bucket.record
+        record = Record(record_metadata.json, model=record_metadata)
+
+        # "Cache" the file's record in the request context
+        if record and request:
+            setattr(request, 'current_file_record', record)
+
+        if record:
+            # TODO: Differentiate between actions
+            if action in cls.actions:
+                return ReadFilesPermission(current_user, record)
+            else:
+                return Permission(ActionNeed('admin-access'))
+
+
+def files_permission_factory(obj, action=None):
+    """Factory function for `FilesPermission.create`.
+
+    Not used, but kept because string version of `FilesPermission.create`
+    can't be used in configuration; whereas string version of this function
+    could if we get circular dependencies.
+    """
+    return FilesPermission.create(obj, action)

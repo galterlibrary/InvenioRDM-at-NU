@@ -4,14 +4,14 @@ from unittest.mock import Mock
 import pytest
 from flask import request
 from flask_principal import ActionNeed
-from flask_security import login_user
+from flask_security import current_user, login_user
 from invenio_access import Permission
 from invenio_files_rest.models import Bucket
 
 from cd2h_repo_project.modules.records.permissions import (
-    CreatePermission, CurrentUserFilesPermission, RecordPermissions,
-    edit_metadata_permission_factory, files_permission_factory, is_owner,
-    view_permission_factory
+    CreatePermission, CurrentUserFilesPermission, ReadFilesPermission,
+    RecordPermissions, edit_metadata_permission_factory,
+    files_permission_factory, is_owner, view_permission_factory
 )
 
 
@@ -61,7 +61,7 @@ def test_files_permission_factory_for_unknown_obj_returns_admin_permission():
     assert ActionNeed('admin-access') in permission.explicit_needs
 
 
-def test_files_permission_factory_for_bucket_obj_outside_request_returns_CurrentUserFilesPermission(  # noqa
+def test_files_permission_factory_for_bucket_obj_outside_request_returns_admin_permission(  # noqa
         create_record):
     create_record()
     unknown_obj = {}
@@ -72,17 +72,40 @@ def test_files_permission_factory_for_bucket_obj_outside_request_returns_Current
     assert ActionNeed('admin-access') in permission.explicit_needs
 
 
-def test_files_permission_factory_for_bucket_obj_returns_CurrentUserFilesPermission(  # noqa
+def test_files_permission_factory_for_bucket_obj_returns_ReadFilesPermission(
         create_record, request_ctx):
     record = create_record()
-    bucket_id = record.model.json['_buckets']['deposit']
+    bucket_id = record['_buckets']['deposit']
     bucket = Bucket.get(bucket_id)
 
     permission = files_permission_factory(bucket, action='bucket-update')
 
-    assert type(permission) == CurrentUserFilesPermission
-    assert permission._can == is_owner
+    assert type(permission) == ReadFilesPermission
     assert request.current_file_record
+
+
+@pytest.mark.parametrize(
+    'user_id, logged_in, provides, owner_id, permissions, allowed',
+    [
+        # anonymous user - open access file
+        (1, False, None, 1, RecordPermissions.ALL_VIEW, True),
+        # anonymous user - restricted access file
+        (1, False, None, 1, RecordPermissions.RESTRICTED_VIEW, False),
+        # anonymous user - private access file
+        (1, False, None, 1, RecordPermissions.PRIVATE_VIEW, False),
+
+        # TODO: Other combinations for other scenarios
+    ])
+def test_read_files_permission(
+        user_id, logged_in, provides, owner_id, permissions, allowed,
+        create_user, create_record, request_ctx):
+    record = {'_deposit': {'owners': [owner_id]}, 'permissions': permissions}
+
+    if logged_in:
+        user = create_user({'id': user_id, 'provides': [provides]})
+        login_user(user)  # makes user become current_user -- to check
+
+    assert ReadFilesPermission(current_user, record).can() is allowed
 
 
 @pytest.mark.parametrize(

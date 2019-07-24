@@ -24,7 +24,7 @@ from invenio_records_rest.facets import terms_filter
 from invenio_records_rest.utils import allow_all, check_elasticsearch, deny_all
 
 from cd2h_repo_project.modules.records.permissions import (
-    CreatePermission, edit_metadata_permission_factory,
+    CreatePermission, FilesPermission, edit_metadata_permission_factory,
     view_permission_factory
 )
 from cd2h_repo_project.modules.records.search import (
@@ -610,8 +610,7 @@ DEPOSIT_FORM_TEMPLATES = {
 }
 """Specific templates for the various deposit form elements."""
 
-FILES_REST_PERMISSION_FACTORY = \
-    'cd2h_repo_project.modules.records.permissions:files_permission_factory'
+FILES_REST_PERMISSION_FACTORY = FilesPermission.create
 """Files REST permission factory"""
 
 FIXTURES_FILES_LOCATION = 'data/'
