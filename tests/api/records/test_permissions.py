@@ -135,8 +135,8 @@ def test_read_files_permission(
 def test_read_files_permission_for_librarians(
         permissions, published, allowed,
         create_user, create_record, request_ctx):
-    # Covers librarians or anyone with 'menrva-view'
-    user = create_user({'provides': ['menrva-view']})
+    # Covers librarians or anyone with 'menrva-view-published-record'
+    user = create_user({'provides': ['menrva-view-published-record']})
     login_user(user)
     record = {
         'permissions': permissions,
@@ -224,7 +224,7 @@ def test_create_permission_factory(
         # authenticated user owner - private access record
         (1, True, None, 1, RecordPermissions.PRIVATE_VIEW, True),
         # librarian - private access record
-        (2, True, 'menrva-view', 1, RecordPermissions.PRIVATE_VIEW, True),
+        (2, True, 'menrva-view-published-record', 1, RecordPermissions.PRIVATE_VIEW, True),  # noqa
         # super-user - private access record
         (2, True, 'superuser-access', 1, RecordPermissions.PRIVATE_VIEW, True),
         # See below for unpublished record

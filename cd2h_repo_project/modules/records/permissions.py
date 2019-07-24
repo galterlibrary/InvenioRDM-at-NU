@@ -16,12 +16,12 @@ from cd2h_repo_project.utils import get_identity
 
 # Need instances #
 # These are granular badge-like permissions that can be assigned via the cli
-menrva_view = ActionNeed('menrva-view')
-"""Permission to view ANY published record."""
+menrva_view_published_record = ActionNeed('menrva-view-published-record')
+"""Permission to view any published record."""
 menrva_edit_published_record = ActionNeed('menrva-edit-published-record')
 """Permission to edit published record ONLY."""
 menrva_edit = ActionNeed('menrva-edit')
-"""Permission to edit ANY record's metadata."""
+"""Permission to edit published OR draft record."""
 
 
 class CurrentUserFilesPermission(object):
@@ -151,7 +151,9 @@ class ViewPermission(object):
             is_open_access(self.record) or
             has_restricted_access(self.user, self.record) or
             is_owner(self.user, self.record) or
-            Permission(menrva_view).allows(get_identity(self.user))
+            Permission(menrva_view_published_record).allows(
+                get_identity(self.user)
+            )
             # NOTE: by default any Permission has a super-user Need
         )
 
@@ -357,10 +359,9 @@ class FilesPermission(object):
 
 
 def files_permission_factory(obj, action=None):
-    """Factory function for `FilesPermission.create`.
+    """Factory function for `FilesPermission.create` (equivalent).
 
-    Not used, but kept because string version of `FilesPermission.create`
-    can't be used in configuration; whereas string version of this function
-    could if we get circular dependencies.
+    Kept in case `FilesPermission.create` can't be used in configuration
+    anymore. This could happen if we get circular dependencies.
     """
     return FilesPermission.create(obj, action)
