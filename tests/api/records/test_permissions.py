@@ -12,7 +12,7 @@ from cd2h_repo_project.modules.records.api import RecordType
 from cd2h_repo_project.modules.records.permissions import (
     CreatePermission, CurrentUserFilesPermission, ReadFilesPermission,
     RecordPermissions, edit_metadata_permission_factory,
-    files_permission_factory, is_owner, view_permission_factory
+    files_permission_factory, has_published, is_owner, view_permission_factory
 )
 
 
@@ -112,7 +112,7 @@ def test_read_files_permission(
     record = {
         '_deposit': {'owners': [owner_id]},
         'permissions': permissions,
-        'type': RecordType.published
+        'type': RecordType.published.value
     }
 
     if logged_in:
@@ -140,7 +140,9 @@ def test_read_files_permission_for_librarians(
     login_user(user)
     record = {
         'permissions': permissions,
-        'type': RecordType.published if published else RecordType.draft
+        'type': (
+            RecordType.published.value if published else RecordType.draft.value
+        )
     }
 
     assert ReadFilesPermission(current_user, record).can() is allowed
@@ -168,8 +170,6 @@ def test_edit_metadata_permission_factory(
         user_id, logged_in, provides, owner_id, has_published, allowed,
         create_user, create_record, request_ctx):
     user = create_user({'id': user_id, 'provides': [provides]})
-    # NOTE: edit_metadata_permission is always applied to a Deposit (draft)
-    #       This Deposit may or may not have an associated Record (published)
     deposit = create_record(
         {'_deposit': {'owners': [owner_id]}},
         published=False
@@ -239,7 +239,7 @@ def test_view_permission_factory(
     record = {
         '_deposit': {'owners': [owner_id]},
         'permissions': permissions,
-        'type': RecordType.published
+        'type': RecordType.published.value
     }
 
     permission = view_permission_factory(record)
@@ -248,7 +248,7 @@ def test_view_permission_factory(
 
 
 def test_view_permission_factory_unpublished_record():
-    record = {'type': RecordType.draft}
+    record = {'type': RecordType.draft.value}
 
     permission = view_permission_factory(record)
 
@@ -265,3 +265,9 @@ def test_view_permission_factory_unpublished_record():
 )
 def test_is_private(record, expected):
     assert RecordPermissions.is_private(record) is expected
+
+
+def test_has_published_for_published_record_should_return_true(create_record):
+    published_record = create_record()
+
+    assert has_published(published_record) is True

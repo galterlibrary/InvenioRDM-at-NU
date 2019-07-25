@@ -52,7 +52,9 @@ class FileObject(_FileObject):
 
 
 class Record(_Record):
-    """menrva Record.
+    """menrva API interface to a published record (a Record in Invenio).
+
+    TODO: Use `published_record` as parameter to refer to this class.
 
     Needed because we customized the file class.
     """
@@ -70,12 +72,19 @@ class RecordType(Enum):
     draft = "draft"
     published = "published"
 
+    @classmethod
+    def is_published(cls, record_or_deposit):
+        """Returns True if we are dealing with a published record."""
+        return record_or_deposit['type'] == cls.published.value
+
 
 class Deposit(_Deposit):
-    """CD2H's in memory API interface to a draft record (a deposit in Invenio).
+    """CD2H's in memory API interface to a draft record (a Deposit in Invenio).
 
     This is the model for a draft and Record is the model for a published
     record.
+
+    TODO: Use `draft` or `deposit` as parameter to refer to this class.
 
     This is an attempt to rely as much as possible on invenio_deposit
     while customizing for our needs.
@@ -281,3 +290,7 @@ class Deposit(_Deposit):
         Status required: ``'draft'``.
         """
         super(Deposit, self).clear(*args, **kwargs)
+
+
+# TODO: Use `record` or `draft_or_published` or `generic_record` as parameter
+#       to refer to either Record or Deposit.

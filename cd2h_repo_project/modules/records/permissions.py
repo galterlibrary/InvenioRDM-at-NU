@@ -108,16 +108,20 @@ class RecordPermissions(object):
 
 
 class CreatePermission(object):
-    """Gate to allow or not creation of a record (deposit metadata)."""
+    """Gate to allow or not creation of a draft."""
 
-    def __init__(self, user, record):
+    def __init__(self, user, draft):
         """Constructor."""
         self.user = user
-        self.record = record
+        self.draft = draft
 
     @classmethod
     def create(cls, record):
-        """Factory."""
+        """Factory.
+
+        `record` must be kept as argument because record=record is used by
+        external module.
+        """
         return cls(current_user, record)
 
     def can(self):
@@ -132,25 +136,20 @@ class ViewPermission(object):
 
     NOTE: This is a wider and simpler permission net; it is used for viewing
           metadata and files. It should be set in config.py for UI and API.
-    TODO: Separate permissions to view metadata and files.
     """
 
-    def __init__(self, user, record):
+    def __init__(self, user, published_record):
         """Constructor."""
         self.user = user
-        self.record = record
+        self.published_record = published_record
 
     def can(self):
-        """Return boolean if permission valid.
-
-        Enforce the fact that this is only for published record.
-        Unpublished records (deposits) can only be viewed if they can be
-        edited.
-        """
-        return self.record['type'] == RecordType.published and (
-            is_open_access(self.record) or
-            has_restricted_access(self.user, self.record) or
-            is_owner(self.user, self.record) or
+        """Return boolean if permission valid."""
+        # Enforce the fact that this is only for published record.
+        return RecordType.is_published(self.published_record) and (
+            is_open_access(self.published_record) or
+            has_restricted_access(self.user, self.published_record) or
+            is_owner(self.user, self.published_record) or
             Permission(menrva_view_published_record).allows(
                 get_identity(self.user)
             )
@@ -159,44 +158,41 @@ class ViewPermission(object):
 
 
 def view_permission_factory(record):
-    """Returns ViewPermission object."""
-    return ViewPermission(current_user, record)
+    """Returns ViewPermission object.
 
-
-def view_draft_permission_factory(record):
-    """Returns ViewPermission object."""
+    `record` parameter must be kept because record=record is used externally.
+    """
     return ViewPermission(current_user, record)
 
 
 class EditMetadataPermission(object):
-    """Gate to allow or not update of a record metadata via its draft.
+    """Gate to allow or not update of a record metadata.
 
     We reuse Zenodo's pattern, while trying to simplify it and make it more
     explicit.
 
+    NOTE: It is passed a record (draft OR published).
     NOTE: This is currently used for metadata and files i.e. editing a deposit.
     TODO: Use this just for metadata.
     """
 
-    def __init__(self, user, draft):
+    def __init__(self, user, record):
         """Constructor.
 
         :param user: typically the current_user.
-        :param draft: a Deposit. Even when editing a published draft, its
-                       deposit is what Invenio sends.
+        :param record: a draft (unpublished record) or published record.
         """
         self.user = user
-        self.draft = draft
+        self.record = record
 
     def can(self):
         """Return boolean if permission valid."""
         identity = get_identity(self.user)
-
         return (
-            is_owner(self.user, self.draft) or
+            is_owner(self.user, self.record) or
             (
                 Permission(menrva_edit_published_record).allows(identity) and
-                has_published(self.draft)
+                has_published(self.record)
             ) or
             Permission(menrva_edit).allows(identity)
             # NOTE: by default any Permission has a super-user Need
@@ -225,8 +221,7 @@ def has_restricted_access(user, record):
     """Returns True if record is restricted and user is authenticated."""
     return (
         record.get('permissions', '').startswith('restricted_') and
-        user and
-        user.is_authenticated
+        user and user.is_authenticated
     )
 
 
@@ -238,12 +233,14 @@ def is_open_access(record):
     return record.get('permissions', '').startswith('all_')
 
 
-def has_published(deposit):
-    """Returns True if the deposit has any published record.
+def has_published(record):
+    """Returns True if the record has any published record.
+
+    NOTE: the published record might be itself.
 
     For efficiency, we don't hit the database.
     """
-    pid = deposit.get('_deposit', {}).get('pid', {})
+    pid = record.get('_deposit', {}).get('pid', {})
     return bool(pid.get('value')) and bool(pid.get('type'))
 
 
