@@ -277,6 +277,12 @@ def has_published(record):
 #     return DepositPermission.create(record=record, action='update')
 
 
+class CreateFilesPermission(EditMetadataPermission):
+    """Gate to allow creation of files for a record."""
+
+    pass
+
+
 class ReadFilesPermission(ViewPermission):
     """Gate to allow reading of files for a record.
 

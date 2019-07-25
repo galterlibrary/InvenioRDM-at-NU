@@ -10,8 +10,8 @@ from invenio_files_rest.models import Bucket
 
 from cd2h_repo_project.modules.records.api import RecordType
 from cd2h_repo_project.modules.records.permissions import (
-    CreatePermission, CurrentUserFilesPermission, ReadFilesPermission,
-    RecordPermissions, edit_metadata_permission_factory,
+    CreatePermission, CurrentUserFilesPermission, CreateFilesPermission,
+    ReadFilesPermission, RecordPermissions, edit_metadata_permission_factory,
     files_permission_factory, has_published, is_owner, view_permission_factory
 )
 
@@ -83,6 +83,88 @@ def test_files_permission_factory_for_bucket_obj_returns_ReadFilesPermission(
 
     assert type(permission) == ReadFilesPermission
     assert request.current_file_record
+
+
+def test_create_files_permission_anonymous_user_not_allowed():
+    record = {'type': RecordType.draft.value}  # content doesn't matter
+
+    assert CreateFilesPermission(current_user, record).can() is False
+
+
+@pytest.mark.parametrize(
+    'user_id, owner_id, published, allowed',
+    [
+        # The below cases are mostly for drafts because it is more realistic
+        # regular user - non-owned draft
+        (1, 2, False, False),
+        # regular user - non-owned published record (not common)
+        (1, 2, True, False),
+        # owner - owned draft (most common)
+        (1, 1, False, True),
+        # owner - owned published record
+        (1, 1, True, True),
+    ]
+)
+def test_create_files_permission_regular_user(
+        user_id, owner_id, published, allowed,
+        create_user, request_ctx):
+    user = create_user({'id': user_id})  # user is automatically authenticated
+    record = {
+        '_deposit': {'owners': [owner_id]},
+        'type': (
+            RecordType.published.value if published else RecordType.draft.value
+        )
+    }
+
+    assert CreateFilesPermission(user, record).can() is allowed
+
+
+@pytest.mark.parametrize(
+    'has_published, allowed',
+    [
+        # librarian - pure draft
+        (False, False),
+        # librarian - draft of published record
+        (True, True),
+    ]
+)
+def test_create_files_permission_librarian(
+        has_published, allowed,
+        create_record, create_user, request_ctx):
+    user = create_user({'id': 1, 'provides': ['menrva-edit-published-record']})
+    deposit = create_record(
+        {'_deposit': {'owners': [2]}},
+        published=False  # most common case
+    )
+
+    if has_published:
+        deposit.publish()
+
+    assert CreateFilesPermission(user, deposit).can() is allowed
+
+
+@pytest.mark.parametrize(
+    'has_published, allowed',
+    [
+        # SUPER_USER - pure draft
+        (False, True),
+        # SUPER_USER - draft of published record
+        (True, True),
+    ]
+)
+def test_create_files_permission_superuser(
+        has_published, allowed,
+        create_record, create_user, request_ctx):
+    user = create_user({'id': 1, 'provides': ['superuser-access']})
+    deposit = create_record(
+        {'_deposit': {'owners': [2]}},
+        published=False  # most common case
+    )
+
+    if has_published:
+        deposit.publish()
+
+    assert CreateFilesPermission(user, deposit).can() is allowed
 
 
 @pytest.mark.parametrize(
