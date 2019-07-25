@@ -24,57 +24,6 @@ menrva_edit = ActionNeed('menrva-edit')
 """Permission to edit published OR draft record."""
 
 
-class CurrentUserFilesPermission(object):
-    """Current user's permission for files in deposit / record.
-
-    This Permission-style class presents an interface that invenio-files-rest
-    expects.
-
-    TODO: Refactor this for consistency with other approaches.
-    """
-
-    update_actions = [
-        'bucket-read',
-        'bucket-read-versions',
-        'bucket-update',
-        'bucket-listmultiparts',
-        'object-read',
-        'object-read-version',
-        'object-delete',
-        'object-delete-version',
-        'multipart-read',
-        'multipart-delete',
-    ]
-
-    def __init__(self, record, can_implementation):
-        """Initialize a file permission object."""
-        self.record = record
-        self._can = can_implementation
-
-    def can(self):
-        """Determine access for the current_user.
-
-        CurrentUserFilesPermission respects the notion that admins are
-        all-powerful.
-        """
-        return (
-            self._can(current_user, self.record) or
-            Permission(ActionNeed('admin-access')).can()
-        )
-
-    @classmethod
-    def create(cls, record, action):
-        """Create a CurrentUserFilesPermission.
-
-        Create a CurrentUserFilesPermission for `record` based on
-        `action`.
-        """
-        if action in cls.update_actions:
-            return cls(record, is_owner)
-        else:
-            return Permission(ActionNeed('admin-access'))
-
-
 class RecordPermissions(object):
     """Encompass all RecordPermissions.
 
@@ -336,7 +285,7 @@ class FilesPermission(object):
         # Retrieve record
         if not bucket_id:
             # Don't think this conditional should be hit
-            return Permission(ActionNeed('admin-access'))
+            return Permission(ActionNeed('superuser-access'))
 
         # WARNING: invenio-records-files implies a one-to-one relationship
         #          between Record and Bucket, but does not enforce it
@@ -344,7 +293,7 @@ class FilesPermission(object):
         record_bucket = \
             RecordsBuckets.query.filter_by(bucket_id=bucket_id).one_or_none()
         if not record_bucket:
-            return Permission(ActionNeed('admin-access'))
+            return Permission(ActionNeed('superuser-access'))
 
         record_metadata = record_bucket.record
         record = Record(record_metadata.json, model=record_metadata)
@@ -356,9 +305,12 @@ class FilesPermission(object):
         if record:
             # TODO: Differentiate between actions
             if action in cls.actions:
-                return ReadFilesPermission(current_user, record)
-            else:
-                return Permission(ActionNeed('admin-access'))
+                if '-read' in action:
+                    return ReadFilesPermission(current_user, record)
+                elif '-update' in action:
+                    return CreateFilesPermission(current_user, record)
+
+        return Permission(ActionNeed('superuser-access'))
 
 
 def files_permission_factory(obj, action=None):

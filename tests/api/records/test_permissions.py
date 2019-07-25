@@ -1,4 +1,3 @@
-from unittest import TestCase
 from unittest.mock import Mock
 
 import pytest
@@ -6,13 +5,13 @@ from flask import request
 from flask_principal import ActionNeed
 from flask_security import current_user, login_user
 from invenio_access import Permission
-from invenio_files_rest.models import Bucket
+from invenio_files_rest.models import Bucket, ObjectVersion
 
 from cd2h_repo_project.modules.records.api import RecordType
 from cd2h_repo_project.modules.records.permissions import (
-    CreatePermission, CurrentUserFilesPermission, CreateFilesPermission,
+    CreateFilesPermission, CreatePermission, FilesPermission,
     ReadFilesPermission, RecordPermissions, edit_metadata_permission_factory,
-    files_permission_factory, has_published, is_owner, view_permission_factory
+    has_published, is_owner, view_permission_factory
 )
 
 
@@ -33,56 +32,56 @@ def test_is_owner(user_id, owner_id, authenticated, expected):
     assert can is expected
 
 
-class TestCurrentUserFilesPermission(TestCase):
-    """CurrentUserFilesPermission tests."""
+class TestFilesPermission(object):
 
-    def test_create_for_bucket_update_action_returns_cls(self):
-        record = {'_deposit': {'owners': [1]}}
+    def test_factory_caches_on_request_in_request_ctx(
+            self, create_record, request_ctx):
+        record = create_record(published=False)
+        bucket_id = record['_buckets']['deposit']
+        bucket = Bucket.get(bucket_id)
 
-        permission = CurrentUserFilesPermission.create(record, 'bucket-update')
+        permission = FilesPermission.create(bucket, action='bucket-update')
 
-        assert type(permission) == CurrentUserFilesPermission
-        assert permission._can == is_owner
+        assert request.current_file_record == record
 
-    def test_create_for_crazy_action_returns_admin_permission(self):
-        record = {'_deposit': {'owners': [1]}}
+    def test_factory_create_update_action_returns_CreateFilesPermission(
+            self, create_record, request_ctx):
+        # Create/Add file == bucket-update
+        record = create_record()
+        bucket_id = record['_buckets']['deposit']
+        bucket = Bucket.get(bucket_id)
 
-        permission = CurrentUserFilesPermission.create(record, 'crazy')
+        permission = FilesPermission.create(bucket, action='bucket-update')
+
+        assert type(permission) == CreateFilesPermission
+
+    def test_factory_read_action_returns_ReadFilesPermission(
+            self, create_record, request_ctx):
+        record = create_record()
+        bucket_id = record['_buckets']['deposit']
+        bucket = Bucket.get(bucket_id)
+        # Read file == read on an ObjectVersion
+        obj = ObjectVersion.create(bucket, 'foo.txt')
+
+        permission = FilesPermission.create(obj, action='object-read')
+
+        assert type(permission) == ReadFilesPermission
+
+    def test_factory_for_unknown_obj_returns_superuser_permission(self):
+        unknown_obj = {}
+
+        permission = FilesPermission.create(unknown_obj, 'bucket-update')
 
         assert type(permission) == Permission
-        assert ActionNeed('admin-access') in permission.explicit_needs
+        assert ActionNeed('superuser-access') in permission.explicit_needs
 
+    def test_factory_for_unknown_action_returns_superuser_permission(self):
+        record = {'_deposit': {'owners': [1]}}
 
-def test_files_permission_factory_for_unknown_obj_returns_admin_permission():
-    unknown_obj = {}
+        permission = FilesPermission.create(record, 'unknown')
 
-    permission = files_permission_factory(unknown_obj, action='bucket-update')
-
-    assert type(permission) == Permission
-    assert ActionNeed('admin-access') in permission.explicit_needs
-
-
-def test_files_permission_factory_for_bucket_obj_outside_request_returns_admin_permission(  # noqa
-        create_record):
-    create_record()
-    unknown_obj = {}
-
-    permission = files_permission_factory(unknown_obj, action='bucket-update')
-
-    assert type(permission) == Permission
-    assert ActionNeed('admin-access') in permission.explicit_needs
-
-
-def test_files_permission_factory_for_bucket_obj_returns_ReadFilesPermission(
-        create_record, request_ctx):
-    record = create_record()
-    bucket_id = record['_buckets']['deposit']
-    bucket = Bucket.get(bucket_id)
-
-    permission = files_permission_factory(bucket, action='bucket-update')
-
-    assert type(permission) == ReadFilesPermission
-    assert request.current_file_record
+        assert type(permission) == Permission
+        assert ActionNeed('superuser-access') in permission.explicit_needs
 
 
 def test_create_files_permission_anonymous_user_not_allowed():
