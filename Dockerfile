@@ -46,7 +46,7 @@ RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 RUN pip install --upgrade \
     setuptools \
     wheel \
-    pip==18.1 \
+    pip==19.2 \
     pipenv==2018.11.26 \
     uwsgi
 
