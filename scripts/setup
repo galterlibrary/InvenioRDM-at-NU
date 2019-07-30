@@ -24,7 +24,7 @@ invenio access allow superuser-access role SUPER_USER
 # ^ This is what makes SUPER_USER all-powerful
 ## Create librarian role
 invenio roles create librarian
-invenio access allow menrva-view role librarian
+invenio access allow menrva-view-published-record role librarian
 invenio access allow menrva-edit-published-record role librarian
 
 # CD2H Repo specific starter setup

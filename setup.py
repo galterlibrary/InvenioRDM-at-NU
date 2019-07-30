@@ -86,7 +86,7 @@ setup(
             'cd2hrepo_doi = cd2h_repo_project.modules.doi.ext:DigitalObjectIdentifier',
         ],
         'invenio_access.actions': [
-          'menrva-view = cd2h_repo_project.modules.records.permissions:menrva_view',
+          'menrva-view-published-record = cd2h_repo_project.modules.records.permissions:menrva_view_published_record',
           'menrva-edit = cd2h_repo_project.modules.records.permissions:menrva_edit',
           'menrva-edit-published-record = cd2h_repo_project.modules.records.permissions:menrva_edit_published_record',
         ],

@@ -9,115 +9,19 @@ from invenio_deposit.utils import check_oauth2_scope
 from invenio_files_rest.models import Bucket, MultipartObject, ObjectVersion
 from invenio_records_files.models import RecordsBuckets
 
-from cd2h_repo_project.modules.records.api import FileObject, Record
+from cd2h_repo_project.modules.records.api import (
+    FileObject, Record, RecordType
+)
 from cd2h_repo_project.utils import get_identity
 
 # Need instances #
 # These are granular badge-like permissions that can be assigned via the cli
-menrva_view = ActionNeed('menrva-view')
-"""Permission to view ANY published record."""
+menrva_view_published_record = ActionNeed('menrva-view-published-record')
+"""Permission to view any published record."""
 menrva_edit_published_record = ActionNeed('menrva-edit-published-record')
 """Permission to edit published record ONLY."""
 menrva_edit = ActionNeed('menrva-edit')
-"""Permission to edit ANY record's metadata."""
-
-
-class CurrentUserFilesPermission(object):
-    """Current user's permission for files in deposit / record.
-
-    This Permission-style class presents an interface that invenio-files-rest
-    expects.
-
-    TODO: Refactor this for consistency with other approaches.
-    """
-
-    update_actions = [
-        'bucket-read',
-        'bucket-read-versions',
-        'bucket-update',
-        'bucket-listmultiparts',
-        'object-read',
-        'object-read-version',
-        'object-delete',
-        'object-delete-version',
-        'multipart-read',
-        'multipart-delete',
-    ]
-
-    def __init__(self, record, can_implementation):
-        """Initialize a file permission object."""
-        self.record = record
-        self._can = can_implementation
-
-    def can(self):
-        """Determine access for the current_user.
-
-        CurrentUserFilesPermission respects the notion that admins are
-        all-powerful.
-        """
-        return (
-            self._can(current_user, self.record) or
-            Permission(ActionNeed('admin-access')).can()
-        )
-
-    @classmethod
-    def create(cls, record, action):
-        """Create a CurrentUserFilesPermission.
-
-        Create a CurrentUserFilesPermission for `record` based on
-        `action`.
-        """
-        if action in cls.update_actions:
-            return cls(record, is_owner)
-        else:
-            return Permission(ActionNeed('admin-access'))
-
-
-def files_permission_factory(obj, action=None):
-    """
-    Permission for files.
-
-    This dynamically generates the permissions required to access
-    `obj`. `check_permission` is typically used on the returned value to
-    assess if the permissions are met.
-
-    For now, it covers:
-    - Deposit Owner has permission to add a file to the bucket associated with
-      the record (at creation time) i.e. `obj` is a Bucket.
-
-    TODO: Add/modify the file permissions based on our needs over time.
-
-    Adapted from https://github.com/zenodo/zenodo
-    """
-    # Extract bucket id
-    bucket_id = None
-    if isinstance(obj, Bucket):
-        bucket_id = str(obj.id)
-    elif isinstance(obj, ObjectVersion):
-        bucket_id = str(obj.bucket_id)
-    elif isinstance(obj, MultipartObject):
-        bucket_id = str(obj.bucket_id)
-    elif isinstance(obj, FileObject):
-        bucket_id = str(obj.bucket_id)
-
-    # Retrieve record
-    if bucket_id is not None:
-        # WARNING: invenio-records-files implies a one-to-one relationship
-        #          between Record and Bucket, but does not enforce it
-        #          "for better future" the invenio-records-files code says
-        record_bucket = \
-            RecordsBuckets.query.filter_by(bucket_id=bucket_id).one_or_none()
-        if record_bucket is not None:
-            record = Record.get_record(record_bucket.record_id)
-
-            # "Cache" the file's record in the request context
-            if record and request:
-                setattr(request, 'current_file_record', record)
-
-            if record:
-                return CurrentUserFilesPermission.create(record, action)
-
-    return Permission(ActionNeed('admin-access'))
+"""Permission to edit published OR draft record."""
 
 
 class RecordPermissions(object):
@@ -153,16 +57,20 @@ class RecordPermissions(object):
 
 
 class CreatePermission(object):
-    """Gate to allow or not creation of a record (deposit metadata)."""
+    """Gate to allow or not creation of a draft."""
 
-    def __init__(self, user, record):
+    def __init__(self, user, draft):
         """Constructor."""
         self.user = user
-        self.record = record
+        self.draft = draft
 
     @classmethod
     def create(cls, record):
-        """Factory."""
+        """Factory.
+
+        `record` must be kept as argument because record=record is used by
+        external module.
+        """
         return cls(current_user, record)
 
     def can(self):
@@ -173,68 +81,67 @@ class CreatePermission(object):
 
 
 class ViewPermission(object):
-    """Gate to allow or not view of a record.
+    """Gate to allow or not view of a published record.
 
     NOTE: This is a wider and simpler permission net; it is used for viewing
           metadata and files. It should be set in config.py for UI and API.
-    TODO: Separate permissions to view metadata and files.
     """
 
-    def __init__(self, user, record):
+    def __init__(self, user, published_record):
         """Constructor."""
         self.user = user
-        self.record = record
+        self.published_record = published_record
 
     def can(self):
         """Return boolean if permission valid."""
-        return (
-            is_open_access(self.record) or
-            has_restricted_access(self.user, self.record) or
-            is_owner(self.user, self.record) or
-            Permission(menrva_view).allows(get_identity(self.user))
+        # Enforce the fact that this is only for published record.
+        return RecordType.is_published(self.published_record) and (
+            is_open_access(self.published_record) or
+            has_restricted_access(self.user, self.published_record) or
+            is_owner(self.user, self.published_record) or
+            Permission(menrva_view_published_record).allows(
+                get_identity(self.user)
+            )
             # NOTE: by default any Permission has a super-user Need
         )
 
 
 def view_permission_factory(record):
-    """Returns ViewPermission object."""
-    return ViewPermission(current_user, record)
+    """Returns ViewPermission object.
 
-
-def view_draft_permission_factory(record):
-    """Returns ViewPermission object."""
+    `record` parameter must be kept because record=record is used externally.
+    """
     return ViewPermission(current_user, record)
 
 
 class EditMetadataPermission(object):
-    """Gate to allow or not update of a record metadata via its draft.
+    """Gate to allow or not update of a record metadata.
 
     We reuse Zenodo's pattern, while trying to simplify it and make it more
     explicit.
 
+    NOTE: It is passed a record (draft OR published).
     NOTE: This is currently used for metadata and files i.e. editing a deposit.
     TODO: Use this just for metadata.
     """
 
-    def __init__(self, user, draft):
+    def __init__(self, user, record):
         """Constructor.
 
         :param user: typically the current_user.
-        :param draft: a Deposit. Even when editing a published draft, its
-                       deposit is what Invenio sends.
+        :param record: a draft (unpublished record) or published record.
         """
         self.user = user
-        self.draft = draft
+        self.record = record
 
     def can(self):
         """Return boolean if permission valid."""
         identity = get_identity(self.user)
-
         return (
-            is_owner(self.user, self.draft) or
+            is_owner(self.user, self.record) or
             (
                 Permission(menrva_edit_published_record).allows(identity) and
-                has_published(self.draft)
+                has_published(self.record)
             ) or
             Permission(menrva_edit).allows(identity)
             # NOTE: by default any Permission has a super-user Need
@@ -263,8 +170,7 @@ def has_restricted_access(user, record):
     """Returns True if record is restricted and user is authenticated."""
     return (
         record.get('permissions', '').startswith('restricted_') and
-        user and
-        user.is_authenticated
+        user and user.is_authenticated
     )
 
 
@@ -276,13 +182,16 @@ def is_open_access(record):
     return record.get('permissions', '').startswith('all_')
 
 
-def has_published(deposit):
-    """Returns True if the deposit has any published record.
+def has_published(record):
+    """Returns True if the record has any published record.
+
+    NOTE: the published record might be itself.
 
     For efficiency, we don't hit the database.
     """
-    pid = deposit.get('_deposit', {}).get('pid', {})
+    pid = record.get('_deposit', {}).get('pid', {})
     return bool(pid.get('value')) and bool(pid.get('type'))
+
 
 # TODO: Enable when working on out-of-browser API interface
 # def check_oauth2_write_scope(can_method):
@@ -315,3 +224,99 @@ def has_published(deposit):
 #         if action in DepositPermission.protected_actions:
 #             return DepositPermission.create(record=record, action=action)
 #     return DepositPermission.create(record=record, action='update')
+
+
+class CreateFilesPermission(EditMetadataPermission):
+    """Gate to allow creation of files for a record."""
+
+    pass
+
+
+class ReadFilesPermission(ViewPermission):
+    """Gate to allow reading of files for a record.
+
+    TODO: ViewPermission -> ReadRecordPermission
+    TODO: Differentiate between {ReadRecord,ReadFiles}Permission
+    """
+
+    pass
+
+
+class FilesPermission(object):
+    """Gates to allow or not files actions.
+
+    This dynamically generates the permissions required to access
+    `obj`. `check_permission` is typically used on the returned value to
+    assess if the permissions are met.
+    """
+
+    actions = [
+        'bucket-read',
+        'bucket-read-versions',
+        'bucket-update',
+        'bucket-listmultiparts',
+        'object-read',  # Read/Download a file action
+        'object-read-version',
+        'object-delete',
+        'object-delete-version',
+        'multipart-read',
+        'multipart-delete',
+    ]
+
+    @classmethod
+    def create(cls, obj, action):
+        """Create an <Action>FilesPermission for record associated with `obj`.
+
+        For now it defaults to ReadFilesPermission for all actions.
+
+        Adapted from https://github.com/zenodo/zenodo
+        """
+        # Extract bucket id
+        bucket_id = None
+        if isinstance(obj, Bucket):
+            bucket_id = str(obj.id)
+        elif isinstance(obj, ObjectVersion):
+            bucket_id = str(obj.bucket_id)
+        elif isinstance(obj, MultipartObject):
+            bucket_id = str(obj.bucket_id)
+        elif isinstance(obj, FileObject):
+            bucket_id = str(obj.bucket_id)
+
+        # Retrieve record
+        if not bucket_id:
+            # Don't think this conditional should be hit
+            return Permission(ActionNeed('superuser-access'))
+
+        # WARNING: invenio-records-files implies a one-to-one relationship
+        #          between Record and Bucket, but does not enforce it
+        #          "for better future" the invenio-records-files code says
+        record_bucket = \
+            RecordsBuckets.query.filter_by(bucket_id=bucket_id).one_or_none()
+        if not record_bucket:
+            return Permission(ActionNeed('superuser-access'))
+
+        record_metadata = record_bucket.record
+        record = Record(record_metadata.json, model=record_metadata)
+
+        # "Cache" the file's record in the request context
+        if record and request:
+            setattr(request, 'current_file_record', record)
+
+        if record:
+            # TODO: Differentiate between actions
+            if action in cls.actions:
+                if '-read' in action:
+                    return ReadFilesPermission(current_user, record)
+                elif '-update' in action:
+                    return CreateFilesPermission(current_user, record)
+
+        return Permission(ActionNeed('superuser-access'))
+
+
+def files_permission_factory(obj, action=None):
+    """Factory function for `FilesPermission.create` (equivalent).
+
+    Kept in case `FilesPermission.create` can't be used in configuration
+    anymore. This could happen if we get circular dependencies.
+    """
+    return FilesPermission.create(obj, action)
