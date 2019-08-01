@@ -65,14 +65,10 @@ ARG PIPENV_SYNC_OPTIONS
 
 RUN mkdir -p ${WORKING_DIR}/src
 
-# Install locked production dependencies now to speed up build
-# (by having this step cached)
-COPY Pipfile Pipfile.lock requirements-vcs.txt ${WORKING_DIR}/src/
-WORKDIR ${WORKING_DIR}/src
-# This will create the virtualenv locally (see below: ${WORKING_DIR}/src)
-ENV PIPENV_VENV_IN_PROJECT=1
-RUN pipenv sync ${PIPENV_SYNC_OPTIONS}
-RUN pipenv run pip install -r requirements-vcs.txt
+# Create mount points for volumes
+RUN mkdir ${INVENIO_INSTANCE_PATH}/static
+RUN mkdir ${INVENIO_INSTANCE_PATH}/data
+RUN mkdir ${INVENIO_INSTANCE_PATH}/archive
 
 # Install global nodejs tools
 ## Reset global npm location to avoid permission issues
@@ -84,23 +80,26 @@ RUN npm update  && \
     npm install --global --unsafe-perm \
     node-sass@4.9.0 clean-css@3.4.19 uglify-js@2.7.3 requirejs@2.2.0
 
+# Set folder permissions
+RUN chgrp -R 0 ${WORKING_DIR} && \
+    chmod -R g=u ${WORKING_DIR}
+RUN useradd invenio --uid 1000 --gid 0 --create-home && \
+    chown -R invenio:root ${WORKING_DIR}
+
+# Install locked production dependencies now to speed up build
+# (by having this step cached)
+COPY Pipfile Pipfile.lock requirements-vcs.txt ${WORKING_DIR}/src/
+WORKDIR ${WORKING_DIR}/src
+# This will create the virtualenv locally (see below: ${WORKING_DIR}/src)
+ENV PIPENV_VENV_IN_PROJECT=1
+RUN pipenv sync ${PIPENV_SYNC_OPTIONS}
+RUN pipenv run pip install -r requirements-vcs.txt
+
 # Copy source code (this WILL bust the cache)
 COPY ./ ${WORKING_DIR}/src
 
 # Install project (use pip so project is NOT added to Pipfile)
 RUN pipenv run pip install .
 
-# Create mount points for volumes
-RUN mkdir ${INVENIO_INSTANCE_PATH}/static
-RUN mkdir ${INVENIO_INSTANCE_PATH}/data
-RUN mkdir ${INVENIO_INSTANCE_PATH}/archive
-
-# Set folder permissions
-RUN chgrp -R 0 ${WORKING_DIR} && \
-    chmod -R g=u ${WORKING_DIR}
-
-RUN useradd invenio --uid 1000 --gid 0 --create-home && \
-    chown -R invenio:root ${WORKING_DIR}
 USER 1000
-
 EXPOSE 5000
