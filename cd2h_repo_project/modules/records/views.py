@@ -7,6 +7,7 @@
 
 """Blueprint definitions."""
 
+import re
 from collections import defaultdict
 
 from flask import Blueprint, current_app, redirect, render_template, url_for
@@ -163,5 +164,8 @@ def is_private(record):
 
 @blueprint.app_template_filter('citation')
 def citation(record, pid, style='chicago-fullnote-bibliography'):
-    """Render citation for record according to style and language."""
-    return citeproc_v1.serialize(pid, record, style=style)
+    """Render citation for record according to style."""
+    citation_str = citeproc_v1.serialize(pid, record, style=style)
+    # Hack to format 'national-library-of-medicine' and others that start
+    # with '1. ' correctly
+    return re.sub(r'^1\. ', '', citation_str)

@@ -1,10 +1,11 @@
 from unittest.mock import Mock
 
 import pytest
+from invenio_pidstore.models import PersistentIdentifier
 
 from cd2h_repo_project.modules.records.marshmallow.json import LICENSES
 from cd2h_repo_project.modules.records.views import (
-    extract_files, license_value_to_name, permissions_to_access_name,
+    citation, extract_files, license_value_to_name, permissions_to_access_name,
     permissions_to_label_css, to_available_options
 )
 
@@ -121,3 +122,15 @@ def test_permissions_to_label_css(permissions, expected):
     ])
 def test_permissions_to_access_name(permissions, expected):
     assert permissions_to_access_name(permissions) == expected
+
+
+def test_nlm_citation_isnt_ordered_list_item(config, create_record):
+    record = create_record()
+    pid = PersistentIdentifier.get(
+        record['_deposit']['pid']['type'],
+        record['_deposit']['pid']['value'],
+    )
+
+    citation_str = citation(record, pid, style='national-library-of-medicine')
+
+    assert not citation_str.startswith('1. ')
