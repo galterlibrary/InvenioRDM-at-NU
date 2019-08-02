@@ -52,7 +52,6 @@ services:
     ports:
       - "5001"
     volumes:
-      - static_data:/opt/cd2h-repo-project/var/instance/static
       - uploaded_data:/opt/cd2h-repo-project/var/instance/data
       - archived_data:/opt/cd2h-repo-project/var/instance/archive
     links:
