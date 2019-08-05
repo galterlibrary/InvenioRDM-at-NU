@@ -79,22 +79,11 @@
     <div class="col-md-4">
       {%- include "records/files_list.html" %}
 
-      {# Actions #}
-      {% if current_user|has_edit_metadata_permission(record) %}
-      <a id="edit-action" class="btn btn-default btn-block"
-         href="{{ url_for('invenio_deposit_ui.depid', pid_value=record._deposit.id) }}">
-        <i class="fa fa-pencil-square-o"></i> Edit
-      </a>
-      {% endif %}
-
-      <a id="cite-action" class="btn btn-default btn-block" data-toggle="modal" data-target="#citationModal">
-        <i class="fa fa-quote-left"></i> Cite
-      </a>
-
       <br>
+
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-6">
 
       <div>
         <ul class="list-inline authors">
@@ -147,6 +136,25 @@
         </dl>
       </div>
 
+    </div>
+
+    <div class="col-md-2">
+      {# Statistics #}
+      {%- include "records/stats.html" %}
+
+      <br>
+
+      {# Actions #}
+      {% if current_user|has_edit_metadata_permission(record) %}
+      <a id="edit-action" class="btn btn-default btn-block"
+         href="{{ url_for('invenio_deposit_ui.depid', pid_value=record._deposit.id) }}">
+        <i class="fa fa-pencil-square-o"></i> Edit
+      </a>
+      {% endif %}
+
+      <a id="cite-action" class="btn btn-default btn-block" data-toggle="modal" data-target="#citationModal">
+        <i class="fa fa-quote-left"></i> Cite
+      </a>
     </div>
 
     {# Modals #}

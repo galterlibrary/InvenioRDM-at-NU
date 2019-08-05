@@ -1,0 +1,29 @@
+{# {%- from "zenodo_records/macros/altmetric.html" import altmetric_badge -%} #}
+{# record|record_stats or  #}
+{%- set stats = {'views': 10, 'downloads': 5} %}
+{%- set show_version_stats = False -%}
+
+{%- macro tooltip_icon(title, icon='question-circle', _class='text-muted', placement='top') -%}
+<i class="fa fa-{{ icon }} {{ _class }}" data-toggle="tooltip" tooltip data-placement="{{ placement }}" title="{{ title }}" data-original-title="{{ title }}"></i>
+{%- endmacro -%}
+
+<!-- Stats -->
+<div class="row stats-box">
+  <div id="accordion"> {# To allow extension #}
+    <!-- Banner -->
+    {%- set banner_views = stats.version_views if show_version_stats else stats.views -%}
+    {%- set banner_downloads = stats.version_downloads if show_version_stats else stats.downloads -%}
+    <div class="row">
+      {{ tooltip_icon('Total views.', icon='eye', _class='') }} {{ banner_views }} views
+    </div>
+    <div class="row">
+      {{ tooltip_icon('Total downloads.', icon='download', _class='') }} {{ banner_downloads }} downloads
+    </div>
+  </div>
+</div>
+
+<!-- Altmetric -->
+{# {%- if record.doi %}
+  {{ altmetric_badge(record.doi) }}
+{%- endif %}
+ #}
