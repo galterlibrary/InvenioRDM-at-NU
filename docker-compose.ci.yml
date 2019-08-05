@@ -16,8 +16,8 @@ services:
       service: app
     build:
       context: ./
-    command: pipenv run ./run-ci-tests.sh
-    image: cd2h-repo-project-ci
+    command: sh -c "pipenv run ./scripts/bootstrap && pipenv run ./run-ci-tests.sh"
+    image: cd2h-repo-project
     # TODO: 'links' are deprecated, use 'networks'
     links:
       - cache

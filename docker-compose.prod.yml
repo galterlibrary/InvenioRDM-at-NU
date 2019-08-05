@@ -5,6 +5,8 @@
 # CD2H Repo Project is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
+# In production, we are limited by RHEL 7.6, support for 1.13.X docker
+# which only supports at most version '2.2'
 version: '2.2'
 services:
   # Load balancer
@@ -34,6 +36,8 @@ services:
       - "5000"
     volumes:
       - static_data:/opt/cd2h-repo-project/var/instance/static
+      - uploaded_data:/opt/cd2h-repo-project/var/instance/data
+      - archived_data:/opt/cd2h-repo-project/var/instance/archive
     links:
       - cache
       - es
@@ -48,7 +52,8 @@ services:
     ports:
       - "5001"
     volumes:
-      - static_data:/opt/cd2h-repo-project/var/instance/static
+      - uploaded_data:/opt/cd2h-repo-project/var/instance/data
+      - archived_data:/opt/cd2h-repo-project/var/instance/archive
     links:
       - cache
       - es
@@ -60,6 +65,9 @@ services:
       file: docker-services.yml
       service: app
     command: "pipenv run celery worker -A invenio_app.celery --loglevel=INFO"
+    volumes:
+      - uploaded_data:/opt/cd2h-repo-project/var/instance/data
+      - archived_data:/opt/cd2h-repo-project/var/instance/archive
     links:
       - cache
       - es
@@ -101,3 +109,5 @@ services:
       - "9300:9300"
 volumes:
   static_data:
+  uploaded_data:
+  archived_data:

@@ -13,3 +13,4 @@ COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 #       Replace `private.pem` by `haproxy_cert.pem` for quick (insecure)
 #       tire kicking.
 COPY private.pem /usr/local/etc/cert.pem
+RUN apt-get update && apt-get install --yes iputils-ping

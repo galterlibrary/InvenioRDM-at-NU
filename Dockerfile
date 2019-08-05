@@ -46,7 +46,7 @@ RUN unzip chromedriver_linux64.zip -d ${WORKING_DIR}/bin/
 RUN pip install --upgrade \
     setuptools \
     wheel \
-    pip==18.1 \
+    pip==19.2 \
     pipenv==2018.11.26 \
     uwsgi
 
@@ -90,11 +90,10 @@ COPY ./ ${WORKING_DIR}/src
 # Install project (use pip so project is NOT added to Pipfile)
 RUN pipenv run pip install .
 
-# Preliminary static asset setup to give a usable image
-# WARNING: scripts/update needs to be run on the final image to
-#          really have everything setup properly
-# TODO: Remove?
-RUN pipenv run ./scripts/bootstrap
+# Create mount points for volumes
+RUN mkdir ${INVENIO_INSTANCE_PATH}/static
+RUN mkdir ${INVENIO_INSTANCE_PATH}/data
+RUN mkdir ${INVENIO_INSTANCE_PATH}/archive
 
 # Set folder permissions
 RUN chgrp -R 0 ${WORKING_DIR} && \
