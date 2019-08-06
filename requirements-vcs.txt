@@ -3,3 +3,4 @@
 -e git+https://github.com/galterlibrary/invenio-files-rest.git@0755644a10f274b7821ea512ecdf9dff833ece84#egg=invenio_files_rest
 -e git+https://github.com/galterlibrary/invenio-ldapclient.git@48b24b5bf46fd40c22dce042f54eaab6b7d377c3#egg=invenio_ldapclient
 -e git+https://github.com/caltechlibrary/datacite.git@doi-mint-enhance#egg=datacite
+-e git+https://github.com/inveniosoftware/invenio-stats.git@bc68ab89387c951186cb565b909b9e9972abcc08#egg=invenio_stats
