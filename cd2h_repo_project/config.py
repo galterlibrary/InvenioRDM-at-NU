@@ -152,6 +152,24 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'invenio_accounts.tasks.clean_session_table',
         'schedule': timedelta(minutes=60),
     },
+    # Stats
+    'stats-process-events': {
+        'task': 'invenio_stats.tasks.process_events',
+        'schedule': timedelta(minutes=30),
+        'args': [('record-view', 'file-download')],
+    },
+    'stats-aggregate-events': {
+        'task': 'invenio_stats.tasks.aggregate_events',
+        'schedule': timedelta(hours=3),
+        'args': [(
+            'record-view-agg',  # 'record-view-all-versions-agg',
+            # 'record-download-agg', 'record-download-all-versions-agg',
+        )],
+    },
+    # 'stats-update-record-statistics': {
+    #     'task': 'zenodo.modules.stats.tasks.update_record_statistics',
+    #     'schedule': crontab(minute=0, hour=1),  # Every day at 01:00 UTC
+    # },
 }
 
 # Database
@@ -686,3 +704,28 @@ ANALYTICS_URL = ''  # TODO::Hoster: CONFIGURE
 """
 ANALYTICS_SITEID = -1  # TODO::Hoster: CONFIGURE
 """Integer Site ID."""
+# invenio-stats
+# =============
+
+STATS_EVENTS = {
+    'record-view': {
+        'signal': 'invenio_records_ui.signals.record_viewed',
+        'event_builders': [
+            'invenio_stats.contrib.event_builders.record_view_event_builder',
+        ]
+    },
+    # 'file-download': {
+    #     'signal': 'invenio_files_rest.signals.file_downloaded',
+    #     'event_builders': [
+    #         'invenio_stats.contrib.event_builders.file_download_event_builder'
+    #     ]
+    # },
+}
+"""This customizes the Event emission (Message to Queue publishing)."""
+
+STATS_AGGREGATIONS = {
+    'record-view-agg': {},
+    # 'record-download-agg': {},
+    # 'record-view-all-versions-agg': {},
+}
+"""This customizes the Event Aggregation."""

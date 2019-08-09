@@ -16,7 +16,7 @@ from invenio_access.permissions import superuser_access
 from invenio_files_rest.models import Bucket, Location
 from invenio_pidstore import current_pidstore
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
-from invenio_search import current_search
+from invenio_search import current_search, current_search_client
 
 from cd2h_repo_project.modules.records.api import Deposit
 
@@ -147,3 +147,55 @@ def super_user(db, create_user):
         'password': 'admin123',
         'provides': ['superuser-access']  # from invenio-access module
     })
+
+
+def _es_delete(current_search, current_search_client):
+    # list is needed because current_search.delete is an iterator
+    list(current_search.delete(ignore=[400, 404]))
+    current_search_client.indices.delete(index='*')
+    current_search_client.indices.delete_template('*')
+
+
+@pytest.fixture(scope='function')
+def es_clear(appctx):
+    """Returns a hygienic Elasticsearch client.
+
+    This fixture is made to provide a clean environment for es tests at the
+    cost of tear-downs and build-ups.
+
+    1- deletes all Elasticsearch indices and templates.
+    2- creates all registered indices and templates.
+    3- yields the Elasticsearch client
+    4- deletes all Elasticsearch indices and templates.
+
+    TODO: Port this to pytest-invenio
+    """
+    from invenio_search import current_search, current_search_client
+
+    _es_delete(current_search, current_search_client)
+
+    # list is needed because current_search.create/put_templates are iterators
+    list(current_search.create())
+    list(current_search.put_templates())
+    current_search_client.indices.refresh()
+
+    yield current_search_client
+
+    _es_delete(current_search, current_search_client)
+
+
+@pytest.fixture()
+def message_queues(app):
+    """Returns hygienic test queues.
+
+    Deletes queues before and after.
+    """
+    from invenio_queues.proxies import current_queues
+
+    current_queues.delete()
+
+    try:
+        current_queues.declare()
+        yield current_queues.queues
+    finally:
+        current_queues.delete()
