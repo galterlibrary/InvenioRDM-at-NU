@@ -80,9 +80,9 @@ SETTINGS_TEMPLATE = 'cd2hrepo_theme/page_settings.html'
 # Theme configuration
 # ===================
 #: Site name
-THEME_SITENAME = _('Next Generation Research Repository')
+THEME_SITENAME = _('InvenioRDM @ Northwestern University')
 #: Frontpage title.
-THEME_FRONTPAGE_TITLE = _('Next Generation Research Repository')
+THEME_FRONTPAGE_TITLE = _('InvenioRDM @ Northwestern University')
 # THEME_HEADER_LOGIN_TEMPLATE = 'invenio_theme/header_login.html'
 
 # Email configuration
