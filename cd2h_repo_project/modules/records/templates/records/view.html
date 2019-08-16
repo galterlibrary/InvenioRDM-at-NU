@@ -194,14 +194,6 @@
 {% endblock content %}
 
 {% block javascript %}
-  {% assets "cd2hrepo_view_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {{ super() }}
-  <script type="text/javascript">
-    const clip = new ClipboardJS('.clipboard-btn');
-    const $tooltip = $('[data-toggle="tooltip"]');
-    $tooltip.tooltip();  // Initializes tooltips
-    $tooltip.on('show.bs.tooltip', () => {
-      $('.tooltip').not(this).remove();
-    });
-  </script>
+  {% assets "cd2hrepo_view_js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
