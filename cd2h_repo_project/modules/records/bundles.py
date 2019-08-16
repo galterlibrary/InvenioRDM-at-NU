@@ -33,6 +33,8 @@ js_search = Bundle(
 js_view = Bundle(
     NpmBundle(
         'node_modules/clipboard/dist/clipboard.js',
+        'js/view/record.js',
+        filters='requirejs',
         output="gen/cd2hrepo.view.clipboard.%(version)s.js",
         npm={
             'clipboard': '~2.0.4',
