@@ -1,9 +1,11 @@
+@import 'common';
+
 body {
   background: white;
   color: $text-color;
   font-family: Calibri,Helvetica,Arial,sans-serif;
   font-size: 16px;
-  margin: 0 0 335px 0;
+  margin: 0 0 $footer-height 0;
   padding: 0 !important;
 
   .alert.fixed {
