@@ -1,0 +1,28 @@
+<div class="well"
+  ngf-drag-over-class="'dragover'"
+  ngf-drop=""
+  ngf-change="filesVM.addFiles($newFiles)"
+  ngf-max-size="50GB"
+  ngf-multiple="true"
+>
+  <center>
+    Drop files or folders here
+  </center>
+</div>
+<p class="text-center legend"><strong>— OR —</strong></p>
+<p class="text-center">
+  <button  class="btn btn-primary"
+    ngf-max-size="50GB"
+    ngf-multiple="true"
+    ngf-select=""
+    ngf-change="filesVM.addFiles($newFiles)"
+  >
+    Click to select
+  </button>
+</p>
+<p class="text-center" ng-hide="collapsed">
+  <small class="text-muted">
+  Optional, with a maximum of 50 GB per upload. <a target="_blank" rel="noopener noreferrer" href="/contact-us">Contact us</a> for larger uploads.
+  </small>
+</p>
+<hr />

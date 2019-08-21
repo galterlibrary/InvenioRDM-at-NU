@@ -49,7 +49,7 @@
         extra-params='{"headers":{"Content-Type": "application/json"}}'
         files='{{record|extract_files|tojson}}'>
         <invenio-files-upload-zone
-          template="{{ url_for('static', filename='node_modules/invenio-files-js/dist/templates/upload.html') }}">
+          template="{{ url_for('static', filename=config.DEPOSIT_UI_JSTEMPLATE_UPLOAD) }}">
         </invenio-files-upload-zone>
         <invenio-files-list
           template="{{ url_for('static', filename=config.DEPOSIT_UI_JSTEMPLATE_FILES_LIST) }}"

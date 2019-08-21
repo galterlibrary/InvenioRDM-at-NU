@@ -170,10 +170,16 @@ class Deposit(_Deposit):
         """Generate a Deposit object.
 
         Overrides parent's `create`.
+
+        The configured quota_size and max_file_size here are for
+        public API constraints. There are no constraints
+        (apart from physical volume we have available) when creating
+        records differently.
         """
-        # TODO: Configure quota_size and max_file_size
+        max_size = 50 * 1000 * 1000 * 1000  # ~50 GB
         bucket = Bucket.create(
-            storage_class=current_app.config['DEPOSIT_DEFAULT_STORAGE_CLASS']
+            quota_size=max_size,
+            max_file_size=max_size
         )
         data['_buckets'] = {'deposit': str(bucket.id)}
         # any newly created Deposit is a draft
