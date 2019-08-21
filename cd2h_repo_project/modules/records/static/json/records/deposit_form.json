@@ -632,7 +632,7 @@
           "refreshDelay": 200
         },
         "placeholder": "Select Medical Subject Heading (MeSH) terms",
-        "description": "Optional. Medical Subject Heading (MeSH) terms."
+        "description": "Medical Subject Heading (<a href='https://www.nlm.nih.gov/mesh/meshhome.html' target='_blank'>MeSH <i class='fa fa-external-link'></i></a>) terms."
       },
       {
         "key": "fast_terms",
@@ -654,8 +654,8 @@
           },
           "refreshDelay": 200
         },
-        "placeholder": "Select Library of Congress topical terms",
-        "description": "Optional. Library of Congress topical terms."
+        "placeholder": "Select Library of Congress (FAST) topical terms",
+        "description": "Library of Congress (<a href='https://www.oclc.org/research/themes/data-science/fast.html' target='_blank'>FAST <i class='fa fa-external-link'></i></a>) topical terms."
       }
     ],
     "required": false
