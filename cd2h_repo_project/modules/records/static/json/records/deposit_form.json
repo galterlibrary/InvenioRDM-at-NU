@@ -155,10 +155,6 @@
             "name": "Journal Article"
           },
           {
-            "value": "letter to the editor",
-            "name": "Letter to the editor"
-          },
-          {
             "value": "newspaper article",
             "name": "Newspaper Article"
           },
@@ -167,8 +163,8 @@
             "name": "Research Paper"
           },
           {
-            "value": "retraction",
-            "name": "Retraction"
+            "value": "retraction of publication",
+            "name": "Retraction of Publication"
           },
           {
             "value": "review article",
@@ -187,8 +183,16 @@
         "condition": "model.resource_type.general == 'conference objects'",
         "titleMap": [
           {
+            "value": "conference abstract",
+            "name": "Conference Abstract"
+          },
+          {
             "value": "conference paper",
             "name": "Conference Paper"
+          },
+          {
+            "value": "conference poster",
+            "name": "Conference Poster"
           },
           {
             "value": "conference presentation",
@@ -201,14 +205,6 @@
           {
             "value": "congress",
             "name": "Congress"
-          },
-          {
-            "value": "meeting abstract",
-            "name": "Meeting Abstract"
-          },
-          {
-            "value": "poster",
-            "name": "Poster"
           }
         ]
       },
@@ -275,12 +271,12 @@
             "name": "Social media"
           },
           {
-            "value": "software or program code",
-            "name": "Software or Program Code"
+            "value": "software/source code",
+            "name": "Software/Source Code"
           },
           {
-            "value": "video",
-            "name": "Video"
+            "value": "video recording",
+            "name": "Video Recording"
           },
           {
             "value": "website",
@@ -339,6 +335,10 @@
             "name": "Book"
           },
           {
+            "value": "book part",
+            "name": "Book Part"
+          },
+          {
             "value": "catalog",
             "name": "Catalog"
           },
@@ -349,10 +349,6 @@
           {
             "value": "handbook",
             "name": "Handbook"
-          },
-          {
-            "value": "part of book",
-            "name": "Part of Book"
           }
         ]
       },
@@ -363,8 +359,8 @@
         "condition": "model.resource_type.general == 'study documentation'",
         "titleMap": [
           {
-            "value": "case reports",
-            "name": "Case Reports"
+            "value": "case report",
+            "name": "Case Report"
           },
           {
             "value": "clinical study",
@@ -385,6 +381,14 @@
           {
             "value": "evaluation study",
             "name": "Evaluation Study"
+          },
+          {
+            "value": "measure",
+            "name": "Measure"
+          },
+          {
+            "value": "protocol",
+            "name": "Protocol"
           },
           {
             "value": "research proposal",
@@ -408,15 +412,15 @@
           },
           {
             "value": "thesis bachelor",
-            "name": "Thesis, Bachelor"
+            "name": "Bachelor Thesis"
           },
           {
             "value": "thesis masters",
-            "name": "Thesis, Masters"
+            "name": "Masters Thesis"
           },
           {
             "value": "thesis doctoral",
-            "name": "Thesis, Doctoral"
+            "name": "Doctoral Thesis"
           }
         ]
       },
@@ -535,8 +539,8 @@
             "name": "Lecture Notes"
           },
           {
-            "value": "lesson",
-            "name": "Lesson"
+            "value": "lesson plans",
+            "name": "Lesson Plans"
           },
           {
             "value": "presentation",
@@ -577,10 +581,6 @@
           {
             "value": "annual report",
             "name": "Annual Report"
-          },
-          {
-            "value": "capstone project",
-            "name": "Capstone Project"
           },
           {
             "value": "interview",

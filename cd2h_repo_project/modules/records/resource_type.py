@@ -15,8 +15,17 @@ from os.path import dirname, join, realpath
 class ResourceType(object):
     """Resource Type.
 
-    If resource types in static/json/records/deposit_form.json changes, this
+    If resource types in static/json/records/deposit_form.json change, this
     must change as well.
+
+    TODO: There should be tighter coupling around:
+        - static/json/records/deposit_form.json
+        - resource_type_mapping.csv
+        - this
+        Perhaps these should all be served (endpoint) from 1 loaded controlled
+        vocabulary (load script).
+        Also there should be a mapping from value (identifier) to name
+        (human readable label).
     """
 
     RESOURCE_TYPES = {
@@ -26,20 +35,19 @@ class ResourceType(object):
             'data paper',
             'editorial',
             'journal article',
-            'letter to the editor',
             'newspaper article',
             'research paper',
-            'retraction',
+            'retraction of publication',
             'review article',
             'software paper',
         ],
         'conference objects': [
+            'conference abstract',
             'conference paper',
+            'conference poster',
             'conference presentation',
             'conference proceeding',
             'congress',
-            'meeting abstract',
-            'poster',
         ],
         'images': [
             'architectural drawing',
@@ -56,8 +64,8 @@ class ResourceType(object):
             'database',
             'postcard',
             'social media',
-            'software or program code',
-            'video',
+            'software/source code',
+            'video recording',
             'website',
         ],
         'periodicals': [
@@ -75,23 +83,25 @@ class ResourceType(object):
             'catalog',
             'diary',
             'handbook',
-            'part of book',
+            'book part',
         ],
         'study documentation': [
-            'case reports',
+            'case report',
             'clinical study',
             'clinical trial',
             'comparative study',
             'data management plan',
             'evaluation study',
+            'measure',
+            'protocol',
             'research proposal',
             'statistics',
         ],
         'theses and dissertations': [
             'academic dissertations',
-            'thesis bachelor',
-            'thesis masters',
-            'thesis doctoral',
+            'bachelor thesis',
+            'masters thesis',
+            'doctoral thesis',
         ],
         'text resources': [
             'abstract',
@@ -121,7 +131,7 @@ class ResourceType(object):
             'examination questions',
             'lecture',
             'lecture notes',
-            'lesson',
+            'lesson plans',
             'presentation',
             'problems and exercises',
         ],
@@ -132,7 +142,6 @@ class ResourceType(object):
         ],
         'other': [
             'annual report',
-            'capstone project',
             'interview',
             'laboratory manual',
             'table',
