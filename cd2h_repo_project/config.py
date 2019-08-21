@@ -554,13 +554,13 @@ DEPOSIT_UI_NEW_URL = '/records/new'
 DEPOSIT_UI_NEW_TEMPLATE = 'records/edit.html'
 """Template for a new deposit page."""
 
-DEPOSIT_UI_JSTEMPLATE_ACTIONS = 'templates/records/actions.html'
+DEPOSIT_UI_JSTEMPLATE_ACTIONS = 'templates/deposit/actions.html'
 """Template for <invenio-records-actions>."""
 
-DEPOSIT_UI_JSTEMPLATE_ALERT = 'templates/records/alert.html'
+DEPOSIT_UI_JSTEMPLATE_ALERT = 'templates/deposit/alert.html'
 """Template for <invenio-records-alert>."""
 
-DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/records/files_list.html'
+DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/deposit/files_list.html'
 """Template for <invenio-files-list>."""
 
 DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/search/personal_results.html'

@@ -1,13 +1,13 @@
-<div ng-show="filesVM.files.length > 0" class="panel panel-default">
+<div id="files" ng-show="filesVM.files.length > 0" class="panel panel-default">
   <table class="table">
     <tr>
       <th>Filename</th>
-      <th class="text-center">Progress</th>
-      <th class="text-center">Actions</th>
+      <th>Progress</th>
+      <th>Actions</th>
     </tr>
     <tr class="sel-file" ng-repeat="f in filesVM.files">
-      <td>
-        {{ f.key | limitTo:40 }} <span ng-show="f.key.length > 50">...</span> ({{ f.size | bytesToHumanReadable }})
+      <td class="wrap">
+        {{f.key}} ({{ f.size | bytesToHumanReadable }})
       </td>
       <td class="text-center">
         <span ng-show="f.progress < 100 && !f.errored">{{ f.progress }} %</span>
@@ -15,7 +15,7 @@
         <span ng-show="f.errored" class="text-danger">Error</span>
         <span ng-show="f.completed" class="text-success">✓</span>
       </td>
-      <td ng-show="f" class="text-center">
+      <td ng-show="f" class="text-center ">
         <a href="" ng-click="filesVM.remove(f)">
           <i class="fa fa-times-circle fa-1-dot-5x" aria-hidden="true"></i>
         </a>

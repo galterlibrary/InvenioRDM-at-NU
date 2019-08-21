@@ -1,4 +1,3 @@
-@import 'common';
 
 .deposit-panel {
   a.panel-toggle {
@@ -61,6 +60,19 @@
         margin-top: -5px;
       }
     }
+  }
+
+}
+
+// Also applies to record page
+#files .table th, #files .table td {
+  max-width: 195px;
+}
+
+@media (min-width: $screen-sm-min) {
+
+  #files .table th, #files .table td {
+    max-width: 130px;
   }
 
 }
