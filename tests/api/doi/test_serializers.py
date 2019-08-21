@@ -38,7 +38,7 @@ def datacite_record(create_record):
             ],
             'resource_type': {
                 'general': 'multimedia',
-                'specific': 'software or program code',
+                'specific': 'software/source code',
                 'full_hierarchy': ['software', 'software or program code'],
             },
         },
@@ -114,4 +114,4 @@ class TestDataCiteV4(object):
             './default:resourceType', self.NAMESPACES
         )
         assert resource_type.attrib['resourceTypeGeneral'] == 'Software'
-        assert resource_type.text == 'Software Or Program Code'
+        assert resource_type.text == 'Software/Source Code'
