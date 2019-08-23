@@ -69,7 +69,7 @@
         extra-params='{"headers":{"Content-Type": "application/json"}}'
         template-params='{{ config.DEPOSIT_UI_RESPONSE_MESSAGES | tojson }}'
         form="{{ url_for('static', filename=config.DEPOSIT_DEFAULT_SCHEMAFORM) }}"
-        record='{{ record | tojson }}'
+        record='{{ record | to_edit_ui | tojson }}'
         schema="{{ url_for('invenio_jsonschemas.get_schema', schema_path=config.DEPOSIT_DEFAULT_JSONSCHEMA) }}">
         <invenio-records-loading
           template="{{ url_for('static', filename='node_modules/invenio-records-js/dist/templates/loading.html') }}">

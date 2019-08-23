@@ -10,7 +10,7 @@
 from flask import Blueprint, jsonify, request
 from flask_security import login_required
 
-from .constants import FAST_SOURCE, MESH_SOURCE
+from .constants import FAST_SOURCE, MESH_SOURCE, SOURCES
 from .suggester import suggest_terms
 
 blueprint = Blueprint(
@@ -54,3 +54,22 @@ def mesh_suggest():
 def fast_suggest():
     """Suggest FAST keywords."""
     return suggest(FAST_SOURCE)
+
+
+@blueprint.app_template_filter('serialize_terms_for_edit_ui')
+def serialize_terms_for_edit_ui(record):
+    """Serialize record for edit page usage.
+
+    Because of the limitations of the frontend form libraries we use, we need
+    to serialize the initial record appropriately
+    Future deposit-page: Have edit page frontend deal with normal serialization
+    """
+    for subject in SOURCES:
+        record[subject.lower() + "_terms"] = [
+            term for term in record.get('terms', [])
+            if term['source'] == subject
+        ]
+
+    record.pop('terms', None)
+
+    return record

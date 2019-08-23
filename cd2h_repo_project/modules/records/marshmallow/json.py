@@ -85,7 +85,10 @@ class AuthorSchemaV1(StrictKeysMixin):
 
 
 class TermSchemaV1(StrictKeysMixin):
-    """Term schema."""
+    """Term schema.
+
+    TODO: Be more discerning of the terms we accept.
+    """
 
     source = fields.Str()
     value = fields.Str()
