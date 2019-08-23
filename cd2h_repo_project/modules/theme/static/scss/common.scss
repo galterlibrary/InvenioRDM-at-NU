@@ -7,3 +7,8 @@ $footer-height: 375px;
 .titlecase {
   text-transform: capitalize;
 }
+
+.wrap {
+  // NOTE: Only apply this to an element with a (max-)width already set;
+  overflow-wrap: break-word;
+}
