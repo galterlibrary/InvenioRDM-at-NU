@@ -176,7 +176,7 @@ class Deposit(_Deposit):
         (apart from physical volume we have available) when creating
         records differently.
         """
-        max_size = 50 * 1000 * 1000 * 1000  # ~50 GB
+        max_size = 50 * 1024 * 1024 * 1024  # 50 GB
         bucket = Bucket.create(
             quota_size=max_size,
             max_file_size=max_size
