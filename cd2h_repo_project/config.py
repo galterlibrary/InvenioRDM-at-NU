@@ -566,6 +566,9 @@ DEPOSIT_UI_JSTEMPLATE_FILES_LIST = 'templates/deposit/files_list.html'
 DEPOSIT_UI_JSTEMPLATE_RESULTS = 'templates/search/personal_results.html'
 """Template for <invenio-search-results> of personal records."""
 
+DEPOSIT_UI_JSTEMPLATE_UPLOAD = 'templates/deposit-form/upload.html'
+"""Template for <invenio-files-list>."""
+
 DEPOSIT_UI_RESPONSE_MESSAGES = {
     'self': {
         'message': (
