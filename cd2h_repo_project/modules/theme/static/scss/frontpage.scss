@@ -1,12 +1,14 @@
 @import 'common';
 
+$jumbotron_min_height: 20em;
 
 #frontPageBody {
+
   .jumbotron {
-    background: url('/static/img/cd2h_hero_image.jpeg') no-repeat;
+    background: url('/static/img/Grad-Student-Film.jpg') no-repeat;
     background-size: cover;
     color: white;
-    min-height: 20em;
+    min-height: $jumbotron_min_height;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,17 +16,33 @@
     .row {
       width: 100%;
 
-      .share {
-        display: flex;
-        justify-content: center;
+      .btn-lg {
+        font-size: 20px;
       }
 
-      .search {
+      .actions {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: space-around;
+        min-height: $jumbotron_min_height;
+      }
+
+      .catalog {
+        width: 240px;
+        margin-left: auto;
+        margin-right:auto;
       }
     }
 
+  }
+
+  .frontPageText {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+
+  .footnote {
+    font-size: 14px;
   }
 
 }
