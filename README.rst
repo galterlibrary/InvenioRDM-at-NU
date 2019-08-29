@@ -4,11 +4,19 @@
     CD2H Repo Project is free software; you can redistribute it and/or modify it
     under the terms of the MIT License; see LICENSE file for more details.
 
-===================
- InvenioRDM
-===================
+====================================
+InvenioRDM @ Northwestern University
+====================================
 
-Invenio-based Digital Library for the CD2H
+Invenio-based Digital Repository for the CD2H.
+
+This is the repository for the code of the Center for Data to Health funded
+project: https://github.com/data2health/InvenioRDM . Reporting will continue
+on that repository, while this repository's code will over time be extracted
+out in parts to https://github.com/inveniosoftware/invenio-app-rdm, our new
+joint effort with CERN. We invite collaboration and discussion on that
+repository. See you there!
+
 
 Documentation on Invenio is available on
 https://invenio.readthedocs.io/en/latest/

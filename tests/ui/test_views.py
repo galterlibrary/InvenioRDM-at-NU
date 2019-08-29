@@ -258,7 +258,9 @@ def test_successful_form_completion_redirects_to_front_page_w_flash(client):
     )
 
 
-def test_successful_form_completion_sends_support_email(client):
+def test_successful_form_completion_sends_support_email(client, config):
+    tmp_recipient_email = config['CONTACT_US_RECIPIENT_EMAIL']
+    config['CONTACT_US_RECIPIENT_EMAIL'] = 'recipient@example.com'
     with current_app.extensions['mail'].record_messages() as outbox:
         response = client.post(
             '/contact-us',
@@ -275,14 +277,18 @@ def test_successful_form_completion_sends_support_email(client):
         support_email = outbox[0]
         assert support_email.sender == 'Jane Smith <jane@example.com>'
         sitename = current_app.config['THEME_SITENAME']
-        assert support_email.recipients == [(sitename, 'digitalhub@northwestern.edu')]  # noqa
+        assert support_email.recipients == [(sitename, 'recipient@example.com')]  # noqa
         assert support_email.subject == '[{} - Contact Us]: A subject'.format(sitename)  # noqa
         assert support_email.reply_to == ('Jane Smith', 'jane@example.com')
         assert 'Jane Smith <jane@example.com>' in support_email.body
         assert 'A message' in support_email.body
 
+    config['CONTACT_US_RECIPIENT_EMAIL'] = tmp_recipient_email
 
-def test_successful_form_completion_sends_confirmation_email(client):
+
+def test_successful_form_completion_sends_confirmation_email(client, config):
+    tmp_sender_email = config['CONTACT_US_SENDER_EMAIL']
+    config['CONTACT_US_SENDER_EMAIL'] = 'sender@example.com'
     with current_app.extensions['mail'].record_messages() as outbox:
         response = client.post(
             '/contact-us',
@@ -298,7 +304,7 @@ def test_successful_form_completion_sends_confirmation_email(client):
         assert len(outbox) == 2  # Includes the support email. See above.
         confirmation_email = outbox[1]
         sitename = current_app.config['THEME_SITENAME']
-        assert confirmation_email.sender == '{} <digitalhub@northwestern.edu>'.format(sitename)  # noqa
+        assert confirmation_email.sender == '{} <sender@example.com>'.format(sitename)  # noqa
         assert confirmation_email.recipients == [
             ('Jane Smith', 'jane@example.com')
         ]
@@ -307,6 +313,8 @@ def test_successful_form_completion_sends_confirmation_email(client):
             'Thank you for contacting us at {}.'.format(sitename)
             in confirmation_email.body
         )
+
+    config['CONTACT_US_SENDER_EMAIL'] = tmp_sender_email
 
 
 # Other
