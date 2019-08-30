@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-# Run this script if the index has been destroyed and you want to repopulate
+# Run this script with `pipenv run`, it will destroy the index and repopulate
 # it from the DB / data files.
-pipenv run invenio index init --force
-pipenv run invenio index reindex --pid-type recid --yes-i-know
-pipenv run invenio index run
-pipenv run menrva terms mesh index
-pipenv run menrva terms fast index
+invenio index destroy --force --yes-i-know
+invenio index init --force
+invenio index reindex --pid-type recid --yes-i-know
+invenio index run
+menrva terms mesh index
+menrva terms fast index

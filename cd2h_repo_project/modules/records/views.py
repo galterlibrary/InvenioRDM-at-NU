@@ -21,6 +21,7 @@ from cd2h_repo_project.modules.records.permissions import (
     EditMetadataPermission, RecordPermissions
 )
 from cd2h_repo_project.modules.records.serializers import citeproc_v1
+from cd2h_repo_project.modules.terms.views import serialize_terms_for_edit_ui
 
 blueprint = Blueprint(
     'cd2hrepo_records',
@@ -169,3 +170,9 @@ def citation(record, pid, style='chicago-fullnote-bibliography'):
     # Hack to format 'national-library-of-medicine' and others that start
     # with '1. ' correctly
     return re.sub(r'^1\. ', '', citation_str)
+
+
+@blueprint.app_template_filter('to_edit_ui')
+def to_edit_ui(record):
+    """Serialize record for edit page usage."""
+    return serialize_terms_for_edit_ui(record)
