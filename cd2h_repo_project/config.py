@@ -89,7 +89,7 @@ THEME_FRONTPAGE_TITLE = _('InvenioRDM @ Northwestern University')
 # ===================
 #: Email address used to send emails.
 # TODO: Create a project email once name is settled on
-SUPPORT_EMAIL = "digitalhub@northwestern.edu"
+SUPPORT_EMAIL = ""
 #: Disable email sending by default.
 MAIL_SUPPRESS_SEND = True
 
@@ -647,18 +647,18 @@ CONTACT_US_CONFIRMATION_EMAIL_BODY_TEMPLATE_HTML = 'contact_us/confirmation_body
 
 CONTACT_US_RECIPIENT_NAME = THEME_SITENAME
 # Overridden via environment variable
-CONTACT_US_RECIPIENT_EMAIL = 'digitalhub@northwestern.edu'
+CONTACT_US_RECIPIENT_EMAIL = ''
 CONTACT_US_SENDER_NAME = THEME_SITENAME
-CONTACT_US_SENDER_EMAIL = 'digitalhub@northwestern.edu'
+CONTACT_US_SENDER_EMAIL = ''
 
 # Invenio-ldapclient
 # ==================
 LDAPCLIENT_LOGIN_USER_TEMPLATE = 'cd2hrepo_theme/login.html'
 # Fields to override
-LDAPCLIENT_SERVER_HOSTNAME = 'registry.northwestern.edu'
+LDAPCLIENT_SERVER_HOSTNAME = ''
 LDAPCLIENT_USE_SSL = True
-LDAPCLIENT_BIND_BASE = 'ou=people,dc=northwestern,dc=edu'
-LDAPCLIENT_SEARCH_BASE = 'dc=northwestern,dc=edu'
+LDAPCLIENT_BIND_BASE = ''
+LDAPCLIENT_SEARCH_BASE = ''
 LDAPCLIENT_SERVER_PORT = 636
 
 # Invenio-admin + Flask-admin
