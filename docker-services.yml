@@ -43,10 +43,9 @@ services:
   db:
     image: postgres:9.6
     restart: "always"
-    environment:
-      - "POSTGRES_USER=cd2h-repo-project"
-      - "POSTGRES_PASSWORD=cd2h-repo-project"
-      - "POSTGRES_DB=cd2h-repo-project"
+    env_file:
+      - default.env
+      - .env
   mq:
     image: rabbitmq:3-management
     restart: "always"
