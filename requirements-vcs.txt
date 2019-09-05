@@ -3,6 +3,6 @@
 -e git+https://github.com/galterlibrary/invenio-files-rest.git@0755644a10f274b7821ea512ecdf9dff833ece84#egg=invenio_files_rest
 -e git+https://github.com/galterlibrary/invenio-ldapclient.git@48b24b5bf46fd40c22dce042f54eaab6b7d377c3#egg=invenio_ldapclient
 -e git+https://github.com/caltechlibrary/datacite.git@doi-mint-enhance#egg=datacite
--e git+https://github.com/inveniosoftware/invenio-stats.git@75e9b71ba8308f6cec4218a210cd8e24ec3e7eb6#egg=invenio_stats[elasticsearch6]
+-e git+https://github.com/inveniosoftware/invenio-stats.git@master#egg=invenio_stats[elasticsearch6]
 # added here because dependency of invenio-stats and if added in Pipfile now causes issues
-invenio-search>=1.2.0
+invenio-search[elasticsearch6]>=1.2.0
