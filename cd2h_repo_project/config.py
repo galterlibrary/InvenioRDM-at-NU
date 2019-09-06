@@ -133,6 +133,7 @@ CELERY_BEAT_SCHEDULE = {
 # Database
 # ========
 #: Database URI including user and password
+# TODO:Hoster: CONFIGURE ME
 SQLALCHEMY_DATABASE_URI = (
     'postgresql+psycopg2://cd2h-repo-project:'
     'cd2h-repo-project@localhost/cd2h-repo-project'
