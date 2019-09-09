@@ -224,6 +224,7 @@ APP_DEFAULT_SECURE_HEADERS = {
             "'self'",
             'https://fonts.googleapis.com',
             'https://fonts.gstatic.com',
+            '*.matomo.cloud',
             "'unsafe-eval'",
         ],
     },
@@ -668,3 +669,14 @@ ADMIN_APPNAME = 'menRva'
 ADMIN_BASE_TEMPLATE = 'cd2hrepo_theme/page_admin.html'
 ADMIN_PERMISSION_FACTORY = 'cd2h_repo_project.modules.admin.permissions.admin_permission_factory'  # noqa
 """Permission factory for the admin views."""
+
+# Analytics
+# =========
+ANALYTICS_URL = ''  # TODO::Hoster: CONFIGURE ME
+"""This is the URL provided by your analytics service without the starting
+   `https://` and ending `/`.
+   Example: For provided https://my-site.matomo.cloud/, use
+   "my-site.matomo.cloud".
+"""
+ANALYTICS_SITEID = -1  # TODO::Hoster: CONFIGURE ME
+"""Integer Site ID."""
