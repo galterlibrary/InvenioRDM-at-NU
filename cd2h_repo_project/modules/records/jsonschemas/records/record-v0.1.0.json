@@ -165,6 +165,11 @@
             "description": "Actual term.",
             "title": "Term Value",
             "type": "string"
+          },
+          "id": {
+            "description": "Term unique identifier.",
+            "title": "Term ID",
+            "type": "string"
           }
         },
         "additionalProperties": false,

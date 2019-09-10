@@ -146,6 +146,9 @@
             },
             "value": {
               "type": "keyword"
+            },
+            "id": {
+              "type": "keyword"
             }
           }
         }

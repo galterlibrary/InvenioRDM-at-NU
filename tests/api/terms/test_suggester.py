@@ -44,7 +44,8 @@ class TestSuggester(object):
                 'name': '(MeSH) Seed Bank',
                 'value': {
                     'value': 'Seed Bank',
-                    'source': 'MeSH'
+                    'source': 'MeSH',
+                    'id': 'FILL ME'  # TODO: Change id here
                 }
             },
         ]
@@ -66,7 +67,8 @@ class TestSuggester(object):
                 'name': '(MeSH) Seed Bank',
                 'value': {
                     'value': 'Seed Bank',
-                    'source': 'MeSH'
+                    'source': 'MeSH',
+                    'id': 'FILL ME'  # TODO: Change id here
                 }
             },
         ]
@@ -81,7 +83,8 @@ class TestSuggester(object):
                 'name': '(MeSH) Seed Bank',
                 'value': {
                     'value': 'Seed Bank',
-                    'source': 'MeSH'
+                    'source': 'MeSH',
+                    'id': 'FILL ME'  # TODO: Change id here
                 }
             },
         ]
@@ -96,7 +99,8 @@ class TestSuggester(object):
                 'name': '(MeSH) Abnormalities, Multiple',
                 'value': {
                     'value': 'Abnormalities, Multiple',
-                    'source': 'MeSH'
+                    'source': 'MeSH',
+                    'id': 'FILL ME'  # TODO: Change id here
                 }
             },
         ]
@@ -123,7 +127,8 @@ class TestSuggester(object):
                 'name': '(FAST) Onions--Diseases and pests--Control',
                 'value': {
                     'value': 'Onions--Diseases and pests--Control',
-                    'source': source
+                    'source': source,
+                    'id': 'FILL ME'  # TODO: Change id here
                 }
             },
         ]

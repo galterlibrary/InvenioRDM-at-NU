@@ -42,7 +42,7 @@ function fieldtitle() {
     }
     return title;
   };
-};
+}
 
 function notIn($filter) {
   return function(srcArray, filterArray, srcKey, filterKey){
@@ -56,8 +56,8 @@ function notIn($filter) {
       });
     }
     return srcArray;
-  }
-};
+  };
+}
 
 
 function formatGrant() {
@@ -67,8 +67,8 @@ function formatGrant() {
     }
     var result = (grant.acronym && grant.acronym + ' ') || '';
     return result + '(' + grant.code + ') - ' + grant.title;
-  }
-};
+  };
+}
 
 
 function striptags() {

@@ -18,8 +18,8 @@ celery worker --app invenio_app.celery --loglevel INFO & process_id_celery=$!
 # Start Server
 invenio run \
        --cert "$script_path"/../docker/nginx/test.crt \
-       --key "$script_path"/../docker/nginx/test.key & process_id_server=$!
+       --key "$script_path"/../docker/nginx/test.key
 
-trap 'kill $process_id_celery $process_id_server &>/dev/null' EXIT
+trap 'kill $process_id_celery &>/dev/null' EXIT
 
-wait $process_id_celery $process_id_server
+# wait $process_id_celery $process_id_server

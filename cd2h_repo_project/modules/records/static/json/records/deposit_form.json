@@ -11,6 +11,7 @@
     "fa_cls": "fa-user",
     "title": "Author(s)",
     "type": "array",
+    "htmlClass": "authors",
     "sortOptions": {
       "axis": "y",
       "cursor": "move",
@@ -612,6 +613,7 @@
   },
   {
     "title": "Subjects",
+    "htmlClass": "subjects",
     "type": "fieldset",
     "fieldhint": "optional",
     "items": [
@@ -619,50 +621,92 @@
         "key": "mesh_terms",
         "fa_cls": "fa-tag",
         "title": "Medical",
-        "type": "uiselectmultiple",
-        "options": {
-          "multiple": true,
-          "asyncCallback": "autocompleteSuggest",
-          "url": "/api/terms/mesh/_suggest",
-          "urlParameters": {
-            "q": "value",
-            "limit": "7"
-          },
-          "map": {
-            "resultSource": "terms",
-            "valueProperty": "value",
-            "nameProperty": "name"
-          },
-          "refreshDelay": 200
+        "type": "array",
+        "description": "Medical Subject Heading (<a href='https://www.nlm.nih.gov/mesh/meshhome.html' target='_blank'>MeSH <i class='fa fa-external-link'></i></a>) terms.",
+        "sortOptions": {
+          "disabled": true
         },
-        "placeholder": "Select Medical Subject Heading (MeSH) terms",
-        "description": "Medical Subject Heading (<a href='https://www.nlm.nih.gov/mesh/meshhome.html' target='_blank'>MeSH <i class='fa fa-external-link'></i></a>) terms."
+        "inline": true,
+        "items": [
+          {
+            "type": "section",
+            "notitle": true,
+            "description": "",
+            "items": [
+              {
+                "key": "mesh_terms[].data",
+                "type": "termsselect",
+                "notitle": true,
+                "placeholder": "Select Medical Subject Heading (MeSH) terms",
+                "options": {
+                  "asyncCallback": "autocompleteTerms",
+                  "url": "/api/terms/mesh/_suggest",
+                  "urlParameters": {
+                    "q": "value",
+                    "limit": 15
+                  },
+                  "map": {
+                    "resultSource": "terms",
+                    "valueSource": "value",
+                    "nameSource": "name",
+                    "valueProperty": "value",
+                    "nameProperty": "name"
+                  },
+                  "refreshDelay": 200,
+                  "maxResultDisplay": 15
+                },
+                "feedback": false
+              }
+            ]
+          }
+        ],
+        "add": "Add another MeSH term"
       },
       {
+        "type": "array",
         "key": "fast_terms",
-        "fa_cls": "fa-tag",
         "title": "Topical",
-        "type": "uiselectmultiple",
-        "options": {
-          "multiple": true,
-          "asyncCallback": "autocompleteSuggest",
-          "url": "/api/terms/fast/_suggest",
-          "urlParameters": {
-            "q": "value",
-            "limit": "7"
-          },
-          "map": {
-            "resultSource": "terms",
-            "valueProperty": "value",
-            "nameProperty": "name"
-          },
-          "refreshDelay": 200
+        "fa_cls": "fa-tag",
+        "description": "Library of Congress (<a href='https://www.oclc.org/research/themes/data-science/fast.html' target='_blank'>FAST <i class='fa fa-external-link'></i></a>) topical terms.",
+        "sortOptions": {
+          "disabled": true
         },
-        "placeholder": "Select Library of Congress (FAST) topical terms",
-        "description": "Library of Congress (<a href='https://www.oclc.org/research/themes/data-science/fast.html' target='_blank'>FAST <i class='fa fa-external-link'></i></a>) topical terms."
+        "add": "Add another FAST term",
+        "inline": true,
+        "items": [
+          {
+            "type": "section",
+            "notitle": true,
+            "description": "",
+            "items": [
+              {
+                "type": "termsselect",
+                "key": "fast_terms[].data",
+                "notitle": true,
+                "placeholder": "Select Library of Congress (FAST) topical terms",
+                "options": {
+                  "asyncCallback": "autocompleteTerms",
+                  "url": "/api/terms/fast/_suggest",
+                  "urlParameters": {
+                    "q": "value",
+                    "limit": 15
+                  },
+                  "map": {
+                    "resultSource": "terms",
+                    "valueSource": "value",
+                    "nameSource": "name",
+                    "valueProperty": "value",
+                    "nameProperty": "name"
+                  },
+                  "maxResultDisplay": 15
+                },
+                "feedback": false
+              }
+            ]
+          }
+        ]
       }
-    ],
-    "required": false
+    ]
   },
   {
     "title": "Access",
