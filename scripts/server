@@ -9,6 +9,17 @@
 set -e
 
 script_path=$(dirname "$0")
-FLASK_ENV=development invenio run \
-    --cert "$script_path"/../docker/nginx/test.crt \
-    --key "$script_path"/../docker/nginx/test.key
+
+export FLASK_ENV=development
+
+# Start Worker
+celery worker --app invenio_app.celery --loglevel INFO & process_id_celery=$!
+
+# Start Server
+invenio run \
+       --cert "$script_path"/../docker/nginx/test.crt \
+       --key "$script_path"/../docker/nginx/test.key & process_id_server=$!
+
+trap 'kill $process_id_celery $process_id_server &>/dev/null' EXIT
+
+wait $process_id_celery $process_id_server
