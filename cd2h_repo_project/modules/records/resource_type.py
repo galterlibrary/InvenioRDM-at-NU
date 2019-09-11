@@ -134,6 +134,7 @@ class ResourceType(object):
             'lesson plans',
             'presentation',
             'problems and exercises',
+            'syllabus'
         ],
         'archival items': [
             'collection',
