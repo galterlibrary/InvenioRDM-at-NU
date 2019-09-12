@@ -64,6 +64,36 @@
 
 }
 
+
+.resource-type-field {
+  .list-inline {
+    margin-left: 0px;
+  }
+
+  li {
+    height: 105px;
+
+    input[type='radio'] {
+      display: none;
+    }
+    label {
+      display: block;
+      padding: 5px;
+    }
+    label:hover {
+      color: white;
+      background-color: $northwestern-color;
+      border-radius: 3px;
+    }
+    input[type='radio']:checked ~ label {
+      color: white;
+      background-color: $northwestern-color;
+      border-radius: 3px;
+    }
+  }
+}
+
+
 // Also applies to record page
 #files .table th, #files .table td {
   max-width: 195px;
