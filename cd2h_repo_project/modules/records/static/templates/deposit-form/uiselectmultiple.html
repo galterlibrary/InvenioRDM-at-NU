@@ -2,7 +2,7 @@
  class="form-group schema-form-uiselectmultiple {{form.htmlClass}}"
  ng-controller="dynamicSelectController"
  ng-class="{'has-error': hasError(), 'has-success': hasSuccess(), 'has-feedback': form.feedback !== false}"
- ng-init="form.options.initial = $$value$$ || []; externalModel = form.options.initial; uiMultiSelectInitInternalModel(form.options.initial)">
+ ng-init="form.options.initial = $$value$$ || []; uiMultiSelectInitInternalModel(form.options.initial)">
   <label
    class="control-label col-sm-3"
    ng-show="showTitle()">
@@ -19,7 +19,7 @@
      on-remove="externalModel.splice($$value$$.indexOf($item.value), 1)"
      class="{{form.options.uiClass}}">
       <ui-select-match placeholder="{{form.placeholder || form.schema.placeholder || ('placeholders.select' | translate)}}">
-        $item.name: {{$item.name}}
+        {{$item.name}}
       </ui-select-match>
       <ui-select-choices
        repeat="item in form.titleMap"
