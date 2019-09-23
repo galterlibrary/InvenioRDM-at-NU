@@ -22,8 +22,6 @@ processors are invoked after the “non-raw” processors.
     5- @post_dump(pass_many=True) methods
 """
 
-from __future__ import absolute_import, print_function
-
 from collections import OrderedDict, namedtuple
 
 from invenio_records_rest.schemas import StrictKeysMixin
@@ -251,10 +249,8 @@ class RecordSchemaV1(StrictKeysMixin):
             data = data['metadata']
 
         # Artificially insert our schema because invenio-deposit wants it.
-        # TODO: Replace cd2hrepo... by configuration variable
-        data['$schema'] = (
-            'https://cd2hrepo.galter.northwestern.edu/'
-            'schemas/records/record-v0.1.0.json'
+        data['$schema'] = current_jsonschemas.path_to_url(
+            current_app.config['RECORD_DEFAULT_JSONSCHEMA']
         )
 
         return data

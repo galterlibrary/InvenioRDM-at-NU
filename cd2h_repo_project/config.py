@@ -7,10 +7,11 @@
 
 """Default configuration for CD2H Repo Project.
 
-You overwrite and set instance-specific configuration by either:
+As a hoster, before you deploy, set all the TODO::Hoster variables below. You
+can overwrite them and set instance-specific configuration by providing a
+`.env` file in the root directory with environment variables like so:
 
-- Configuration file: ``<virtualenv prefix>/var/instance/invenio.cfg``
-- Environment variables: ``APP_<variable name>``
+    ``INVENIO_<variable name>=<value>``
 """
 
 from __future__ import absolute_import, print_function
@@ -47,6 +48,29 @@ def _(x):
     """Identity function used to trigger string extraction."""
     return x
 
+
+# Flask configuration
+# ===================
+# See details on
+# http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values
+
+#: Secret key - each installation (dev, production, ...) needs a separate key.
+#: It should be changed before deploying.
+SECRET_KEY = 'CHANGE_ME'  # TODO::Hoster CONFIGURE
+#: Max upload size for form data via application/mulitpart-formdata.
+MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 100 MiB
+#: Sets cookie with the secure flag by default
+SESSION_COOKIE_SECURE = True
+#: Since HAProxy and Nginx route all requests no matter the host header
+#: provided, the allowed hosts variable is set to localhost. In production it
+#: should be set to the correct host and it is strongly recommended to only
+#: route correct hosts to the application.
+APP_ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # TODO::Hoster CONFIGURE
+PREFERRED_URL_SCHEME = 'https'
+
+#: Custom constant for host name
+#: Using Flask's SERVER_NAME breaks the containerized setup
+SERVER_HOSTNAME = 'localhost:5000'  # TODO::Hoster CONFIGURE
 
 # Rate limiting
 # =============
@@ -88,22 +112,23 @@ THEME_FRONTPAGE_TITLE = _('InvenioRDM @ Northwestern University')
 # Email configuration
 # ===================
 #: Email address used to send emails.
-SUPPORT_EMAIL = ""  # TODO::Hoster: CONFIGURE ME
+SUPPORT_EMAIL = ""  # TODO::Hoster CONFIGURE
 #: Disable email sending by default.
-MAIL_SUPPRESS_SEND = True  # TODO::Hoster: Set to False
+MAIL_SUPPRESS_SEND = True  # TODO::Hoster set to False
 
 # Assets
 # ======
 #: Static files collection method (defaults to copying files).
-COLLECT_STORAGE = 'flask_collect.storage.link'
-# NOTE: COLLECT_STORAGE = 'flask_collect.storage.file' is used in Production
+COLLECT_STORAGE = 'flask_collect.storage.link'  # TODO::Hoster set as below
+# COLLECT_STORAGE = 'flask_collect.storage.file'  # in Production
+
 # Uncomment to NOT bundle js and css in order to debug in the browser.
 # ASSETS_DEBUG = True
 
 # Accounts
 # ========
 #: Email address used as sender of account registration emails.
-SECURITY_EMAIL_SENDER = SUPPORT_EMAIL  # TODO::Hoster: CONFIGURE ME
+SECURITY_EMAIL_SENDER = SUPPORT_EMAIL  # TODO::Hoster CONFIGURE
 #: Email subject for account registration emails.
 SECURITY_EMAIL_SUBJECT_REGISTER = _("Welcome to CD2H Repo Project!")
 #: Redis session storage URL.
@@ -132,7 +157,7 @@ CELERY_BEAT_SCHEDULE = {
 # Database
 # ========
 #: Database URI including user and password
-# TODO:Hoster: CONFIGURE ME
+# TODO::Hoster CONFIGURE
 SQLALCHEMY_DATABASE_URI = (
     'postgresql+psycopg2://cd2h-repo-project:'
     'cd2h-repo-project@localhost/cd2h-repo-project'
@@ -140,6 +165,7 @@ SQLALCHEMY_DATABASE_URI = (
 
 # Digital Object Identifier (DOI), Datacite and Invenio-Pidstore integration
 # =================================================
+# TODO::Hoster CONFIGURE
 DOI_REGISTER_SIGNALS = False
 """Set this to True to mint DOIs."""
 DOI_PUBLISHER = "YOUR PLATFORM NAME"
@@ -163,7 +189,7 @@ PIDSTORE_DATACITE_URL = "https://mds.datacite.org"
 # JSONSchemas
 # ===========
 #: Hostname used in URLs for local JSONSchemas.
-JSONSCHEMAS_HOST = 'cd2hrepo.galter.northwestern.edu'
+JSONSCHEMAS_HOST = 'localhost:5000'  # TODO::Hoster CONFIGURE
 # Custom settings for our instance
 DEPOSIT_JSONSCHEMAS_PREFIX = 'records/'
 RECORD_JSONSCHEMAS_PREFIX = 'records/'
@@ -171,32 +197,11 @@ RECORD_JSONSCHEMAS_PREFIX = 'records/'
 # because they should contain the same data. We allow the schema to be
 # configurable (as per invenio-deposit) to give us some adaptability in the
 # future.
-
-# Flask configuration
-# ===================
-# See details on
-# http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values
-
-#: Secret key - each installation (dev, production, ...) needs a separate key.
-#: It should be changed before deploying.
-SECRET_KEY = 'CHANGE_ME'
-#: Max upload size for form data via application/mulitpart-formdata.
-MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 100 MiB
-#: Sets cookie with the secure flag by default
-SESSION_COOKIE_SECURE = True
-#: Since HAProxy and Nginx route all requests no matter the host header
-#: provided, the allowed hosts variable is set to localhost. In production it
-#: should be set to the correct host and it is strongly recommended to only
-#: route correct hosts to the application.
-APP_ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-PREFERRED_URL_SCHEME = 'https'
-
-#: Custom constant for host name
-#: Using Flask's SERVER_NAME breaks the containerized setup
-SERVER_HOSTNAME = 'localhost:5000'
+RECORD_DEFAULT_JSONSCHEMA = 'records/record-v0.1.0.json'
 
 # OAI-PMH
 # =======
+# TODO::Hoster CONFIGURE
 OAISERVER_ID_PREFIX = 'oai:cd2hrepo.galter.northwestern.edu:'
 
 # Debug
@@ -468,7 +473,8 @@ DEPOSIT_DEFAULT_SCHEMAFORM = 'json/records/deposit_form.json'
 """Default Angular Schema **Form**.
 """
 
-DEPOSIT_DEFAULT_JSONSCHEMA = 'records/record-v0.1.0.json'
+# TODO::Hoster set to JSONSCHEMAS_HOST
+DEPOSIT_DEFAULT_JSONSCHEMA = RECORD_DEFAULT_JSONSCHEMA
 """Default JSON schema used for new deposits.
 """
 
@@ -647,8 +653,8 @@ CONTACT_US_CONFIRMATION_EMAIL_SUBJECT_TEMPLATE = 'contact_us/confirmation_subjec
 CONTACT_US_CONFIRMATION_EMAIL_BODY_TEMPLATE_TXT = 'contact_us/confirmation_body.txt'  # noqa
 CONTACT_US_CONFIRMATION_EMAIL_BODY_TEMPLATE_HTML = 'contact_us/confirmation_body.html'  # noqa
 
+# TODO::Hoster CONFIGURE
 CONTACT_US_RECIPIENT_NAME = THEME_SITENAME
-# Overridden via environment variable
 CONTACT_US_RECIPIENT_EMAIL = ''
 CONTACT_US_SENDER_NAME = THEME_SITENAME
 CONTACT_US_SENDER_EMAIL = ''
@@ -656,7 +662,7 @@ CONTACT_US_SENDER_EMAIL = ''
 # Invenio-ldapclient
 # ==================
 LDAPCLIENT_LOGIN_USER_TEMPLATE = 'cd2hrepo_theme/login.html'
-# Fields to override
+# TODO::Hoster CONFIGURE
 LDAPCLIENT_SERVER_HOSTNAME = ''
 LDAPCLIENT_USE_SSL = True
 LDAPCLIENT_BIND_BASE = ''
@@ -665,18 +671,18 @@ LDAPCLIENT_SERVER_PORT = 636
 
 # Invenio-admin + Flask-admin
 # ===========================
-ADMIN_APPNAME = 'menRva'
+ADMIN_APPNAME = 'invenioRDM'
 ADMIN_BASE_TEMPLATE = 'cd2hrepo_theme/page_admin.html'
 ADMIN_PERMISSION_FACTORY = 'cd2h_repo_project.modules.admin.permissions.admin_permission_factory'  # noqa
 """Permission factory for the admin views."""
 
 # Analytics
 # =========
-ANALYTICS_URL = ''  # TODO::Hoster: CONFIGURE ME
+ANALYTICS_URL = ''  # TODO::Hoster: CONFIGURE
 """This is the URL provided by your analytics service without the starting
    `https://` and ending `/`.
    Example: For provided https://my-site.matomo.cloud/, use
    "my-site.matomo.cloud".
 """
-ANALYTICS_SITEID = -1  # TODO::Hoster: CONFIGURE ME
+ANALYTICS_SITEID = -1  # TODO::Hoster: CONFIGURE
 """Integer Site ID."""
