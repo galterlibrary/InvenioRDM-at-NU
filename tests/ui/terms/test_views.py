@@ -26,10 +26,14 @@ def test_serialize_terms_for_edit_ui(create_record):
 
     assert 'terms' not in serialized_deposit
     assert serialized_deposit['mesh_terms'] == [
-        {'source': 'MeSH', 'value': 'Cognitive Neuroscience'}
+        {
+            'data': {'source': 'MeSH', 'value': 'Cognitive Neuroscience'}
+        }
     ]
     assert serialized_deposit['fast_terms'] == [
-        {'source': 'FAST', 'value': 'Border terrier'}
+        {
+            'data': {'source': 'FAST', 'value': 'Border terrier'}
+        }
     ]
 
 

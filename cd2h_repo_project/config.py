@@ -610,8 +610,9 @@ DEPOSIT_FORM_TEMPLATES = {
     'select': 'select.html',
     'textarea': 'textarea.html',
     # Added
+    'termsselect': 'termsselect.html',
     'uiselect': 'uiselect.html',
-    'uiselectmultiple': 'uiselectmultiple.html'
+    'uiselectmultiple': 'uiselectmultiple.html',
 }
 """Specific templates for the various deposit form elements."""
 

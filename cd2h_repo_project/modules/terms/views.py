@@ -60,13 +60,13 @@ def fast_suggest():
 def serialize_terms_for_edit_ui(record):
     """Serialize record for edit page usage.
 
-    Because of the limitations of the frontend form libraries we use, we need
-    to serialize the initial record appropriately
-    Future deposit-page: Have edit page frontend deal with normal serialization
+    WHY: Because of the limitations of the frontend form libraries we use, we
+         need to serialize the initial record appropriately for it only.
+         Future deposit-page won't have those limitations.
     """
     for subject in SOURCES:
         record[subject.lower() + "_terms"] = [
-            term for term in record.get('terms', [])
+            {'data': term} for term in record.get('terms', [])
             if term['source'] == subject
         ]
 

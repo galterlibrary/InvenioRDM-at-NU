@@ -14,17 +14,21 @@ from cd2h_repo_project.modules.terms.constants import SOURCES
 
 
 def to_frontend_dict(es_suggestion):
-    """Return JS-object-compatible Python dict from ES suggestion result."""
+    """Return JS-object-compatible Python dict from ES suggestion result.
+
+    The frontend expects 2 fields, 'name' (human readable value) and 'value'
+    (machine/backend value).
+    TODO: Use id from es_suggestion
+    """
     source = es_suggestion['_source']['source']
     value = es_suggestion['_source']['value']
 
     return {
         'name': "({source}) {value}".format(source=source, value=value),
-        # 'value' wrapper is needed bc frontend only accepts
-        # 'name' and 'value' keys
         'value': {
             'value': value,
-            'source': source
+            'source': source,
+            'id': 'FILL ME'
         }
     }
 

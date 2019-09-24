@@ -24,7 +24,7 @@ processors are invoked after the “non-raw” processors.
 
 from __future__ import absolute_import, print_function
 
-from collections import namedtuple
+from collections import OrderedDict, namedtuple
 
 from invenio_records_rest.schemas import StrictKeysMixin
 from invenio_records_rest.schemas.fields import DateString, SanitizedUnicode
@@ -84,7 +84,7 @@ class AuthorSchemaV1(StrictKeysMixin):
         data['full_name'] = to_full_name(data)
 
 
-class TermSchemaV1(StrictKeysMixin):
+class TermSchemaV1(Schema):
     """Term schema.
 
     TODO: Be more discerning of the terms we accept.
@@ -92,6 +92,58 @@ class TermSchemaV1(StrictKeysMixin):
 
     source = fields.Str()
     value = fields.Str()
+    id = fields.Str()
+
+    def remove_data_envelope(self, raw_terms):
+        """Returns the array of term without the optional 'data' layer.
+
+        If no 'data' layer, the term itself is returned.
+        Filters out empty top-level terms but not those with {'data': <empty>}.
+        """
+        return [
+            t.get('data', t) if isinstance(t, dict) else t
+            for t in raw_terms if t
+        ]
+
+    def remove_empty_terms(self, no_envelope_terms):
+        """Filters out the remaining empty terms."""
+        return [t for t in no_envelope_terms if t]
+
+    def remove_duplicate_terms(self, loaded_terms):
+        """Removes duplicate term entries from loaded terms."""
+        unique_terms_dict = OrderedDict(
+            # TODO: change 'value' for 'id' when we start filling id
+            (t['value'], t) for t in loaded_terms if 'value' in t
+        )
+        # WHY: list is needed because otherwise a view is returned
+        return list(unique_terms_dict.values())
+
+    @pre_load(pass_many=True)
+    def preprocess_terms(self, data, many):
+        """Pre-process loaded data.
+
+        - removing 'data' layer from individual entries
+        - removing empty entries from those
+
+        WHY: Because the frontend may return empty entries, duplicates and
+             'data' wrapped entries. We should be at least able to get rid of
+             the last case when we change frontend.
+        """
+        if many:
+            data = self.remove_data_envelope(data)
+            data = self.remove_empty_terms(data)
+            return data
+        else:
+            return data
+
+    @post_load(pass_many=True)
+    def postprocess_terms(self, data, many):
+        """Remove duplicates from array of terms (data) once loaded."""
+        if many:
+            data = self.remove_duplicate_terms(data)
+            return data
+        else:
+            return data
 
 
 class ResourceTypeSchemaV1(StrictKeysMixin):

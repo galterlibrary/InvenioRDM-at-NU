@@ -11,6 +11,7 @@ js_deposit = Bundle(
     Bundle(
         'js/deposit/controllers.js',
         'js/deposit/filters.js',
+        'js/deposit/config.js',
         filters='jsmin',
         output="gen/cd2hrepo.deposit.filters.%(version)s.js",
     ),

@@ -93,13 +93,7 @@ Once you have setup your environment as above, your day to day work will
 involve running these commands to develop / run the application on your local
 machine.
 
-1.  Start the celery worker via pipenv
-
-    .. code-block:: console
-
-        $ pipenv run celery worker --app invenio_app.celery --loglevel INFO
-
-2.  ...in a new terminal, start the flask development server
+1.  Start the flask development server and celery worker via pipenv
 
     .. code-block:: console
 
@@ -110,17 +104,9 @@ server at https://localhost:5000 .
 
 Once you are done you can:
 
--   In the terminal where you started the celery worker
+.. code-block:: console
 
-    .. code-block:: console
-
-        ^C
-
--   ... in the new terminal where you started the development server
-
-    .. code-block:: console
-
-        ^C
+    ^C
 
 If you want to permanently bring the containers down, you can do:
 
@@ -132,7 +118,7 @@ To add another ``entry_point`` to the ``setup.py`` (to integrate a module) and
 have it take effect:
 
 1.  Modify ``setup.py``
-2.  Stop the development server and/or celery service
+2.  Stop the scripts/server as above
 3.  Re-install this project in your virtualenv:
 
     .. code-block:: console

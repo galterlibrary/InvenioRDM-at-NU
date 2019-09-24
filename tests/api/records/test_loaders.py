@@ -174,10 +174,18 @@ class TestMetadataSchemaV1(object):
 
         assert 'description' in unmarshalled_record.errors
 
+    # WHY: We place these tests here because we plan on having terms be a
+    #      first-class citizen of the records schema
     def test_one_term_loaded(self, create_input_metadatav1):
-        terms = [{'source': 'MeSH', 'value': 'Cognitive Neuroscience'}]
+        terms = [
+            {
+                'source': 'MeSH',
+                'value': 'Cognitive Neuroscience',
+                'id': 'D000066494'
+            }
+        ]
         serialized_record = create_input_metadatav1({
-            'terms': terms
+            'terms': [{'data': term} for term in terms]
         })
 
         unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
@@ -189,11 +197,19 @@ class TestMetadataSchemaV1(object):
 
     def test_multiple_terms_loaded(self, create_input_metadatav1):
         terms = [
-            {'source': 'MeSH', 'value': 'Cognitive Neuroscience'},
-            {'source': 'MeSH', 'value': 'Acanthamoeba'}
+            {
+                'source': 'MeSH',
+                'value': 'Cognitive Neuroscience',
+                'id': 'D000066494'
+            },
+            {
+                'source': 'MeSH',
+                'value': 'Acanthamoeba',
+                'id': 'D000048'
+            }
         ]
         serialized_record = create_input_metadatav1({
-            'terms': terms
+            'terms': [{'data': term} for term in terms]
         })
 
         unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)
@@ -225,6 +241,17 @@ class TestMetadataSchemaV1(object):
         assert 'terms' in deserialized_metadata
         assert deserialized_metadata['terms'] == terms
 
+        serialized_record3 = create_input_metadatav1({
+            'terms': [None, {}, {'data': None}, {'data': {}}, '']
+        })
+
+        unmarshalled_metadata = MetadataSchemaV1().load(serialized_record3)
+        deserialized_metadata = unmarshalled_metadata.data
+
+        assert not unmarshalled_metadata.errors
+        assert 'terms' in deserialized_metadata
+        assert deserialized_metadata['terms'] == []
+
     def test_incorrect_format_terms_returns_error(
             self, create_input_metadatav1):
         terms = ["bar"]
@@ -240,13 +267,21 @@ class TestMetadataSchemaV1(object):
 
     def test_coalesce_terms_loaded(self, create_input_metadatav1):
         terms = [
-            {'source': 'MeSH', 'value': 'Cognitive Neuroscience'},
-            {'source': 'FAST', 'value': 'Glucagonoma'}
+            {
+                'source': 'MeSH',
+                'value': 'Cognitive Neuroscience',
+                'id': 'D000066494'
+            },
+            {
+                'source': 'FAST',
+                'value': 'Glucagonoma',
+                'id': '943672'
+            }
         ]
 
         serialized_record = create_input_metadatav1({
-            'mesh_terms': [terms[0]],
-            'fast_terms': [terms[1]],
+            'mesh_terms': [{'data': terms[0]}],
+            'fast_terms': [{'data': terms[1]}]
         })
 
         unmarshalled_metadata = MetadataSchemaV1().load(serialized_record)

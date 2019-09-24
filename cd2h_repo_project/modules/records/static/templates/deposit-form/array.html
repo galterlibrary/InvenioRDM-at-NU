@@ -1,4 +1,3 @@
-<!-- Adapted from Zenodo Copyright (C) 2016 CERN. -->
 <div
   class="form-group schema-form-array clearfix {{form.htmlClass}}"
   sf-array="form"
@@ -12,44 +11,45 @@
     <i ng-if="form.fa_cls" class="fa fa-fw {{ form.fa_cls }}"></i>&nbsp;{{ form.title }}
   </label>
   <div ng-class="{'col-sm-9': !form.notitle, 'col-sm-12': form.notitle}">
-    <ol class="authors-list" ng-model="modelArray" ui-sortable="form.sortOptions">
+    <ol ng-model="modelArray" ui-sortable="form.sortOptions">
       <li
         class="{{ form.fieldHtmlClass }}"
         ng-class="{'deposit-inline': form.inline}"
         ng-repeat="item in modelArray track by $index">
+
         <div
           class="pull-left sort-handle"
           ng-class="{'clear-form': !form.inline}"
           ng-if="form.sortOptions.disabled === false && !form.readonly && modelArray.length > form.minItems">
           <i class="fa fa-sort fa-fw">&nbsp;</i>&nbsp;
         </div>
+
         <div
           class="close-container pull-right"
           ng-class="{'clear-form': !form.inline}">
-
           <button
             class="close"
             type="button"
             ng-hide="form.readonly || form.remove === null || modelArray.length <= form.minItems"
             ng-click="deleteFromArray($index)"
-            ng-disabled="modelArray.length <= form.minItems">
-          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            ng-disabled="form.schema.minItems >= modelArray.length">
+            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
           </button>
         </div>
         <sf-decorator form="copyWithIndex($index)" ng-init="arrayIndex = $index"></sf-decorator>
       </li>
     </ol>
-    <div class="clearfix" ng-model="modelArray">
-      <div class="help-block"
-           ng-show="(hasError() && errorMessage(schemaError())) || form.description"
-           ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div>
-      <button ng-hide="form.readonly || form.add === null"
-              ng-click="appendToArray()"
-              ng-disabled="form.schema.maxItems <= modelArray.length"
-              type="button"
-              class="btn {{ form.style.add || 'btn-default' }} pull-right">
-        <i class="glyphicon glyphicon-plus"></i>
-        {{ form.add || 'Add'}}
+    <div ng-model="modelArray">
+      <div
+        class="help-block"
+        ng-show="(hasError() && errorMessage(schemaError())) || form.description"
+        ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div>
+      <button
+        class="btn add-button {{ form.style.add || 'btn-default' }} pull-right"
+        ng-hide="form.readonly || form.add === null"
+        ng-click="appendToArray()"
+        ng-disabled="form.schema.maxItems <= modelArray.length">
+        <i class="fa fa-plus"></i>&nbsp;{{ form.add || 'Add'}}
       </button>
     </div>
   </div>
