@@ -88,10 +88,9 @@ THEME_FRONTPAGE_TITLE = _('InvenioRDM @ Northwestern University')
 # Email configuration
 # ===================
 #: Email address used to send emails.
-# TODO: Create a project email once name is settled on
-SUPPORT_EMAIL = ""
+SUPPORT_EMAIL = ""  # TODO::Hoster: CONFIGURE ME
 #: Disable email sending by default.
-MAIL_SUPPRESS_SEND = True
+MAIL_SUPPRESS_SEND = True  # TODO::Hoster: Set to False
 
 # Assets
 # ======
@@ -104,7 +103,7 @@ COLLECT_STORAGE = 'flask_collect.storage.link'
 # Accounts
 # ========
 #: Email address used as sender of account registration emails.
-SECURITY_EMAIL_SENDER = SUPPORT_EMAIL
+SECURITY_EMAIL_SENDER = SUPPORT_EMAIL  # TODO::Hoster: CONFIGURE ME
 #: Email subject for account registration emails.
 SECURITY_EMAIL_SUBJECT_REGISTER = _("Welcome to CD2H Repo Project!")
 #: Redis session storage URL.
