@@ -21,5 +21,3 @@ invenio run \
        --key "$script_path"/../docker/nginx/test.key
 
 trap 'kill $process_id_celery &>/dev/null' EXIT
-
-# wait $process_id_celery $process_id_server

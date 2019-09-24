@@ -293,11 +293,6 @@ class TestMetadataSchemaV1(object):
         assert 'fast_terms' not in deserialized_metadata
         assert deserialized_metadata['terms'] == terms
 
-        # # unordered comparison
-        # assert len(terms) == len(deserialized_metadata['terms'])
-        # for term in terms:
-        #     deserialized_metadata['terms'].index(term)
-
     def test_permissions_loaded(self, create_input_metadatav1):
         serialized_record = create_input_metadatav1({
             'permissions': 'restricted_view'
