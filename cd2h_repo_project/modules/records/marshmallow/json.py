@@ -24,6 +24,8 @@ processors are invoked after the “non-raw” processors.
 
 from collections import OrderedDict, namedtuple
 
+from flask import current_app
+from invenio_jsonschemas import current_jsonschemas
 from invenio_records_rest.schemas import StrictKeysMixin
 from invenio_records_rest.schemas.fields import DateString, SanitizedUnicode
 from invenio_rest.errors import RESTValidationError
