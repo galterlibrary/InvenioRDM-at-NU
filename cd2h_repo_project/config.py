@@ -52,7 +52,7 @@ def _(x):
 # Flask configuration
 # ===================
 # See details on
-# http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values
+# https://flask.palletsprojects.com/en/master/config/
 
 #: Secret key - each installation (dev, production, ...) needs a separate key.
 #: It should be changed before deploying.
