@@ -54,13 +54,14 @@ def create_input_record(create_input_metadatav1):
 
 
 class TestRecordSchemaV1(object):
-    def test_load_for_empty_json_contains_schema(self):
+    def test_load_for_empty_json_contains_schema(self, appctx):
         unmarshalled_record = RecordSchemaV1().load({})
 
         assert not unmarshalled_record.errors
         assert unmarshalled_record.data == {
-            '$schema': ('https://cd2hrepo.galter.northwestern.edu/'
-                        'schemas/records/record-v0.1.0.json'),
+            '$schema': (
+                'https://localhost:5000/schemas/records/record-v0.1.0.json'
+            )
         }
 
     def test_load_for_valid_json_removes_metadata_envelope(
