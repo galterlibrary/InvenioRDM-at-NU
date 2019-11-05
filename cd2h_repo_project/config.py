@@ -707,13 +707,20 @@ ANALYTICS_SITEID = -1  # TODO::Hoster: CONFIGURE
 # invenio-stats
 # =============
 
+from invenio_stats.contrib.config import AGGREGATIONS_CONFIG, EVENTS_CONFIG
+
 STATS_EVENTS = {
-    'record-view': {
-        'signal': 'invenio_records_ui.signals.record_viewed',
-        'event_builders': [
-            'invenio_stats.contrib.event_builders.record_view_event_builder',
-        ]
-    },
+    # 'record-view': {
+    #     'signal': 'invenio_records_ui.signals.record_viewed',
+    #     'event_builders': [
+    #         'invenio_stats.contrib.event_builders.record_view_event_builder',
+    #     ],
+    #     'templates': 'invenio_stats.contrib.record_view'
+    # },
+    #
+    # FROM invenio-stats/invenio_stats/contrib/config.py
+    'record-view': EVENTS_CONFIG['record-view']
+
     # 'file-download': {
     #     'signal': 'invenio_files_rest.signals.file_downloaded',
     #     'event_builders': [
@@ -724,7 +731,30 @@ STATS_EVENTS = {
 """This customizes the Event emission (Message to Queue publishing)."""
 
 STATS_AGGREGATIONS = {
-    'record-view-agg': {},
+    # FROM invenio-stats/invenio_stats/contrib/config.py
+    'record-view-agg': AGGREGATIONS_CONFIG['record-view-agg']
+    # dict(
+    #     templates='invenio_stats.contrib.aggregations.aggr_record_view',
+    #     cls=StatAggregator,
+    #     params=dict(
+    #         event='record-view',
+    #         field='unique_id',
+    #         interval='day',
+    #         index_interval='month',
+    #         copy_fields=dict(
+    #             record_id='record_id',
+    #             pid_type='pid_type',
+    #             pid_value='pid_value',
+    #         ),
+    #         metric_fields={
+    #             'unique_count': (
+    #                 'cardinality', 'unique_session_id',
+    #                 {'precision_threshold': 1000},
+    #             ),
+    #         },
+    #     )
+    # )
+
     # 'record-download-agg': {},
     # 'record-view-all-versions-agg': {},
 }

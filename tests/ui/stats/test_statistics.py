@@ -82,7 +82,7 @@ def test_process_record_view_events_indexes_stats_event(
         )
     index = 'events-stats-record-view'
 
-    process_events(['record-view'])
+    process_events(['record-view'])  # This processes EventQueueMessage
     current_search.flush_and_refresh(index=index)
 
     search = Search(using=es, index=index)
@@ -111,6 +111,7 @@ def test_aggregate_events_scheduled(config):
 def test_aggregate_record_view_stats_event_indexes_aggregate_event(
         create_record, es_clear, message_queues):
     """Tests STATS_AGGREGATIONS configuration."""
+    # FAILING test
     record = create_record()
     pid = PersistentIdentifier.get(
         record['_deposit']['pid']['type'],
